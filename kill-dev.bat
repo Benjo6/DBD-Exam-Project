@@ -1,0 +1,1 @@
+docker-compose -f infrastructure/docker-compose.infrastructure.dev.yml down
