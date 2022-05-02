@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBD-Exam-Project", "DBD-Exam-Project\DBD-Exam-Project.csproj", "{6F403E0A-B5FB-41F9-9F9D-14A0E56136C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lib", "lib\lib.csproj", "{881CD67F-9BC1-48BE-94CC-E0B4F80C9076}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lib", "lib\lib.csproj", "{881CD67F-9BC1-48BE-94CC-E0B4F80C9076}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDataApi", "TestDataApi\TestDataApi.csproj", "{E1943DB7-D03C-4D8A-803B-97A3E943C8CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{881CD67F-9BC1-48BE-94CC-E0B4F80C9076}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{881CD67F-9BC1-48BE-94CC-E0B4F80C9076}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{881CD67F-9BC1-48BE-94CC-E0B4F80C9076}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1943DB7-D03C-4D8A-803B-97A3E943C8CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1943DB7-D03C-4D8A-803B-97A3E943C8CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1943DB7-D03C-4D8A-803B-97A3E943C8CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1943DB7-D03C-4D8A-803B-97A3E943C8CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
