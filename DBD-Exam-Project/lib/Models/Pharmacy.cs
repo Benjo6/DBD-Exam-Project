@@ -10,7 +10,7 @@ namespace lib.Models
     {
         public Pharmacy()
         {
-            Pharamceuts = new HashSet<Pharamceut>();
+            Pharamceuts = new HashSet<Pharmaceut>();
         }
 
         public int Id { get; set; }
@@ -18,6 +18,6 @@ namespace lib.Models
         public int? AddressId { get; set; }
 
         public virtual Address? Address { get; set; }
-        public virtual  ICollection<Pharamceut> Pharamceuts { get; set; }
+        public virtual  ICollection<Pharmaceut> Pharamceuts { get; set; }
     }
 }

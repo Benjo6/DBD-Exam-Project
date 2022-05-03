@@ -28,6 +28,6 @@ namespace lib.Models
         public virtual UserRole? Role { get; set; }
         public virtual ICollection<Doctor> Doctors { get; set; }
         public virtual ICollection<Patient> Patients { get; set; }
-        public virtual ICollection<Pharamceut> Pharamceuts { get; set; }
+        public virtual ICollection<Pharmaceut> Pharmaceuts { get; set; }
     }
 }

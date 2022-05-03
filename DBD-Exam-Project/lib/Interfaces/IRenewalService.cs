@@ -1,6 +1,4 @@
-﻿using lib.Mail;
-using lib.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace lib.Interfaces
 {
-    public interface IMailService
+    public interface IRenewalService
     {
-        Task SendEmailAsync(MailRequest mailRequest);
-
+        void NotifyRenewals();
     }
 }

@@ -18,7 +18,7 @@ namespace lib.Models
         public string PrescribedToCpr { get; set; } = null!;
         public int? LastAdministeredBy { get; set; }
 
-        public virtual Pharamceut? LastAdministeredByNavigation { get; set; }
+        public virtual Pharmaceut? LastAdministeredByNavigation { get; set; }
         public virtual Medicine Medicine { get; set; } = null!;
         public virtual Doctor PrescribedByNavigation { get; set; } = null!;
         public virtual Patient PrescribedToNavigation { get; set; } = null!;

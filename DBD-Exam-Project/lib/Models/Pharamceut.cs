@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace lib.Models
 {
-    public partial class Pharamceut
+    public partial class Pharmaceut
     {
-        public Pharamceut()
+        public Pharmaceut()
         {
             Prescriptions = new HashSet<Prescription>();
         }
