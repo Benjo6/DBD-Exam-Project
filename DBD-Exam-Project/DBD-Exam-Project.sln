@@ -7,15 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailService", "DBD-Exam-Pro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lib", "lib\lib.csproj", "{881CD67F-9BC1-48BE-94CC-E0B4F80C9076}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrescriptionService", "PrescriptionService\PrescriptionService.csproj", "{73CAD70E-86AE-40B7-B6C5-16EE948E78C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrescriptionService", "PrescriptionService\PrescriptionService.csproj", "{73CAD70E-86AE-40B7-B6C5-16EE948E78C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenewalService", "RenewalService\RenewalService.csproj", "{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db", "db", "{D0BAB462-3289-4470-987F-08C0CE068700}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\..\..\Downloads\ERD.png = ..\..\..\..\..\..\Downloads\ERD.png
-		init.sql = init.sql
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenewalService", "RenewalService\RenewalService.csproj", "{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
