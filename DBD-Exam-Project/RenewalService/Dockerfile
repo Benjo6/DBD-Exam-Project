@@ -10,16 +10,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["TestDataAPI/TestDataAPI.csproj", "TestDataAPI/"]
-RUN dotnet restore "TestDataAPI/TestDataAPI.csproj"
+COPY ["RenewalService/RenewalService.csproj", "RenewalService/"]
+RUN dotnet restore "RenewalService/RenewalService.csproj"
 COPY . .
-WORKDIR "/src/TestDataAPI"
-RUN dotnet build "TestDataAPI.csproj" -c Release -o /app/build
+WORKDIR "/src/RenewalService"
+RUN dotnet build "RenewalService.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "TestDataAPI.csproj" -c Release -o /app/publish
+RUN dotnet publish "RenewalService.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "TestDataAPI.dll"]
+ENTRYPOINT ["dotnet", "RenewalService.dll"]

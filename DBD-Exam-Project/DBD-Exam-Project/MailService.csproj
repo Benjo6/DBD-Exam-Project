@@ -4,13 +4,17 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-DBD_Exam_Project-10100D58-938E-42B8-AFAE-B172FDD6E8C2</UserSecretsId>
     <RootNamespace>DBD_Exam_Project</RootNamespace>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Cronos" Version="0.7.1" />
+    <PackageReference Include="MailKit" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.12" />
     <PackageReference Include="Microsoft.Identity.Web" Version="1.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
+    <PackageReference Include="MimeKit" Version="3.2.0" />
     <PackageReference Include="Neo4j.Driver" Version="4.1.0" />
     <PackageReference Include="Neo4jClient" Version="4.1.24" />
     <PackageReference Include="RestSharp" Version="107.3.0" />

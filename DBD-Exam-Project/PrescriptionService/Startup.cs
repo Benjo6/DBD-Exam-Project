@@ -1,8 +1,3 @@
-using DBD_Exam_Project.Service;
-using DBD_Exam_Project.Settings;
-using lib.Interfaces;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,16 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using Neo4j.Driver;
-using Neo4jClient;
+using PrescriptionService.DAP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DBD_Exam_Project
+namespace PrescriptionService
 {
     public class Startup
     {
@@ -34,22 +27,16 @@ namespace DBD_Exam_Project
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetConnectionString("postgres") ?? throw new NullReferenceException("ConnectionString");
+            var host = Configuration["PostgresHost"] ?? throw new NullReferenceException("PostgresHost");
+            var port = Configuration["PostgresPort"] ?? throw new NullReferenceException("PostgresPort");
+            services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(connectionString, host, port));
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DBD_Exam_Project", Version = "v1" });
-            });
-            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            services.AddTransient<IMailService, MailService>();
-
-            var client = new BoltGraphClient(new Uri("bolt://localhost:7687"), "neo4j", "2wsxcde3");
-            client.ConnectAsync();
-            services.AddSingleton<IGraphClient>(client);
-
-            services.AddCors(c =>
-            {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "PrescriptionService", Version = "v1" });
             });
         }
 
@@ -60,14 +47,13 @@ namespace DBD_Exam_Project
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DBD_Exam_Project v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PrescriptionService v1"));
             }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

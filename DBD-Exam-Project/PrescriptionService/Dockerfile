@@ -10,16 +10,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["TestDataAPI/TestDataAPI.csproj", "TestDataAPI/"]
-RUN dotnet restore "TestDataAPI/TestDataAPI.csproj"
+COPY ["PrescriptionService/PrescriptionService.csproj", "PrescriptionService/"]
+RUN dotnet restore "PrescriptionService/PrescriptionService.csproj"
 COPY . .
-WORKDIR "/src/TestDataAPI"
-RUN dotnet build "TestDataAPI.csproj" -c Release -o /app/build
+WORKDIR "/src/PrescriptionService"
+RUN dotnet build "PrescriptionService.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "TestDataAPI.csproj" -c Release -o /app/publish
+RUN dotnet publish "PrescriptionService.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "TestDataAPI.dll"]
+ENTRYPOINT ["dotnet", "PrescriptionService.dll"]
