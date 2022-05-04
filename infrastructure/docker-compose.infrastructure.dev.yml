@@ -23,7 +23,7 @@ services:
     container_name: db-exam-neo4j
     image: neo4j
     hostname: db-exam-neo4j
-    mem_limit: 400m
+    mem_limit: 600m
     memswap_limit: 6000m
     ports:
       - 17474:7474
