@@ -179,7 +179,7 @@ namespace TestDataAPI.Context
 
                 entity.Property(e => e.PharamacyId).HasColumnName("pharmacy_id");
 
-                entity.HasOne(d => d.PersonalDatá)
+                entity.HasOne(d => d.PersonalData)
                     .WithMany(p => p.Pharmaceuts)
                     .HasForeignKey(d => d.PersonalDataId)
                     .OnDelete(DeleteBehavior.ClientSetNull)

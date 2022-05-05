@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TestDataAPI.Context;
+using TestDataAPI.DAP;
 
 namespace TestDataAPI.Seeder
 {

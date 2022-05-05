@@ -26,10 +26,25 @@ namespace PrescriptionService.Controllers
         }
 
 
-        [HttpGet(Name ="GetPrescriptions")]
+        [HttpGet(Name = "GetPrescriptions")]
         public IEnumerable<PrescriptionDto> Get()
         {
             var result = _prescriptionRepo.GetPrescriptionsExpiringLatest(DateTime.Now.AddDays(7)).Select(x => PrescriptionMapper.ToDto(x));
+            return result;
+        }
+
+        [HttpGet("{username}/{password}")]
+        public IEnumerable<PrescriptionDto> GetForPatient(string username, string password)
+        {
+            var result = _prescriptionRepo.GetPrescriptionsForUser(username, password).Select(x => PrescriptionMapper.ToDto(x));
+            return result;
+        }
+
+        [HttpPut("{id}")]
+        public bool Update(long id)
+        {
+            var result = _prescriptionRepo.MarkPrescriptionWarningSent(id);
+            return result;
         }
     }
 }
