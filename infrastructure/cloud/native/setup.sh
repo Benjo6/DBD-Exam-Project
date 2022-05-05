@@ -1,12 +1,12 @@
 # Heavily inspired by: https://medium.com/the-glitcher/mongodb-sharding-9c5357a95ec1
 
 
-GROUP='mongo'
+GROUP='database-exam'
 VMSIZE='Standard_B1ls'
 #IMG='Canonical:UbuntuServer:16_04_0-lts-gen2:16.04.202109280'
 IMG='ubuntults'
 LOCATION='northeurope'
-NSG='mongo-nsg'
+NSG='database-exam-nsg'
 USER=$USERNAME
 
 
@@ -30,7 +30,7 @@ az network nsg rule create -n 'http' -g $GROUP --nsg-name $NSG --priority 770   
 az network nsg rule create -n 'https' -g $GROUP --nsg-name $NSG --priority 780   \
 --direction Inbound --access Allow --protocol Tcp --description "Allow https traffic" --destination-port-ranges '443'
 
-az vm create -g $GROUP -n mongo-config --image $IMG --size Standard_B1ms \
+az vm create -g $GROUP -n mongo-config --image $IMG --size $VMSIZE \
 --location $LOCATION --public-ip-address db-ass-mongo-config --generate-ssh-keys --nsg $NSG --public-ip-sku Basic
 
 az vm create -g $GROUP -n mongo-shard1-1 --image $IMG --size $VMSIZE \
