@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Neo4j.Driver;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Neo4jClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace DBD_Exam_Project.Controllers
+namespace Neo4J.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -50,7 +47,7 @@ namespace DBD_Exam_Project.Controllers
                 .ExecuteWithoutResultsAsync();
 
             return Ok();
-       }
+        }
 
         // PUT api/<MovieController>/5
         [HttpPut("{id}")]
@@ -85,9 +82,9 @@ namespace DBD_Exam_Project.Controllers
                  .ExecuteWithoutResultsAsync();
 
             return Ok();
-            
+
         }
-        
+
 
     }
 }

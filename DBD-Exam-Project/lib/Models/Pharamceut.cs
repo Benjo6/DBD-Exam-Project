@@ -17,7 +17,7 @@ namespace lib.Models
         public int? PharamacyId { get; set; }
         public int PersonalDataId { get; set; }
 
-        public virtual PersonalDatum PersonalDatá { get; set; } = null!;
+        public virtual PersonalDatum PersonalData { get; set; } = null!;
         public virtual Pharmacy? Pharmacy { get; set; }
         public virtual ICollection<Prescription> Prescriptions { get; set; }
     }

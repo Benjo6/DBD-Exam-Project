@@ -7,17 +7,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DBD_Exam_Project.Controllers
+namespace MailService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class EmailController : ControllerBase
     {
-
         private readonly IMailService _mailService;
         public EmailController(IMailService mailService)
         {
             _mailService = mailService;
+
         }
 
         [HttpPost("Send")]
@@ -28,7 +28,7 @@ namespace DBD_Exam_Project.Controllers
                 await _mailService.SendEmailAsync(mailRequest);
                 return Ok();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 throw;

@@ -1,8 +1,8 @@
-﻿using DBD_Exam_Project.Settings;
-using lib.Interfaces;
+﻿using lib.Interfaces;
 using lib.Mail;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using MailService.Settings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -12,23 +12,23 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DBD_Exam_Project.Service
+namespace MailService.Services
 {
     public class MailService : IMailService
     {
-        private readonly MailSettings _mailSettings;
+        private readonly MailSettings _settings;
         private readonly ILogger<MailService> _logger;
 
-        public MailService(IOptions<MailSettings> options,ILogger<MailService> logger)
+        public MailService(IOptions<MailSettings> options, ILogger<MailService> logger)
         {
-            _mailSettings = options.Value;
+            _settings = options.Value;
             _logger = logger;
         }
         public async Task SendEmailAsync(MailRequest mailRequest)
         {
             _logger.LogInformation($"Sending mail to {mailRequest.ToEmail}");
             var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
+            email.Sender = MailboxAddress.Parse(_settings.Mail);
             email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
             email.Subject = mailRequest.Subject;
             var builder = new BodyBuilder();
@@ -52,14 +52,14 @@ namespace DBD_Exam_Project.Service
             builder.HtmlBody = mailRequest.Body;
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();
-            if (_mailSettings.DisplayName == "freesmtpservers")
+            if (_settings.DisplayName == "freesmtpservers")
             {
-                smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.None);
+                smtp.Connect(_settings.Host, _settings.Port, SecureSocketOptions.None);
             }
             else
             {
-                smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-                smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+                smtp.Connect(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);
+                smtp.Authenticate(_settings.Mail, _settings.Password);
             }
             await smtp.SendAsync(email);
             smtp.Disconnect(true);

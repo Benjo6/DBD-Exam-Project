@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:16034",
-      "sslPort": 44323
+      "applicationUrl": "http://localhost:39927",
+      "sslPort": 44359
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "MailService": {
+    "Neo4J": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
