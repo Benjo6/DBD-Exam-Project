@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using lib.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Neo4jClient;
+using Neo4jClient.Cypher;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +29,20 @@ namespace Neo4J.Controllers
                 .Return(n => n.As<Person>()).ResultsAsync;
 
             return Ok(items);
+        }
+
+        [HttpGet("check")]
+        public async Task<bool> PermissionCheckAsync(int userid, int enteringid)
+        {
+            var item = await _client.Cypher.Match("p:PersonalDatum")
+                .Where((PersonalDatum p) => p.Id == userid)
+                .Return(() => new {RoleId = Return.As<int>("p.RoleId")}).ResultsAsync;
+
+            if (item.FirstOrDefault().RoleId == enteringid)
+                return true;
+
+            return false;
+            
         }
 
         [HttpGet("{id}")]
