@@ -1,8 +1,5 @@
 USER=$1
-TWITTER=$2
-
 su $USER
-export TWITTER=$2
 
 echo "config setup 2"
 echo 'sh.addShard("mongors1/mongo-shard1-1:27018")' | mongosh --quiet
@@ -14,9 +11,6 @@ echo "**Setup Shards**"
 echo 'sh.enableSharding("twitter")' | mongosh --quiet
 echo 'sh.shardCollection("twitter.tweets", {"source" : "hashed"})' | mongosh --quiet
 
-
-echo "**Import data**"
-mongoimport --db twitter --collection tweets --type json /data/twitter.json
 
 
 # Install docker
@@ -36,5 +30,3 @@ sudo chgrp docker /usr/local/bin/docker-compose
 #Setup frontend and backend
 sudo mkdir /repo && sudo chgrp docker /repo
 git clone https://github.com/danielgron/db_assignment3_mongodb_sharding.git /repo/
-
-TWITTER=$TWITTER docker-compose -f /repo/docker-compose.application.yml up -d

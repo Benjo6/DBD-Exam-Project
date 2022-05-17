@@ -10,8 +10,6 @@ sudo echo "\n/swapfile swap swap defaults 0 0" >> /etc/fstab
 
 sudo mkdir /data
 sudo chmod 777 /data
-curl https://raw.githubusercontent.com/danielgron/db_assignment3_mongodb_sharding/main/twitter.json -o /data/twitter.json
-curl https://raw.githubusercontent.com/danielgron/db_assignment3_mongodb_sharding/main/tweets.bson -o /data/twitter.bson
 
 mkdir -p /home/$USER/data/db-cfg1
 mkdir -p /home/$USER/data/db-cfg2
@@ -32,12 +30,18 @@ mongod --configsvr --replSet mongors1conf --dbpath /home/$USER/data/db-cfg3 --po
 
 #mongocfg1 
 sleep 30
+
 echo 'rs.initiate({_id: "mongors1conf",configsvr: true, members: [{ _id : 0, host : "mongo-config:27014" },{ _id : 1, host : "mongo-config:27015" }, { _id : 2, host : "mongo-config:27016" }]})' | mongosh --port 27014 --quiet
 echo 'rs.status()' | mongosh --port 27014 --quiet
 
 mongos --configdb mongors1conf/mongo-config:27014,mongo-config:27015,mongo-config:27016 --port 27017 --bind_ip_all --fork --logpath=/home/$USER/mongo.log --logappend
 
-
+echo @'db.createUser(
+  {
+    user: "exam",
+    pwd: "maxexam",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  })' | mongosh --port 27017 --quiet
 
 
 

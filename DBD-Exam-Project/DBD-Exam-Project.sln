@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31829.152
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lib", "lib\lib.csproj", "{881CD67F-9BC1-48BE-94CC-E0B4F80C9076}"
 EndProject
@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4J", "Neo4J\Neo4J.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailService", "MailService\MailService.csproj", "{6BC26914-408D-49AE-8D60-50D2D7B85382}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDataAPI", "TestDataAPI\TestDataAPI.csproj", "{35E4B0EF-B093-43D0-BE18-9DD633D7769A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDataAPI", "TestDataAPI\TestDataAPI.csproj", "{35E4B0EF-B093-43D0-BE18-9DD633D7769A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StaffAdminApi", "StaffAdminApi\StaffAdminApi.csproj", "{E5E4A9BC-3D3A-4100-B360-329EC4F38A74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{35E4B0EF-B093-43D0-BE18-9DD633D7769A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35E4B0EF-B093-43D0-BE18-9DD633D7769A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35E4B0EF-B093-43D0-BE18-9DD633D7769A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5E4A9BC-3D3A-4100-B360-329EC4F38A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5E4A9BC-3D3A-4100-B360-329EC4F38A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5E4A9BC-3D3A-4100-B360-329EC4F38A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5E4A9BC-3D3A-4100-B360-329EC4F38A74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
