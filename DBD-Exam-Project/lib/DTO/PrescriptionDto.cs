@@ -13,6 +13,13 @@ namespace lib.DTO
         public DateTime Creation { get; set; }
         public MedicineDto Medicine { get; set; }
         public PatientDto Patient { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id: {Id}";
+        }
     }
-    
+
+   
+
 }
