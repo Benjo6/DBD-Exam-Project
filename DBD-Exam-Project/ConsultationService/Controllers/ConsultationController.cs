@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConsultationService.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ConsultationController : ControllerBase
 {
 
@@ -18,17 +18,37 @@ public class ConsultationController : ControllerBase
         _consultationService = consultationService;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public ConsultationDto GetConsultation(string consultationId)
+    [HttpPost]
+    public async Task<ConsultationDto> CreateConsultation(ConsultationCreationDto consultationDto)
     {
-        return _consultationService.GetConsultation(consultationId);
+        return await _consultationService.CreateConsultationAsync(consultationDto);
     }
 
+    [HttpPut]
+    public async Task<ConsultationDto> UpdateConsultation(ConsultationDto consultationDto)
+    {
+        return await _consultationService.UpdateConsultationAsync(consultationDto);
+    }
+
+    [HttpPut]
+    public async Task<ConsultationDto> BookConsultation(ConsultationBookingRequestDto consultationDto)
+    {
+        return await _consultationService.BookConsultationAsync(consultationDto);
+    }
+
+    [HttpGet("{consultationId}")]
+    public ConsultationDto GetConsultation(string id)
+    {
+        return _consultationService.GetConsultation(id);
+    }
+
+    [HttpGet("patient/{patientId}")]
     public IEnumerable<ConsultationDto> GetConsultationsForPatient(string patientId)
     {
         return _consultationService.GetConsultationsForPatient(patientId);
     }
-
+    
+    [HttpGet("doctor/{doctorId}")]
     public IEnumerable<ConsultationDto> GetConsultationsForDoctor(string doctorId)
     {
         return _consultationService.GetConsultationsForDoctor(doctorId);
