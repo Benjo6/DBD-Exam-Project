@@ -27,7 +27,7 @@ namespace ConsultationService.Services
         {
             var consulationEntity = Util.ConsultationMapper.FromDto(consultationDto);
             var filter = Builders<ConsultationEntity>.Filter.Eq("_id", consultationDto.Id);
-            await _database.GetCollection<ConsultationEntity>("consultations").UpdateOneAsync(filter, consulationEntity, null, CancellationToken.None);
+            await _database.GetCollection<ConsultationEntity>("consultations").UpdateOneAsync(x => x.ConsultationId == consultationDto.Id, Builders<ConsultationEntity>.Update.Set(x => x, consulationEntity));
             return Util.ConsultationMapper.ToDto(consulationEntity);
         }
 

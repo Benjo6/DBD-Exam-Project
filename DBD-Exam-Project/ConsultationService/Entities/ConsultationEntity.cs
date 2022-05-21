@@ -4,15 +4,27 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace ConsultationService.Entities;
 
 [BsonIgnoreExtraElements]
-public class ConsultationEntity : BsonDocument
+
+public class ConsultationEntity
 {
-    public DateTime ConsultationStartUtc { get; set; }
+    public ConsultationEntity()
+    {
+        CreatedUtc = DateTime.UtcNow;
+    }
+
+    [BsonIgnoreIfNullAttribute]
+    public DateTime? ConsultationStartUtc { get; set; }
+    [BsonIgnoreIfNullAttribute]
     public DateTime CreatedUtc { get; set; }
 
     [BsonId]
-    public BsonObjectId Id { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? ConsultationId { get; set; }
 
-    public string PatientId { get; set; }
-    public string DoctorId { get; set; }
-    public string Regarding { get; set; }
+    [BsonIgnoreIfNullAttribute]
+    public string? PatientId { get; set; }
+    [BsonIgnoreIfNullAttribute]
+    public string? DoctorId { get; set; }
+    [BsonIgnoreIfNullAttribute]
+    public string? Regarding { get; set; }
 }

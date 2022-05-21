@@ -1,6 +1,5 @@
 using ConsultationService.Entities;
 using lib.DTO;
-using MongoDB.Bson;
 
 namespace ConsultationService.Util
 {
@@ -8,9 +7,9 @@ namespace ConsultationService.Util
     {
         public static ConsultationDto ToDto(ConsultationEntity entity){
             var dto = new ConsultationDto(){
-                Id = entity.Id.ToString(),
+                Id = entity.ConsultationId,
                 DoctorId = entity.DoctorId,
-                PatientId = entity.DoctorId,
+                PatientId = entity.PatientId,
                 Regarding = entity.Regarding
 
             };
@@ -20,7 +19,7 @@ namespace ConsultationService.Util
         public static ConsultationEntity FromDto(ConsultationDto dto){
             var entity = new ConsultationEntity(){
                 DoctorId = dto.DoctorId,
-                Id = new BsonObjectId(new ObjectId(dto.Id)),
+                ConsultationId = dto.Id,
                 PatientId = dto.PatientId,
                 Regarding = dto.Regarding
             };
@@ -29,7 +28,7 @@ namespace ConsultationService.Util
 
         public static ConsultationEntity FromDto(ConsultationBookingRequestDto dto){
             var entity = new ConsultationEntity(){
-                Id = new BsonObjectId(new ObjectId(dto.Id)),
+                ConsultationId = dto.Id,
                 PatientId = dto.PatientId,
                 Regarding = dto.Regarding
             };
