@@ -27,7 +27,7 @@ namespace TestDataAPI.Seeder
         static Faker<Pharmaceut> pharmaceutFaker = new Faker<Pharmaceut>();
         static Faker<Prescription> prescriptionFaker = new Faker<Prescription>();
 
-        DapperPrescriptionRepo repo = new DapperPrescriptionRepo("Host=prescription-database;Port=5432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw");
+        DapperPrescriptionRepo repo = new DapperPrescriptionRepo("Host=localhost;Port=15432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw");
 
 
         HashSet<string> cprs = new HashSet<string>();

@@ -1,4 +1,5 @@
 ﻿using lib.DTO;
+using lib.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,12 +16,10 @@ namespace PrescriptionService.Controllers
     [ApiController]
     public class PrescriptionController : ControllerBase
     {
-        private readonly ILogger<PrescriptionController> _logger;
         private readonly IPrescriptionRepo _prescriptionRepo;
 
-        public PrescriptionController(ILogger<PrescriptionController> logger, IPrescriptionRepo prescriptionRepo)
+        public PrescriptionController(IPrescriptionRepo prescriptionRepo)
         {
-            _logger = logger;
             _prescriptionRepo = prescriptionRepo;
 
         }
@@ -40,10 +39,24 @@ namespace PrescriptionService.Controllers
             return result;
         }
         [HttpGet("patient")]
-        public IEnumerable<PatientDto> GetPatient()
+        public IEnumerable<Patient> GetAllPatients()
         {
-            var result = _prescriptionRepo.GetAllPatient();
-            return (IEnumerable<PatientDto>)result;
+            var result = _prescriptionRepo.GetAllPatients();
+            return result;
+        }
+
+        [HttpGet("prescriptions")]
+        public IEnumerable<PrescriptionDto> GetAllPrescriptions()
+        {
+            var result = _prescriptionRepo.GetAllPrescriptions().Select(x => PrescriptionMapper.ToDto(x));
+            return result;
+        }
+
+        [HttpGet("pharmacy")]
+        public IEnumerable<Pharmacy> GetAllPharmacies()
+        {
+            var result = _prescriptionRepo.GetAllPharmacies();
+            return result;
         }
 
         [HttpPut("{id}")]

@@ -11,9 +11,9 @@ namespace PrescriptionService.DAP
         public IEnumerable<Prescription> GetPrescriptionsExpiringLatest(DateTime expiringDate);
         public IEnumerable<Prescription> GetPrescriptionsForUser(string username, string password);
         public bool MarkPrescriptionWarningSent(long prescriptionId);
-        public IEnumerable<Patient> GetAllPatient();
-
-
+        public IEnumerable<Patient> GetAllPatients();
+        public IEnumerable<Prescription> GetAllPrescriptions();
+        public IEnumerable<Pharmacy> GetAllPharmacies();
     }
 
 }

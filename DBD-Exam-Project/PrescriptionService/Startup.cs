@@ -27,9 +27,9 @@ namespace PrescriptionService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("postgres") ?? throw new NullReferenceException("ConnectionString");
-            var host = Configuration["PostgresHost"] ?? throw new NullReferenceException("PostgresHost");
-            var port = Configuration["PostgresPort"] ?? throw new NullReferenceException("PostgresPort");
+            var connectionString = "Host=localhost;Port=15432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw";
+            var host = "localhost";
+            var port = "5432";
             services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(connectionString, host, port));
 
 

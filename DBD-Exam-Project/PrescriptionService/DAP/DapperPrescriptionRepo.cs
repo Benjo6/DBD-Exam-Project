@@ -20,7 +20,7 @@ namespace PrescriptionService.DAP
             _port = port;
         }
 
-        public IEnumerable<Patient> GetAllPatient()
+        public IEnumerable<Patient> GetAllPatients()
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -28,7 +28,8 @@ namespace PrescriptionService.DAP
 
                 var lookup = new Dictionary<string, Patient>();
 
-                var query = @$"??? ";
+                var query = @$" SELECT pat  FROM prescriptions.patient pat";
+
 
 
                 var resultList = lookup.Values;
@@ -38,6 +39,47 @@ namespace PrescriptionService.DAP
             }
 
         }
+
+        public IEnumerable<Pharmacy> GetAllPharmacies()
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+                var lookup = new Dictionary<string, Pharmacy>();
+
+                var query = @$" SELECT pha  FROM prescriptions.pharmacy pha";
+
+
+
+                var resultList = lookup.Values;
+                return resultList;
+
+
+            }
+        }
+
+        public IEnumerable<Prescription> GetAllPrescriptions()
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+                var lookup = new Dictionary<string, Prescription>();
+
+                var query = @$" SELECT pr  FROM prescriptions.prescription pr";
+
+
+
+                var resultList = lookup.Values;
+                return resultList;
+
+
+            }
+
+        }
+
+        
 
         public IEnumerable<Prescription> GetPrescriptionsExpiringLatest(DateTime expiringDate)
         {

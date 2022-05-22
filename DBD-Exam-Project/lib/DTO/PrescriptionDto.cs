@@ -14,10 +14,7 @@ namespace lib.DTO
         public MedicineDto Medicine { get; set; }
         public PatientDto Patient { get; set; }
 
-        public override string ToString()
-        {
-            return $"Id: {Id}";
-        }
+
     }
 
    
