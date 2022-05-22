@@ -5,14 +5,14 @@ services:
   postgres:
     container_name: 'db-exam-postgres'
     image: postgres:14.2-alpine
-    hostname: postgres
+    hostname: db-exam-postgres
     mem_limit: 400m
     memswap_limit: 6000m
     ports:
       - 15432:5432
     volumes:
-     - ./db/data:/var/lib/postgresql/data
-     - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+     - ./postgres/data:/var/lib/postgresql/data
+     - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: always
     environment:
       POSTGRES_USER: prescription_user
@@ -74,9 +74,12 @@ services:
     container_name: db-exam-redis
     image: "redis:alpine"
     hostname: db-exam-redis
-    mem_limit: 400m
+    mem_limit: 2000m
     memswap_limit: 6000m
     restart: always
     ports:
       - "16379:6379"
-    
+
+networks:
+  default:
+    name: db-exam
