@@ -14,13 +14,12 @@ This will set up databases and services on the following ports:
 | Neo4j                   | localhost:17474   | db-exam-neo4j:17474          |
 | Neo4j                   | localhost:17687   | db-exam-neo4j:17687          |
 | Redis                   | localhost:16379   | db-exam-redis:16379          |
-| Consultation Service    | localhost:18088   |              --              |
+| Consultation Service    | localhost:18080   |              --              |
 
 neo4j
 ## mongo
 ConnectionString for local development
 
-```db-exam-mongo-config.northeurope.cloudapp.azure.com:17017```
 ## postgres
 ### docker
 ```"Host=prescription-database;Port=5432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw"```
