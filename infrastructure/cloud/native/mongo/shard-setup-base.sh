@@ -9,13 +9,6 @@ sudo mkdir /data && chmod 777 /data
 curl https://raw.githubusercontent.com/danielgron/db_assignment3_mongodb_sharding/main/twitter.json -o /data/twitter.json 
 curl https://raw.githubusercontent.com/danielgron/db_assignment3_mongodb_sharding/main/tweets.bson -o /data/twitter.bson
 
-#sudo apt update
-#sudo apt install ntp
-#echo date
-#sudo service ntp stop
-#sudo ntpd -gq
-#sudo service ntp start
-#echo date >> /home/$USER/timelog
 
 ## Install Mongo ##
 wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -

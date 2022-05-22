@@ -1,4 +1,4 @@
-﻿CREATE DATABASE prescription_db;
+CREATE DATABASE prescription_db;
 \connect prescription_db
 
 CREATE SCHEMA "prescriptions"
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS prescriptions.prescription(
    id BIGSERIAL PRIMARY KEY,
    expiration DATE,
    expiration_warning_sent boolean,
-   creation TIMESTAMP NOT NULL,
+   creation TIMESTAMPTZ NOT NULL,
    medicine_id int NOT NULL,
    prescribed_by int NOT NULL,
    prescribed_to int NOT NULL,

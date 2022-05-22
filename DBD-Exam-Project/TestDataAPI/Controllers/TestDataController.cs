@@ -16,26 +16,27 @@ namespace TestDataAPI.Controllers
     {
 
         private readonly ILogger<TestDataController> _logger;
+        private readonly DbSeeder _dbSeeder;
         private readonly PrescriptionContext _pc;
 
-        public TestDataController(ILogger<TestDataController> logger,PrescriptionContext pc)
+        public TestDataController(ILogger<TestDataController> logger, DbSeeder dbSeeder)
         {
             _logger = logger;
-            _pc = pc;
+            _dbSeeder = dbSeeder;
 
         }
 
         [HttpGet("SeedTestData")]
         public Task Seed()
         {
-            new DbSeeder(_pc).SeedTestData(1);
+            _dbSeeder.SeedTestData(1);
             return Task.CompletedTask;
         }
 
         [HttpGet("SeedTestDataReduced")]
         public Task SeedReduced()
         {
-            new DbSeeder(_pc).SeedTestData(100);
+            _dbSeeder.SeedTestData(100);
             return Task.CompletedTask;
         }
     }
