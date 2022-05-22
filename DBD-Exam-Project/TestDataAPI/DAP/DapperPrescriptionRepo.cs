@@ -16,8 +16,8 @@ namespace TestDataAPI.DAP
         public DapperPrescriptionRepo(string cs)
         {
             _connectionsString = cs;
-
         }
+
         public LoginInfo AddUser(string username, string password, string salt, string passwordRaw, string role)
         {
             var func = $"select prescriptions.create_{role}(@username::varchar,@password_hashed::varchar,@password_salt::varchar,@password_raw::varchar)";

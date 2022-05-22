@@ -27,7 +27,7 @@ namespace TestDataAPI.Seeder
         static Faker<Pharmaceut> pharmaceutFaker = new Faker<Pharmaceut>();
         static Faker<Prescription> prescriptionFaker = new Faker<Prescription>();
 
-        DapperPrescriptionRepo repo = new DapperPrescriptionRepo("Host=prescription-database;Port=5432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw");
+        IPrescriptionRepo _repo;
 
 
         HashSet<string> cprs = new HashSet<string>();
@@ -40,9 +40,10 @@ namespace TestDataAPI.Seeder
 
         private PrescriptionContext _prescriptionContext;
 
-        public DbSeeder(PrescriptionContext prescriptionContext)
+        public DbSeeder(PrescriptionContext prescriptionContext, IPrescriptionRepo prescriptionRepo)
         {
             _prescriptionContext = prescriptionContext;
+            _repo = prescriptionRepo;
         }
 
         public void SeedTestData(int divider = 1)
@@ -71,14 +72,14 @@ namespace TestDataAPI.Seeder
                 _prescriptionContext.AddRange(prescriptions);
                 _prescriptionContext.Add(CreateTestPatient());
                 Console.WriteLine("Save Changes");
-                _prescriptionContext.SaveChanges();
-                Console.WriteLine("Done!");
+                var entries = _prescriptionContext.SaveChanges();
+                Console.WriteLine($"Done! - Wrote {entries} entries");
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex);
+                throw;
             }
-
 
         }
        
@@ -90,7 +91,7 @@ namespace TestDataAPI.Seeder
 
             prescriptionFaker
                 .RuleFor(p => p.Creation, (f, p) => f.Date.Between(DateTime.Now.AddDays(-30), DateTime.Now))
-                .RuleFor(p => p.Expiration, (f, p) => (p.Creation).AddDays(30))
+                .RuleFor(p => p.Expiration, (f, p) => DateOnly.FromDateTime(p.Creation.AddDays(30)))
                 .RuleFor(p => p.PrescribedByNavigation, (f, p) => docs[random.Next(docs.Count)])
                 .RuleFor(p => p.PrescribedToNavigation, (f, p) => patients[random.Next(patients.Count)])
                 .RuleFor(p => p.PrescribedToCpr, (f, p) =>
@@ -130,7 +131,7 @@ namespace TestDataAPI.Seeder
             Console.WriteLine("Create Patients");
 
             List<Patient> patients = new List<Patient>();
-            var perIteration = PATIENT_COUNT / 100;
+            var perIteration = ( PATIENT_COUNT / _divider ) / 100;
             Stopwatch timer = Stopwatch.StartNew();
             for (int i = 0; i < 100; i++)
             {
@@ -227,7 +228,7 @@ namespace TestDataAPI.Seeder
             var salt = Salt.Create();
             var hash = Hash.Create(password, salt);
 
-            var login = repo.AddUser(username, hash, salt, password, role);
+            var login = _repo.AddUser(username, hash, salt, password, role);
 
             LoginInfo loginInfo = _prescriptionContext.LoginInfos.First(x => x.Id == login.Id);
 

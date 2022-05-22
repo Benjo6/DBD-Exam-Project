@@ -9,7 +9,7 @@ namespace lib.Models
     public partial class Prescription
     {
         public long Id { get; set; }
-        public DateTime? Expiration { get; set; }
+        public DateOnly? Expiration { get; set; }
         public bool ExpirationWarningSent { get; set; }
         public DateTime Creation { get; set; }
         public int MedicineId { get; set; }
