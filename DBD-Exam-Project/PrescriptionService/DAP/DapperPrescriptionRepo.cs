@@ -27,8 +27,6 @@ namespace PrescriptionService.DAP
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-                var lookup = new Dictionary<string, Patient>();
-
                 var query = @$" SELECT * FROM prescriptions.patient;";
 
                 var resultList = connection.Query<Patient>(query);
@@ -46,7 +44,6 @@ namespace PrescriptionService.DAP
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-                var lookup = new Dictionary<string, Pharmacy>();
 
                 var query = @$" SELECT id, pharmacy_name, address_id FROM prescriptions.pharmacy;";
 
