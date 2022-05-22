@@ -5,7 +5,7 @@ services:
   postgres:
     container_name: 'db-exam-postgres'
     image: postgres:14.2-alpine
-    hostname: postgres
+    hostname: db-exam-postgres
     mem_limit: 400m
     memswap_limit: 6000m
     ports:
@@ -74,9 +74,13 @@ services:
     container_name: db-exam-redis
     image: "redis:alpine"
     hostname: db-exam-redis
-    mem_limit: 400m
+    mem_limit: 2000m
     memswap_limit: 6000m
     restart: always
     ports:
       - "16379:6379"
-    
+
+networks:
+  db-exam:
+    name: db-exam
+    driver: custom-driver-1

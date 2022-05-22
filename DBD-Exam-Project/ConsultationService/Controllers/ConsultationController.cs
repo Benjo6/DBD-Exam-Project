@@ -30,7 +30,7 @@ public class ConsultationController : ControllerBase
         return await _consultationService.UpdateConsultationAsync(consultationDto);
     }
 
-    [HttpPut]
+    [HttpPut("book")]
     public async Task<ConsultationDto> BookConsultation(ConsultationBookingRequestDto consultationDto)
     {
         return await _consultationService.BookConsultationAsync(consultationDto);
