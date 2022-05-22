@@ -28,7 +28,7 @@ namespace PrescriptionService.Controllers
         [HttpGet(Name = "GetPrescriptions")]
         public IEnumerable<PrescriptionDto> Get()
         {
-            var result = _prescriptionRepo.GetPrescriptionsExpiringLatest(DateTime.Now.AddDays(7)).Select(x => PrescriptionMapper.ToDto(x));
+            var result = _prescriptionRepo.GetPrescriptionsExpiringLatest(DateOnly.FromDateTime(DateTime.Now.AddDays(7))).Select(x => PrescriptionMapper.ToDto(x));
             return result;
         }
 

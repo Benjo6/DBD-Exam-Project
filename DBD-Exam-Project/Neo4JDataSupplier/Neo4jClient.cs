@@ -29,8 +29,9 @@ namespace Neo4JDataSupplier
 
         public async Task<string> Run()
         {
-            await Prescription();
+            //await Prescription();
             await Patient();
+            await Pharmacies();
             return "Task Completed";
         }
 
@@ -39,7 +40,7 @@ namespace Neo4JDataSupplier
             var patient = PrescriptionController.GetAllPatients();
             foreach (Patient item in patient)
             {
-                await _client.Cypher.Merge("(p:Patient {Id: $pID })")
+                await _client.Cypher.Merge("(p:Patient {Id: $pID } )")
                     .OnMatch()
                     .Set("p=$pat")
                     .OnCreate()
@@ -71,6 +72,25 @@ namespace Neo4JDataSupplier
 
 
             return prescription;
+        }
+        public async Task<IEnumerable<Pharmacy>> Pharmacies()
+        {
+            var pharmacies = PrescriptionController.GetAllPharmacies();
+            foreach (Pharmacy item in pharmacies)
+            {
+                await _client.Cypher.Merge("(p:Pharmacy {Id: $pID} )")
+                    .OnMatch()
+                    .Set("p=$pha")
+                    .OnCreate()
+                    .Set("p=$pha")
+                    .WithParam("pha", item)
+                    .WithParam("pID", item.Id)
+                    .ExecuteWithoutResultsAsync();
+            }
+
+
+
+            return pharmacies;
         }
 
     }

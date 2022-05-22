@@ -4,6 +4,7 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PrescriptionService.DAP
 {
@@ -28,11 +29,10 @@ namespace PrescriptionService.DAP
 
                 var lookup = new Dictionary<string, Patient>();
 
-                var query = @$" SELECT pat  FROM prescriptions.patient pat";
+                var query = @$" SELECT * FROM prescriptions.patient;";
 
+                var resultList = connection.Query<Patient>(query);
 
-
-                var resultList = lookup.Values;
                 return resultList;
 
 
@@ -40,7 +40,7 @@ namespace PrescriptionService.DAP
 
         }
 
-        public IEnumerable<Pharmacy> GetAllPharmacies()
+        public  IEnumerable<Pharmacy> GetAllPharmacies()
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -48,30 +48,27 @@ namespace PrescriptionService.DAP
 
                 var lookup = new Dictionary<string, Pharmacy>();
 
-                var query = @$" SELECT pha  FROM prescriptions.pharmacy pha";
+                var query = @$" SELECT id, pharmacy_name, address_id FROM prescriptions.pharmacy;";
+
+                var resultList = connection.Query<Pharmacy>(query);
 
 
-
-                var resultList = lookup.Values;
-                return resultList;
+                return (IEnumerable<Pharmacy>)resultList;
 
 
             }
         }
 
-        public IEnumerable<Prescription> GetAllPrescriptions()
+        public IEnumerable<Prescription>GetAllPrescriptions()
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-                var lookup = new Dictionary<string, Prescription>();
 
-                var query = @$" SELECT pr  FROM prescriptions.prescription pr";
+                var query = @$" SELECT * FROM prescriptions.prescription;";
 
-
-
-                var resultList = lookup.Values;
+                var resultList = connection.Query<Prescription>(query);
                 return resultList;
 
 
@@ -81,7 +78,7 @@ namespace PrescriptionService.DAP
 
         
 
-        public IEnumerable<Prescription> GetPrescriptionsExpiringLatest(DateTime expiringDate)
+        public IEnumerable<Prescription> GetPrescriptionsExpiringLatest(DateOnly expiringDate)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -89,7 +86,8 @@ namespace PrescriptionService.DAP
 
                 var lookup = new Dictionary<long, Prescription>();
 
-                var query = @$"
+                var query =
+                    @$"
                         SELECT
                         pr.id, pr.expiration, pr.creation, pr.medicine_id, pr.prescribed_to, pr.expiration_warning_sent,
                         pat.id, pat.personal_data_id,
@@ -106,6 +104,8 @@ namespace PrescriptionService.DAP
 
                 var param = new DynamicParameters();
                 param.Add("@exp", expiringDate.ToString("yyyy-MM-dd"));
+
+
                 connection.Query<Prescription, Patient, Medicine, PersonalDatum, Prescription>(query, (pr, pat, med, dat) => {
                     Prescription prescription;
                     if (!lookup.TryGetValue(pr.Id, out prescription))
