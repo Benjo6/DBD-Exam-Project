@@ -20,6 +20,25 @@ namespace PrescriptionService.DAP
             _port = port;
         }
 
+        public IEnumerable<Patient> GetAllPatient()
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+                var lookup = new Dictionary<string, Patient>();
+
+                var query = @$"??? ";
+
+
+                var resultList = lookup.Values;
+                return resultList;
+
+
+            }
+
+        }
+
         public IEnumerable<Prescription> GetPrescriptionsExpiringLatest(DateTime expiringDate)
         {
             using (var connection = new NpgsqlConnection(_connectionString))

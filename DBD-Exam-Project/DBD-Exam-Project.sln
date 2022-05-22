@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDataAPI", "TestDataAPI\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsultationService", "ConsultationService\ConsultationService.csproj", "{1FE07A2F-CC7D-4749-B615-2897DD4E1D45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo4JDataSupplier", "Neo4JDataSupplier\Neo4JDataSupplier.csproj", "{EEA48026-F6BF-448F-92C6-836DB77D52A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{1FE07A2F-CC7D-4749-B615-2897DD4E1D45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FE07A2F-CC7D-4749-B615-2897DD4E1D45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FE07A2F-CC7D-4749-B615-2897DD4E1D45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEA48026-F6BF-448F-92C6-836DB77D52A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEA48026-F6BF-448F-92C6-836DB77D52A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEA48026-F6BF-448F-92C6-836DB77D52A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEA48026-F6BF-448F-92C6-836DB77D52A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

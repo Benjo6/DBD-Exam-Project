@@ -39,6 +39,12 @@ namespace PrescriptionService.Controllers
             var result = _prescriptionRepo.GetPrescriptionsForUser(username, password).Select(x => PrescriptionMapper.ToDto(x));
             return result;
         }
+        [HttpGet("patient")]
+        public IEnumerable<PatientDto> GetPatient()
+        {
+            var result = _prescriptionRepo.GetAllPatient();
+            return (IEnumerable<PatientDto>)result;
+        }
 
         [HttpPut("{id}")]
         public bool Update(long id)
