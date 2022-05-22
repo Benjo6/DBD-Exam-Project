@@ -7,10 +7,6 @@ namespace ConsultationService.Entities;
 
 public class ConsultationEntity
 {
-    public ConsultationEntity()
-    {
-        CreatedUtc = DateTime.UtcNow;
-    }
 
     [BsonIgnoreIfNullAttribute]
     public DateTime? ConsultationStartUtc { get; set; }

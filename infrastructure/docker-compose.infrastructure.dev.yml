@@ -81,6 +81,5 @@ services:
       - "16379:6379"
 
 networks:
-  db-exam:
+  default:
     name: db-exam
-    driver: custom-driver-1

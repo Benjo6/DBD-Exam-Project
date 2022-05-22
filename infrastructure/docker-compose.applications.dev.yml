@@ -1,17 +1,17 @@
 version: '2.4'
 services:
 
-  ## Postgres ##
-  postgres:
+  ## PConsultation ##
+  consultation-service:
     container_name: 'db-exam-consultation-service'
     build: 
-      context: ../DBD-Exam-Project/ConsulationService
-      dockerfile: Dockerfile
+      context: ../DBD-Exam-Project
+      dockerfile: ConsultationService/Dockerfile.compose
     hostname: db-exam-consultation-service
     mem_limit: 400m
     memswap_limit: 6000m
     ports:
-      - 15432:5432
+      - 18080:80
     restart: always
     
 

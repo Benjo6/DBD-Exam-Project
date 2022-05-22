@@ -19,38 +19,62 @@ public class ConsultationController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ConsultationDto> CreateConsultation(ConsultationCreationDto consultationDto)
+    public async Task<IActionResult> CreateConsultation(ConsultationCreationDto consultationDto)
     {
-        return await _consultationService.CreateConsultationAsync(consultationDto);
+        return Ok(await _consultationService.CreateConsultationAsync(consultationDto));
     }
 
     [HttpPut]
-    public async Task<ConsultationDto> UpdateConsultation(ConsultationDto consultationDto)
+    public async Task<IActionResult> UpdateConsultation(ConsultationDto consultationDto)
     {
-        return await _consultationService.UpdateConsultationAsync(consultationDto);
+        var result = await _consultationService.UpdateConsultationAsync(consultationDto);
+
+        if (result == null)
+          return NotFound();
+
+        return Ok(result);
     }
 
     [HttpPut("book")]
-    public async Task<ConsultationDto> BookConsultation(ConsultationBookingRequestDto consultationDto)
+    public async Task<IActionResult> BookConsultation(ConsultationBookingRequestDto consultationDto)
     {
-        return await _consultationService.BookConsultationAsync(consultationDto);
+        var result = await _consultationService.BookConsultationAsync(consultationDto);
+
+        if (result == null)
+          return NotFound();
+
+        return Ok(result);
     }
 
     [HttpGet("{consultationId}")]
-    public ConsultationDto GetConsultation(string id)
+    public async Task<IActionResult> GetConsultation(string consultationId)
     {
-        return _consultationService.GetConsultation(id);
+        var result = await _consultationService.GetConsultationAsync(consultationId);
+        if (result == null)
+          return NotFound();
+
+        return Ok(result);
     }
 
     [HttpGet("patient/{patientId}")]
-    public IEnumerable<ConsultationDto> GetConsultationsForPatient(string patientId)
+    public async Task<IActionResult> GetConsultationsForPatient(string patientId)
     {
-        return _consultationService.GetConsultationsForPatient(patientId);
+        var result = await _consultationService.GetConsultationsForPatientAsync(patientId);
+
+        if (result == null)
+          return NotFound();
+
+        return Ok(result);
     }
     
     [HttpGet("doctor/{doctorId}")]
-    public IEnumerable<ConsultationDto> GetConsultationsForDoctor(string doctorId)
+    public async Task<IActionResult> GetConsultationsForDoctor(string doctorId)
     {
-        return _consultationService.GetConsultationsForDoctor(doctorId);
+        var result = await _consultationService.GetConsultationsForDoctorAsync(doctorId);
+
+        if (result == null)
+          return NotFound();
+
+        return Ok(result);
     }
 }

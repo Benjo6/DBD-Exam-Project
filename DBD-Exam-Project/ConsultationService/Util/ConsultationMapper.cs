@@ -6,11 +6,16 @@ namespace ConsultationService.Util
     public static class ConsultationMapper
     {
         public static ConsultationDto ToDto(ConsultationEntity entity){
+            if (entity == null)
+                return null;
+
             var dto = new ConsultationDto(){
                 Id = entity.ConsultationId,
                 DoctorId = entity.DoctorId,
                 PatientId = entity.PatientId,
-                Regarding = entity.Regarding
+                Regarding = entity.Regarding,
+                ConsultationStartUtc = entity.ConsultationStartUtc,
+                CreatedUtc = entity.CreatedUtc
 
             };
             return dto;
@@ -21,7 +26,9 @@ namespace ConsultationService.Util
                 DoctorId = dto.DoctorId,
                 ConsultationId = dto.Id,
                 PatientId = dto.PatientId,
-                Regarding = dto.Regarding
+                Regarding = dto.Regarding,
+                ConsultationStartUtc = dto.ConsultationStartUtc,
+                CreatedUtc = dto.CreatedUtc
             };
             return entity;
         }
@@ -38,7 +45,8 @@ namespace ConsultationService.Util
         public static ConsultationEntity FromDto(ConsultationCreationDto dto){
             var entity = new ConsultationEntity(){
                 ConsultationStartUtc = dto.ConsultationStartUtc,
-                DoctorId = dto.DoctorId
+                DoctorId = dto.DoctorId,
+                CreatedUtc = DateTime.UtcNow
             };
             return entity;
         }

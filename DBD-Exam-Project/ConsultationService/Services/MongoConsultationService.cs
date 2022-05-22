@@ -1,5 +1,4 @@
 using MongoDB.Driver;
-using lib;
 using lib.DTO;
 using ConsultationService.Entities;
 using ConsultationService.Util;
@@ -7,28 +6,38 @@ using Microsoft.Extensions.Options;
 
 namespace ConsultationService.Services
 {
-    public class MongoConsultationService: IConsultationService
+    public class MongoConsultationService : IConsultationService
     {
         private MongoClient _client;
         private IMongoDatabase _database;
 
         public MongoConsultationService(IOptions<DatabaseSettings> settings)
         {
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
             _client = new MongoClient(settings.Value.MongoConnectionString ?? throw new ArgumentNullException("MongoConnectionString"));
             _database = _client.GetDatabase("consultations");
         }
 
         public ConsultationDto BookConsultation(ConsultationBookingRequestDto consultationDto)
         {
-            throw new NotImplementedException();
+            return BookConsultationAsync(consultationDto).Result;
         }
 
         public async Task<ConsultationDto> BookConsultationAsync(ConsultationBookingRequestDto consultationDto)
         {
-            var consulationEntity = Util.ConsultationMapper.FromDto(consultationDto);
-            var filter = Builders<ConsultationEntity>.Filter.Eq("_id", consultationDto.Id);
-            await _database.GetCollection<ConsultationEntity>("consultations").UpdateOneAsync(x => x.ConsultationId == consultationDto.Id, Builders<ConsultationEntity>.Update.Set(x => x, consulationEntity));
-            return Util.ConsultationMapper.ToDto(consulationEntity);
+            var consultationEntity = Util.ConsultationMapper.FromDto(consultationDto);
+            var builder = Builders<ConsultationEntity>
+            .Update.Set(x => x.PatientId, consultationDto.PatientId)
+            .Set(x => x.Regarding, consultationDto.Regarding);
+
+            var options = new UpdateOptions { IsUpsert = false };
+
+            var result = await _database.GetCollection<ConsultationEntity>("consultations").UpdateOneAsync(x =>
+            x.ConsultationId == consultationDto.Id && x.PatientId == null
+            , builder, options);
+            return result.ModifiedCount > 0 ? Util.ConsultationMapper.ToDto(consultationEntity) : null;
         }
 
         public ConsultationDto CreateConsultation(ConsultationCreationDto consultationDto)
@@ -50,8 +59,7 @@ namespace ConsultationService.Services
 
         public async Task<ConsultationDto> GetConsultationAsync(string id)
         {
-            var filter = Builders<ConsultationEntity>.Filter.Eq("_id", id);
-            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(filter).FirstOrDefaultAsync();
+            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(x => x.ConsultationId == id).FirstOrDefaultAsync();
             return ConsultationMapper.ToDto(consultationEntity);
         }
 
@@ -62,8 +70,7 @@ namespace ConsultationService.Services
 
         public async Task<IEnumerable<ConsultationDto>> GetConsultationsForDoctorAsync(string doctorId)
         {
-            var filter = Builders<ConsultationEntity>.Filter.Eq("doctorId", doctorId);
-            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(filter).ToListAsync();
+            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(x => x.DoctorId == doctorId).ToListAsync();
             return consultationEntity.Select(entity => ConsultationMapper.ToDto(entity));
         }
 
@@ -86,7 +93,7 @@ namespace ConsultationService.Services
 
         public async Task<ConsultationDto> UpdateConsultationAsync(ConsultationDto consultationDto)
         {
-            if(string.IsNullOrWhiteSpace(consultationDto.Id))
+            if (string.IsNullOrWhiteSpace(consultationDto.Id))
                 throw new ArgumentException("Consultation is missing ID");
 
             var filter = Builders<ConsultationEntity>.Filter.Eq("_id", consultationDto.Id);
