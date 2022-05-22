@@ -20,10 +20,10 @@ neo4j
 ## mongo
 ConnectionString for local development
 
-db-exam-mongo-config.northeurope.cloudapp.azure.com:17017
+```db-exam-mongo-config.northeurope.cloudapp.azure.com:17017```
 ## postgres
 ### docker
-"Host=prescription-database;Port=5432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw"
+```"Host=prescription-database;Port=5432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw"```
 ### localhost
-"Host=localhost;Port=15432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw"
+```"Host=localhost;Port=15432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw"```
 redis
