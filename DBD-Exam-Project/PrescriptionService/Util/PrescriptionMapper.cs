@@ -9,7 +9,7 @@ namespace PrescriptionService.Util
 {
     public class PrescriptionMapper
     {
-        public static PrescriptionDto ToDto(Prescription prescription)
+        public static PrescriptionDto ToDto(PrescriptionOut prescription)
         {
             var dto = new PrescriptionDto();
 

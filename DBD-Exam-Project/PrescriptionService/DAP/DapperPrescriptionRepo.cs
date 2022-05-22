@@ -59,13 +59,13 @@ namespace PrescriptionService.DAP
             }
         }
 
-        public IEnumerable<Prescription> GetAllPrescriptions()
+        public IEnumerable<PrescriptionOut> GetAllPrescriptions()
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-                var lookup = new Dictionary<string, Prescription>();
+                var lookup = new Dictionary<string, PrescriptionOut>();
 
                 var query = @$" SELECT pr  FROM prescriptions.prescription pr";
 
@@ -81,13 +81,13 @@ namespace PrescriptionService.DAP
 
         
 
-        public IEnumerable<Prescription> GetPrescriptionsExpiringLatest(DateTime expiringDate)
+        public IEnumerable<PrescriptionOut> GetPrescriptionsExpiringLatest(DateTime expiringDate)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-                var lookup = new Dictionary<long, Prescription>();
+                var lookup = new Dictionary<long, PrescriptionOut>();
 
                 var query = @$"
                         SELECT
@@ -106,8 +106,8 @@ namespace PrescriptionService.DAP
 
                 var param = new DynamicParameters();
                 param.Add("@exp", expiringDate.ToString("yyyy-MM-dd"));
-                connection.Query<Prescription, Patient, Medicine, PersonalDatum, Prescription>(query, (pr, pat, med, dat) => {
-                    Prescription prescription;
+                connection.Query<PrescriptionOut, Patient, Medicine, PersonalDatum, PrescriptionOut>(query, (pr, pat, med, dat) => {
+                    PrescriptionOut prescription;
                     if (!lookup.TryGetValue(pr.Id, out prescription))
                         lookup.Add(pr.Id, prescription = pr);
 
@@ -126,7 +126,7 @@ namespace PrescriptionService.DAP
             }
         }
 
-        public IEnumerable<Prescription> GetPrescriptionsForUser(string username, string password)
+        public IEnumerable<PrescriptionOut> GetPrescriptionsForUser(string username, string password)
         {
             Console.WriteLine($"Get prescriptions for {username.Substring(0,6)}-xxxx");
 
@@ -134,7 +134,7 @@ namespace PrescriptionService.DAP
             {
                 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-                var lookup = new Dictionary<long, Prescription>();
+                var lookup = new Dictionary<long, PrescriptionOut>();
 
                 var query =
                     @$"
@@ -153,8 +153,8 @@ namespace PrescriptionService.DAP
                 param.Add("@cpr", username);
 
 
-                connection.Query<Prescription, Medicine, Prescription>(query, (pr, med) => {
-                    Prescription prescription;
+                connection.Query<PrescriptionOut, Medicine, PrescriptionOut>(query, (pr, med) => {
+                    PrescriptionOut prescription;
                     if (!lookup.TryGetValue(pr.Id, out prescription))
                         lookup.Add(pr.Id, prescription = pr);
 
