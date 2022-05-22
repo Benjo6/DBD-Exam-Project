@@ -5,7 +5,7 @@ Very interesting assignment
 
 # Connectionstrings for dev:
 All require running .start-dev.bat from root of repository (shortcut for docker-compose up with the databases along with services that have been containerized)
-This will set up databases on the following ports:
+This will set up databases and services on the following ports:
 
 | Service  | Local Development | From other docker containers |
 |----------|-------------------|------------------------------|
