@@ -4,7 +4,9 @@ services:
   ## Postgres ##
   postgres:
     container_name: 'db-exam-postgres'
-    image: postgres:14.2-alpine
+    build: 
+      context: ./postgres
+      dockerfile: Dockerfile
     hostname: db-exam-postgres
     mem_limit: 400m
     memswap_limit: 6000m
@@ -32,7 +34,6 @@ services:
       - ./neo4j/data:/data
       - ./neo4j/logs:/logs
       - ./neo4j/conf:/var/lib/neo4j/conf
-      - ./neo4j/plugins:/var/lib/neo4j/plugins
       - ./neo4j/import:/var/lib/neo4j/import
     environment:
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*,algo.*,gds.*
