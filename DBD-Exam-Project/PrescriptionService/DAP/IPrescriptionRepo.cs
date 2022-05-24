@@ -1,11 +1,14 @@
-﻿using lib.DTO;
+using lib.DTO;
 using lib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PrescriptionService.DAP
+
+namespace PrescriptionService.DAP;
+
+public interface IPrescriptionRepo
 {
     public interface IPrescriptionRepo
     {

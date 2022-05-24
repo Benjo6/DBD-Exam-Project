@@ -12,15 +12,13 @@ namespace PrescriptionService.DAP
 {
     public class DapperPrescriptionRepo : IPrescriptionRepo
     {
-        private string _connectionString;
-        private string _host;
-        private string _port;
+        private readonly string _adminConnectionString;
+        private readonly string _customConenctionString;
 
-        public DapperPrescriptionRepo(string connectionString, string host, string port)
+        public DapperPrescriptionRepo(string adminConnectionString, string customConenctionString)
         {
-            _connectionString = connectionString;
-            _host = host;
-            _port = port;
+            _adminConnectionString = adminConnectionString;
+            _customConenctionString = customConenctionString;
         }
 
         public async Task<Prescription> CreatePrescription(Prescription prescription)
@@ -50,7 +48,7 @@ namespace PrescriptionService.DAP
 
         public IEnumerable<Patient> GetAllPatients()
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -67,7 +65,7 @@ namespace PrescriptionService.DAP
 
         public  IEnumerable<Pharmacy> GetAllPharmacies()
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -85,7 +83,7 @@ namespace PrescriptionService.DAP
 
         public IEnumerable<Prescription>GetAllPrescriptions()
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -104,7 +102,7 @@ namespace PrescriptionService.DAP
 
         public IEnumerable<Prescription> GetPrescriptionsExpiringLatest(DateOnly expiringDate)
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -154,8 +152,10 @@ namespace PrescriptionService.DAP
         {
             Console.WriteLine($"Get prescriptions for {username.Substring(0,6)}-xxxx");
 
-            using (var connection = new NpgsqlConnection($"Host={_host};Port={_port};Database=prescription_db; Include Error Detail=true;Username={username};Password={password}"))
+            string connString = string.Format(_customConenctionString, username, password);
+            using (var connection = new NpgsqlConnection(connString))
             {
+                
                 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
                 var lookup = new Dictionary<long, Prescription>();
@@ -194,7 +194,7 @@ namespace PrescriptionService.DAP
         public bool MarkPrescriptionWarningSent(long prescriptionId)
         {
             Console.WriteLine($"Mark prescription with id {prescriptionId} as warned about expiration");
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
