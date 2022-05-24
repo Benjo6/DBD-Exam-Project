@@ -17,9 +17,9 @@ namespace Neo4JDataSupplier
                 .ConfigureServices((hostContext,services) =>
                 {
                     var connectionString = "Host=localhost;Port=15432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw";
-                    var host = "localhost";
-                    var port = "5432";
-                    services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(connectionString, host, port));
+                    string customConnString = "Host=localhost;Port=5432;Database=prescription_db;Include Error Detail=true;Username={user};Password={pass}";
+
+                    services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(connectionString, customConnString));
                     services.AddTransient<Neo4jClient>();
                     services.AddSingleton<IGraphClient>(client);
                 }).UseConsoleLifetime();
