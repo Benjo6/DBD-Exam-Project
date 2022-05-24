@@ -24,6 +24,13 @@ namespace PrescriptionService.Controllers
 
         }
 
+        [HttpPost]
+        public Prescription Post([FromBody] Prescription prescription)
+        {
+            var result = _prescriptionRepo.CreatePrescription(prescription);
+            return  result.Result;
+        }
+
 
         [HttpGet(Name = "GetPrescriptions")]
         public IEnumerable<PrescriptionDto> Get()

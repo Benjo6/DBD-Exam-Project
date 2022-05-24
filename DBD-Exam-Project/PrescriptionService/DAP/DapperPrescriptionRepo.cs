@@ -1,8 +1,10 @@
 ﻿using Dapper;
+using lib.DTO;
 using lib.Models;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +21,31 @@ namespace PrescriptionService.DAP
             _connectionString = connectionString;
             _host = host;
             _port = port;
+        }
+
+        public async Task<Prescription> CreatePrescription(Prescription prescription)
+        {
+            var query = @$"INSERT INTO prescriptions.prescription(expiration,expiration_warning_sent,creation,medicine_id,prescribed_by,prescribed_to_cpr,last_administered_by)
+                                                                   VALUES(@expiration,@expiration_warning_sent,@creation,@medicine_id,@prescribed_by,@prescribed_to_cpr,@last_administered_by)";
+            var param = new DynamicParameters();
+            param.Add("@expiration", prescription.Expiration);
+            param.Add("@expiration_warning_sent", prescription.ExpirationWarningSent);
+            param.Add("@creation", DateTime.Now);
+            param.Add("@medicine_id", prescription.MedicineId);
+            param.Add("@prescribed_by", prescription.PrescribedBy);
+            param.Add("@prescribed_to_cpr", prescription.PrescribedToCpr);
+            param.Add("@last_administered_by", prescription.LastAdministeredBy);
+
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+                var result = connection.Query(sql: query, param: param, commandType: CommandType.Text);
+            };
+            Console.WriteLine($"Id:{prescription.Id}");
+
+            return prescription;
         }
 
         public IEnumerable<Patient> GetAllPatients()
@@ -50,7 +77,7 @@ namespace PrescriptionService.DAP
                 var resultList = connection.Query<Pharmacy>(query);
 
 
-                return (IEnumerable<Pharmacy>)resultList;
+                return resultList;
 
 
             }

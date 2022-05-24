@@ -1,4 +1,5 @@
-﻿using lib.Models;
+﻿using lib.DTO;
+using lib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace PrescriptionService.DAP
         public IEnumerable<Patient> GetAllPatients();
         public IEnumerable<Prescription> GetAllPrescriptions();
         public IEnumerable<Pharmacy> GetAllPharmacies();
+        public Task<Prescription> CreatePrescription(Prescription prescription);
+
     }
 
 }

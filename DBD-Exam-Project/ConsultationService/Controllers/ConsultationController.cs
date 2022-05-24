@@ -17,6 +17,7 @@ public class ConsultationController : ControllerBase
         _logger = logger;
         _consultationService = consultationService;
     }
+   
 
     [HttpPost]
     public async Task<IActionResult> CreateConsultation(ConsultationCreationDto consultationDto)

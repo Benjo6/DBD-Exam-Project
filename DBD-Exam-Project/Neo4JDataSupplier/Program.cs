@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Configuration;
 using System.Threading.Tasks;
+using ConsultationService;
+using ConsultationService.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Neo4jClient;
@@ -16,6 +19,8 @@ namespace Neo4JDataSupplier
             var builder = Host.CreateDefaultBuilder()
                 .ConfigureServices((hostContext,services) =>
                 {
+                   //services.Configure<DatabaseSettings>(Configuration.GetSection("ConnectionStrings"));
+                    services.AddScoped<IConsultationService, MongoConsultationService>();
                     var connectionString = "Host=localhost;Port=15432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw";
                     var host = "localhost";
                     var port = "5432";
