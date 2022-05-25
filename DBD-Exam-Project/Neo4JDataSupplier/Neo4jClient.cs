@@ -3,13 +3,10 @@ using Neo4jClient;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using lib.Models;
-using System;
-using PrescriptionService.Controllers;
 using lib.DTO;
-using PrescriptionService.DAP;
 using System.Net.Http;
 using Newtonsoft.Json;
-using ConsultationService.Entities;
+using PrescriptionService.DAP;
 
 namespace Neo4JDataSupplier
 {
