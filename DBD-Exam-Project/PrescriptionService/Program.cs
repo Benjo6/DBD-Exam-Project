@@ -24,6 +24,7 @@ RedisCacheConfig settings = builder.Configuration.GetSection(RedisCacheConfig.Co
 builder.Services.AddSingleton(ConnectionMultiplexer.Connect(settings.EndPoints));
 
 builder.Services.AddScoped<IPrescriptionCache, PrescriptionCache>();
+builder.Services.AddScoped<IPrescriptionStorage, PrescriptionStorage>();
 
 builder.Services.AddNpgsql<PostgresContext>(builder.Configuration.GetConnectionString("postgres_admin"));
 builder.Services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(adminConnString, customConnString));
