@@ -6,17 +6,14 @@ using lib.Models;
 using lib.DTO;
 using System.Net.Http;
 using Newtonsoft.Json;
-using PrescriptionService.DAP;
 
 namespace Neo4JDataSupplier
 {
     public class Neo4jClient
     {
         private readonly IGraphClient _client;
-        private readonly IPrescriptionRepo _repo;
-        public Neo4jClient(IGraphClient client, IPrescriptionRepo repo)
+        public Neo4jClient(IGraphClient client)
         {
-            _repo = repo;
             _client = client;
         }
 
@@ -25,7 +22,7 @@ namespace Neo4JDataSupplier
             //await Prescription();
             await Patient();
             await Pharmacies();
-            //await Consultations();
+            await Consultations();
             return "Task Completed";
         }
 
