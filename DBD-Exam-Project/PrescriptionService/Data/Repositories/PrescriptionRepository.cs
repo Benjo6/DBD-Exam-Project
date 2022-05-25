@@ -12,8 +12,8 @@ public interface IPrescriptionRepository: IAsyncRepository<Prescription, long>
 
 public class PrescriptionRepository: BaseAsyncRepository<Prescription, long>, IPrescriptionRepository
 {
-    public PrescriptionRepository(DbContext dbContext, DbSet<Prescription> contextCollection) 
-        : base(dbContext, contextCollection) { }
+    public PrescriptionRepository(PostgresContext dbContext) 
+        : base(dbContext, dbContext.Prescriptions) { }
 
     public IEnumerable<Prescription> GetAllExpired()
         => ContextCollection

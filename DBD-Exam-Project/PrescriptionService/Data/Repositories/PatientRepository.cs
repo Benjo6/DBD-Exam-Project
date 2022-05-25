@@ -5,7 +5,7 @@ namespace PrescriptionService.Data.Repositories;
 
 public class PatientRepository : BaseAsyncRepository<Patient>
 {
-    public PatientRepository(DbContext dbContext, DbSet<Patient> contextCollection) : base(dbContext, contextCollection)
+    public PatientRepository(PostgresContext dbContext) : base(dbContext, dbContext.Patients)
     {
     }
 }
