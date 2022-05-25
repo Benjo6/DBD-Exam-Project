@@ -18,11 +18,11 @@ builder.Services.AddSwaggerGen();
 string adminConnString = builder.Configuration.GetConnectionString("postgres_admin");
 string customConnString = builder.Configuration.GetConnectionString("postgres_custom_user");
 
+builder.Services.AddNpgsql<PostgresContext>(builder.Configuration.GetConnectionString("postgres_admin"));
 builder.Services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(adminConnString, customConnString));
 builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
 builder.Services.AddScoped<IAsyncRepository<Patient>, PatientRepository>();
 builder.Services.AddScoped<IAsyncRepository<Pharmacy>, PharmacyRepository>();
-
 
 
 var app = builder.Build();
