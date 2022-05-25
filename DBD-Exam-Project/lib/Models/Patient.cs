@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace lib.Models;
 
 [Table("patient", Schema = "prescriptions")]
-public class Patient
+public class Patient: EntityWithId<int>
 {
     public Patient(string cpr, PersonalDatum personalData, List<Prescription> prescriptions)
     {

@@ -7,22 +7,45 @@ using System.Threading.Tasks;
 
 namespace PrescriptionService.Util
 {
-    public class PrescriptionMapper
+    public class DtoMapper
     {
         public static PrescriptionDto ToDto(Prescription prescription)
-        {
-            var dto = new PrescriptionDto();
+            => new PrescriptionDto
+            {
+                Creation = prescription.Creation,
+            Expiration = prescription.Expiration,
+            Patient = new PatientDto
+            {
+                FirstName = prescription.PrescribedToNavigation.PersonalData.FirstName,
+                LastName = prescription.PrescribedToNavigation.PersonalData.LastName,
+                Email = prescription.PrescribedToNavigation.PersonalData.Email ?? "",
+            },
+            Medicine = new MedicineDto {
+                Name = prescription.Medicine.Name
+            }
+        };
 
-            dto.Creation = prescription.Creation;
-            dto.Expiration = prescription.Expiration;
-            dto.Patient = new PatientDto();
-            dto.Patient.FirstName = prescription.PrescribedToNavigation?.PersonalData?.FirstName;
-            dto.Patient.LastName = prescription.PrescribedToNavigation?.PersonalData?.LastName;
-            dto.Patient.Email = prescription.PrescribedToNavigation?.PersonalData?.Email;
-            dto.Medicine = new MedicineDto();
-            dto.Medicine.Name = prescription.Medicine?.Name;
+        public static PatientDto ToDto(Patient patient)
+            => new PatientDto
+            {
+                Email = patient.PersonalData.Email ?? "",
+                FirstName = patient.PersonalData.FirstName,
+                LastName = patient.PersonalData.LastName,
+                Id = patient.Id
+            };
 
-            return dto;
-        }
+        public static PharmacyDto ToDto(Pharmacy pharmacy)
+            => new PharmacyDto
+            {
+                Id = pharmacy.Id,
+                Name = pharmacy.PharmacyName,
+                Address = pharmacy.Address != null ? new AddressDto
+                {
+                    Id = pharmacy.Address.Id,
+                    StreetName = pharmacy.Address.StreetName,
+                    StreetNumber = pharmacy.Address.StreetNumber,
+                    ZipCode = pharmacy.Address.ZipCode
+                } : new(),
+            };
     }
 }

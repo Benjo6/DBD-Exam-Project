@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PrescriptionService.Data;
+using PrescriptionService.Data.Repositories;
 
 namespace PrescriptionService.Controllers
 {
@@ -16,61 +18,72 @@ namespace PrescriptionService.Controllers
     [ApiController]
     public class PrescriptionController : ControllerBase
     {
-        private readonly IPrescriptionRepo _prescriptionRepo;
+        private readonly IPrescriptionRepository _prescriptionRepository;
+        private readonly IAsyncRepository<Patient> _patientRepository;
+        private readonly IAsyncRepository<Pharmacy> _pharmacyRepository;
 
-        public PrescriptionController(IPrescriptionRepo prescriptionRepo)
+        public PrescriptionController(
+            IPrescriptionRepository prescriptionRepository, 
+            IAsyncRepository<Patient> patientRepository,
+            IAsyncRepository<Pharmacy> pharmacyRepository)
         {
-            _prescriptionRepo = prescriptionRepo;
-
+            _prescriptionRepository = prescriptionRepository;
+            _patientRepository = patientRepository;
+            _pharmacyRepository = pharmacyRepository;
         }
 
         [HttpPost]
-        public Prescription Post([FromBody] Prescription prescription)
-        {
-            var result = _prescriptionRepo.CreatePrescription(prescription);
-            return  result.Result;
-        }
+        public async Task<Prescription> Post([FromBody] Prescription prescription)
+            => await _prescriptionRepository.Create(prescription);
 
 
         [HttpGet(Name = "GetPrescriptions")]
         public IEnumerable<PrescriptionDto> Get()
-        {
-            var result = _prescriptionRepo.GetPrescriptionsExpiringLatest(DateOnly.FromDateTime(DateTime.Now.AddDays(7))).Select(x => PrescriptionMapper.ToDto(x));
-            return result;
-        }
+            => _prescriptionRepository
+                .GetAllExpired()
+                .Select(DtoMapper.ToDto);
+        
 
         [HttpGet("{username}/{password}")]
         public IEnumerable<PrescriptionDto> GetForPatient(string username, string password)
-        {
-            var result = _prescriptionRepo.GetPrescriptionsForUser(username, password).Select(x => PrescriptionMapper.ToDto(x));
-            return result;
-        }
+            => _prescriptionRepository
+                .GetAllForPatient(username)
+                .Select(DtoMapper.ToDto);
+        
         [HttpGet("patient")]
-        public IEnumerable<Patient> GetAllPatients()
-        {
-            var result = _prescriptionRepo.GetAllPatients();
-            return result;
-        }
+        public IEnumerable<PatientDto> GetAllPatients()
+            => _patientRepository
+                .GetAll()
+                .Select(DtoMapper.ToDto)
+                .ToEnumerable();
 
         [HttpGet("prescriptions")]
         public IEnumerable<PrescriptionDto> GetAllPrescriptions()
-        {
-            var result = _prescriptionRepo.GetAllPrescriptions().Select(x => PrescriptionMapper.ToDto(x));
-            return result;
-        }
+            => _prescriptionRepository
+                .GetAll()
+                .Select(DtoMapper.ToDto)
+                .ToEnumerable();
+
 
         [HttpGet("pharmacy")]
-        public IEnumerable<Pharmacy> GetAllPharmacies()
-        {
-            var result = _prescriptionRepo.GetAllPharmacies();
-            return result;
-        }
+        public IEnumerable<PharmacyDto> GetAllPharmacies()
+            => _pharmacyRepository
+                .GetAll()
+                .Select(DtoMapper.ToDto)
+                .ToEnumerable();
 
         [HttpPut("{id}")]
-        public bool Update(long id)
+        public async Task<bool> Update(long id)
         {
-            var result = _prescriptionRepo.MarkPrescriptionWarningSent(id);
-            return result;
+            //var result = _prescriptionRepo.MarkPrescriptionWarningSent(id);
+            var result = await _prescriptionRepository.Get(id);
+            if (result is null)
+                return false;
+
+            result.ExpirationWarningSent = true;
+            await _prescriptionRepository.Update(result);
+
+            return true;
         }
     }
 }

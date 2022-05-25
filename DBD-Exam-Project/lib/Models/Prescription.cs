@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace lib.Models;
 
 [Table("prescription", Schema = "prescriptions")]
-public class Prescription
+public class Prescription: EntityWithId<long>
 {
     public Prescription(Medicine medicine, Doctor prescribedByNavigation, Patient prescribedToNavigation)
     {
