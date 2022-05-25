@@ -1,3 +1,4 @@
+using lib.Configurations;
 using lib.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using PrescriptionService.DAP;
 using PrescriptionService.Data;
 using PrescriptionService.Data.Repositories;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,11 @@ builder.Services.AddSwaggerGen();
 
 string adminConnString = builder.Configuration.GetConnectionString("postgres_admin");
 string customConnString = builder.Configuration.GetConnectionString("postgres_custom_user");
+
+RedisCacheConfig settings = builder.Configuration.GetSection(RedisCacheConfig.ConfigKey).Get<RedisCacheConfig>();
+builder.Services.AddSingleton(ConnectionMultiplexer.Connect(settings.EndPoints));
+
+builder.Services.AddScoped<IPrescriptionCache, PrescriptionCache>();
 
 builder.Services.AddNpgsql<PostgresContext>(builder.Configuration.GetConnectionString("postgres_admin"));
 builder.Services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(adminConnString, customConnString));
