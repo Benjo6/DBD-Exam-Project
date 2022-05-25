@@ -7,13 +7,6 @@ namespace lib.Models;
 [Table("prescription", Schema = "prescriptions")]
 public class Prescription: EntityWithId<long>
 {
-    public Prescription(Medicine medicine, Doctor prescribedByNavigation, Patient prescribedToNavigation)
-    {
-        Medicine = medicine;
-        PrescribedByNavigation = prescribedByNavigation;
-        PrescribedToNavigation = prescribedToNavigation;
-    }
-
     [Column("id"), Key]
     public long Id { get; set; }
     [Column("expiration")]
@@ -34,7 +27,7 @@ public class Prescription: EntityWithId<long>
     public int? LastAdministeredBy { get; set; }
 
     public Pharmaceut? LastAdministeredByNavigation { get; set; }
-    public Medicine Medicine { get; set; }
-    public Doctor PrescribedByNavigation { get; set; }
-    public Patient PrescribedToNavigation { get; set; }
+    public Medicine Medicine { get; set; } = null!;
+    public Doctor PrescribedByNavigation { get; set; } = null!;
+    public Patient PrescribedToNavigation { get; set; } = null!;
 }

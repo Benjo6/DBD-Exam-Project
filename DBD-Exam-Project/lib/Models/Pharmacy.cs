@@ -7,10 +7,9 @@ namespace lib.Models;
 [Table("pharmacy", Schema = "prescriptions")]
 public class Pharmacy: EntityWithId<int>
 {
-    public Pharmacy(string pharmacyName, List<Pharmaceut> pharamceuts)
+    public Pharmacy(string pharmacyName)
     {
         PharmacyName = pharmacyName;
-        Pharamceuts = pharamceuts;
     }
 
     [Column("id"), Key]
@@ -21,5 +20,5 @@ public class Pharmacy: EntityWithId<int>
     public int? AddressId { get; set; }
 
     public Address? Address { get; set; }
-    public List<Pharmaceut> Pharamceuts { get; set; }
+    public List<Pharmaceut> Pharamceuts { get; set; } = new();
 }

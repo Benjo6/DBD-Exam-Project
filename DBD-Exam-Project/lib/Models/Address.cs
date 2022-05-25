@@ -16,15 +16,13 @@ public class Address
     [Column("zipcode"), MaxLength(32)]
     public string ZipCode { get; set; }
 
-    public List<PersonalDatum> PersonalData { get; set; }
-    public List<Pharmacy> Pharmacies { get; set; }
+    public List<PersonalDatum> PersonalData { get; set; } = new();
+    public List<Pharmacy> Pharmacies { get; set; } = new();
 
-    public Address(string streetName, string streetNumber, string zipCode, List<PersonalDatum> personalData, List<Pharmacy> pharmacies)
+    public Address(string streetName, string streetNumber, string zipCode)
     {
         StreetName = streetName;
         StreetNumber = streetNumber;
         ZipCode = zipCode;
-        PersonalData = personalData;
-        Pharmacies = pharmacies;
     }
 }

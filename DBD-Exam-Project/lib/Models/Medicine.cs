@@ -7,16 +7,15 @@ namespace lib.Models;
 [Table("medicine", Schema = "prescriptions")]
 public class Medicine
 {
-    public Medicine(string name, List<Prescription> prescriptions)
+    public Medicine(string name)
     {
         Name = name;
-        Prescriptions = prescriptions;
     }
 
     [Column("id"), Key]
     public int Id { get; set; }
     [Column("name"), MaxLength(64)]
     public string Name { get; set; }
-        
-    public List<Prescription> Prescriptions { get; set; }
+
+    public List<Prescription> Prescriptions { get; set; } = new();
 }

@@ -7,11 +7,9 @@ namespace lib.Models;
 [Table("patient", Schema = "prescriptions")]
 public class Patient: EntityWithId<int>
 {
-    public Patient(string cpr, PersonalDatum personalData, List<Prescription> prescriptions)
+    public Patient(string cpr)
     {
         Cpr = cpr;
-        PersonalData = personalData;
-        Prescriptions = prescriptions;
     }
 
     [Column("id"), Key]
@@ -21,6 +19,6 @@ public class Patient: EntityWithId<int>
     [Column("personal_data_id")]
     public int PersonalDataId { get; set; }
 
-    public virtual PersonalDatum PersonalData { get; set; }
-    public virtual List<Prescription> Prescriptions { get; set; }
+    public virtual PersonalDatum PersonalData { get; set; } = null!;
+    public virtual List<Prescription> Prescriptions { get; set; } = new();
 }

@@ -7,13 +7,10 @@ namespace lib.Models;
 [Table("personal_data", Schema = "prescriptions")]
 public class PersonalDatum
 {
-    public PersonalDatum(string firstName, string lastName, List<Doctor> doctors, List<Patient> patients, List<Pharmaceut> pharmaceuts)
+    public PersonalDatum(string firstName, string lastName)
     {
         FirstName = firstName;
         LastName = lastName;
-        Doctors = doctors;
-        Patients = patients;
-        Pharmaceuts = pharmaceuts;
     }
 
     [Column("id"), Key]
@@ -34,7 +31,7 @@ public class PersonalDatum
     public Address? Address { get; set; }
     public LoginInfo? Login { get; set; }
     public UserRole? Role { get; set; }
-    public List<Doctor> Doctors { get; set; }
-    public List<Patient> Patients { get; set; }
-    public List<Pharmaceut> Pharmaceuts { get; set; }
+    public List<Doctor> Doctors { get; set; } = new();
+    public List<Patient> Patients { get; set; } = new();
+    public List<Pharmaceut> Pharmaceuts { get; set; } = new();
 }
