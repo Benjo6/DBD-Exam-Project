@@ -9,21 +9,21 @@ namespace ConsultationService.Entities;
 public class ConsultationEntity
 {
 
-    [BsonIgnoreIfNullAttribute]
+    [BsonIgnoreIfNull]
     public DateTime? ConsultationStartUtc { get; set; }
-    [BsonIgnoreIfNullAttribute]
+    [BsonIgnoreIfNull]
     public DateTime CreatedUtc { get; set; }
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? ConsultationId { get; set; }
 
-    [BsonIgnoreIfNullAttribute]
+    [BsonIgnoreIfNull]
     public string? PatientId { get; set; }
-    [BsonIgnoreIfNullAttribute]
+    [BsonIgnoreIfNull]
     public string? DoctorId { get; set; }
-    [BsonIgnoreIfNullAttribute]
+    [BsonIgnoreIfNull]
     public string? Regarding { get; set; }
-    [BsonIgnoreIfNullAttribute]
+    [BsonIgnoreIfNull]
     public GeoJsonPoint<GeoJson2DCoordinates> Location { get; set; }
 }

@@ -1,0 +1,1 @@
+db.consultations.createIndex( { Location : "2dsphere" } )
