@@ -37,10 +37,10 @@ public class ConsultationController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("booking/{longitude}/{latitude}/{distanceKm}")]
-    public async Task<IActionResult> GetConsultationBookings(double longitude, double latitude, int distanceKm)
+    [HttpGet("booking/{longitude}/{latitude}/{distanceMeters}")]
+    public async Task<IActionResult> GetConsultationBookings(double longitude, double latitude, int distanceMeters)
     {
-        var result = await _consultationService.GetConsultationsOpenForBookingAsync(new GeoPointDto(longitude, latitude), distanceKm);
+        var result = await _consultationService.GetConsultationsOpenForBookingAsync(new GeoPointDto(longitude, latitude), distanceMeters);
         if (result == null)
             return NotFound();
 

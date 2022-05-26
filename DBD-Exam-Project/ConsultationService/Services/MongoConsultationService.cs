@@ -113,18 +113,16 @@ namespace ConsultationService.Services
             return consultationEntity.Select(ConsultationMapper.ToDto);
         }
 
-        public IEnumerable<ConsultationDto> GetConsultationsOpenForBooking(GeoPointDto position, int distanceKm)
+        public IEnumerable<ConsultationDto> GetConsultationsOpenForBooking(GeoPointDto position, int distanceMeters)
         {
-            return GetConsultationsOpenForBookingAsync(position, distanceKm).Result;
+            return GetConsultationsOpenForBookingAsync(position, distanceMeters).Result;
         }
 
-        public async Task<IEnumerable<ConsultationDto>> GetConsultationsOpenForBookingAsync(GeoPointDto position, int distance)
+        public async Task<IEnumerable<ConsultationDto>> GetConsultationsOpenForBookingAsync(GeoPointDto position, int distanceMeters)
         {
             var builder = Builders<ConsultationEntity>.Filter;
-            // Set center point to Magnolia Bakery on Bleecker Street
             var point = GeoJson.Point(GeoJson.Position(position.Longitude, position.Latitude));
-            // Create geospatial query that searches for restaurants at most 10,000 meters away
-            var filter = builder.Near(x => x.Location, point, maxDistance: distance) & Builders<ConsultationEntity>.Filter.Eq(x => x.PatientId, null) & Builders<ConsultationEntity>.Filter.Exists(x => x.ConsultationStartUtc);
+            var filter = builder.Near(x => x.Location, point, maxDistance: distanceMeters) & Builders<ConsultationEntity>.Filter.Eq(x => x.PatientId, null) & Builders<ConsultationEntity>.Filter.Exists(x => x.ConsultationStartUtc);
 
             var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(filter).ToListAsync();
             return consultationEntity.Select(ConsultationMapper.ToDto);
