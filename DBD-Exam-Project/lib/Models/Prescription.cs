@@ -1,26 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace lib.Models
+namespace lib.Models;
+
+[Table("prescription", Schema = "prescriptions")]
+public class Prescription: EntityWithId<long>
 {
-    public partial class Prescription
-    {
-        public long Id { get; set; }
-        public DateOnly? Expiration { get; set; }
-        public bool ExpirationWarningSent { get; set; }
-        public DateTime Creation { get; set; }
-        public int MedicineId { get; set; }
-        public int PrescribedBy { get; set; }
-        public int PrescribedTo { get; set; }
-        public string PrescribedToCpr { get; set; } = null!;
-        public int? LastAdministeredBy { get; set; }
+    [Column("id"), Key]
+    public long Id { get; set; }
+    [Column("expiration")]
+    public DateOnly? Expiration { get; set; }
+    [Column("expiration_warning_sent")]
+    public bool ExpirationWarningSent { get; set; }
+    [Column("creation", TypeName = "timestamp without time zone")]
+    public DateTime Creation { get; set; }
+    [Column("medicine_id")]
+    public int MedicineId { get; set; }
+    [Column("prescribed_by")]
+    public int PrescribedBy { get; set; }
+    [Column("prescribed_to")]
+    public int PrescribedTo { get; set; }
+    [Column("prescribed_to_cpr")]
+    public string PrescribedToCpr { get; set; } = null!;
+    [Column("last_administered_by")]
+    public int? LastAdministeredBy { get; set; }
 
-        public virtual Pharmaceut? LastAdministeredByNavigation { get; set; }
-        public virtual Medicine Medicine { get; set; } = null!;
-        public virtual Doctor PrescribedByNavigation { get; set; } = null!;
-        public virtual Patient PrescribedToNavigation { get; set; } = null!;
-    }
+    public Pharmaceut? LastAdministeredByNavigation { get; set; }
+    public Medicine? Medicine { get; set; }
+    public Doctor? PrescribedByNavigation { get; set; }
+    public Patient? PrescribedToNavigation { get; set; }
 }

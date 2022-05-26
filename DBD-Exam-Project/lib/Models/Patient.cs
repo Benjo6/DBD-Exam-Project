@@ -1,23 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace lib.Models
+namespace lib.Models;
+
+[Table("patient", Schema = "prescriptions")]
+public class Patient: EntityWithId<int>
 {
-    public partial class Patient
+    public Patient(string cpr)
     {
-        public Patient()
-        {
-            Prescriptions = new HashSet<Prescription>();
-        }
-
-        public int Id { get; set; }
-        public string Cpr { get; set; } = null!;
-        public int PersonalDataId { get; set; }
-
-        public virtual PersonalDatum PersonalData { get; set; } = null!;
-        public virtual ICollection<Prescription> Prescriptions { get; set; }
+        Cpr = cpr;
     }
+
+    [Column("id"), Key]
+    public int Id { get; set; }
+    [Column("cpr"), MaxLength(10)]
+    public string Cpr { get; set; }
+    [Column("personal_data_id")]
+    public int PersonalDataId { get; set; }
+
+    public virtual PersonalDatum PersonalData { get; set; } = null!;
+    public virtual List<Prescription> Prescriptions { get; set; } = new();
 }
