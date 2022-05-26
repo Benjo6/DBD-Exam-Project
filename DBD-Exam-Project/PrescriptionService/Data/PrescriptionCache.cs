@@ -8,10 +8,10 @@ namespace PrescriptionService.Data;
 
 public class PrescriptionCache: IPrescriptionCache
 {
-    private readonly ConnectionMultiplexer _connection;
+    private readonly IConnectionMultiplexer _connection;
     private readonly TimeSpan? _retentionTimeSec;
 
-    public PrescriptionCache(ConnectionMultiplexer connection, IOptionsSnapshot<RedisCacheConfig> redisConfig)
+    public PrescriptionCache(IConnectionMultiplexer connection, IOptionsSnapshot<RedisCacheConfig> redisConfig)
     {
         _connection = connection;
         _retentionTimeSec = redisConfig.Value.RetentionTimeSec > 0 ? TimeSpan.FromSeconds(redisConfig.Value.RetentionTimeSec) : null;

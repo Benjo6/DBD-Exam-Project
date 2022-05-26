@@ -1,4 +1,6 @@
+using AutoMapper;
 using lib.Configurations;
+using lib.DTO;
 using lib.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +23,7 @@ string adminConnString = builder.Configuration.GetConnectionString("postgres_adm
 string customConnString = builder.Configuration.GetConnectionString("postgres_custom_user");
 
 RedisCacheConfig settings = builder.Configuration.GetSection(RedisCacheConfig.ConfigKey).Get<RedisCacheConfig>();
-builder.Services.AddSingleton(ConnectionMultiplexer.Connect(settings.EndPoints));
+builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(settings.EndPoints));
 
 builder.Services.AddScoped<IPrescriptionCache, PrescriptionCache>();
 builder.Services.AddScoped<IPrescriptionStorage, PrescriptionStorage>();
@@ -32,6 +34,27 @@ builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
 builder.Services.AddScoped<IAsyncRepository<Patient>, PatientRepository>();
 builder.Services.AddScoped<IAsyncRepository<Pharmacy>, PharmacyRepository>();
 
+builder.Services.AddSingleton<IMapper>(
+    new Mapper(
+        new MapperConfiguration(
+            cfg =>
+            {
+                cfg.CreateMap<Prescription, PrescriptionDto>()
+                    .ForMember(dist => dist.Patient, opt => opt.MapFrom(src => src.PrescribedToNavigation))
+                    .ReverseMap();
+                cfg.CreateMap<Medicine, MedicineDto>()
+                    .ReverseMap();
+                cfg.CreateMap<Patient, PatientDto>()
+                    .ForMember(dist => dist.FirstName, opt => opt.MapFrom(src => src.PersonalData.FirstName))
+                    .ForMember(dist => dist.LastName, opt => opt.MapFrom(src => src.PersonalData.LastName))
+                    .ForMember(dist => dist.Email, opt => opt.MapFrom(src => src.PersonalData.Email))
+                    .ReverseMap();
+                cfg.CreateMap<Address, AddressDto>()
+                    .ReverseMap();
+                cfg.CreateMap<Pharmacy, PharmacyDto>()
+                    .ForMember(dist => dist.Name, opt => opt.MapFrom(src => src.PharmacyName))
+                    .ReverseMap();
+            })));
 
 var app = builder.Build();
 
