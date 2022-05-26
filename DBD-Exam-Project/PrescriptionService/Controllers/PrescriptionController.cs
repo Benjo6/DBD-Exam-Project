@@ -38,29 +38,33 @@ namespace PrescriptionService.Controllers
 
 
         [HttpGet(Name = "GetPrescriptions")]
-        public IEnumerable<PrescriptionDto> Get()
-            => _prescriptionRepository
+        public async Task<IEnumerable<PrescriptionDto>> Get([FromQuery] int count = 100)
+            => await _prescriptionRepository
                 .GetAllExpired()
-                .Select(DtoMapper.ToDto);
+                .Take(count)
+                .Select(DtoMapper.ToDto)
+                .ToListAsync();
         
 
         [HttpGet("{username}/{password}")]
-        public IEnumerable<PrescriptionDto> GetForPatient(string username, string password)
-            => _prescriptionRepository
+        public async Task<IEnumerable<PrescriptionDto>> GetForPatient(string username, string password)
+            => await _prescriptionRepository
                 .GetAllForPatient(username)
-                .Select(DtoMapper.ToDto);
+                .Select(DtoMapper.ToDto)
+                .ToListAsync();
         
         [HttpGet("patient")]
-        public IEnumerable<PatientDto> GetAllPatients()
-            => _patientRepository
+        public async Task<IEnumerable<PatientDto>> GetAllPatients()
+            => await _patientRepository
                 .GetAll()
                 .Select(DtoMapper.ToDto)
-                .ToEnumerable();
+                .ToListAsync();
 
         [HttpGet("prescriptions")]
-        public IEnumerable<PrescriptionDto> GetAllPrescriptions()
+        public IEnumerable<PrescriptionDto> GetAllPrescriptions([FromQuery] int count = 100)
             => _prescriptionRepository
                 .GetAll()
+                .Take(count)
                 .Select(DtoMapper.ToDto)
                 .ToEnumerable();
 

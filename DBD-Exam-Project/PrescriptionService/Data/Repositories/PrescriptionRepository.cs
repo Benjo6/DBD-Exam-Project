@@ -6,8 +6,8 @@ namespace PrescriptionService.Data;
 
 public interface IPrescriptionRepository: IAsyncRepository<Prescription, long>
 {
-    IEnumerable<Prescription> GetAllExpired();
-    IEnumerable<Prescription> GetAllForPatient(string cprNumber);
+    IAsyncEnumerable<Prescription> GetAllExpired();
+    IAsyncEnumerable<Prescription> GetAllForPatient(string cprNumber);
 }
 
 public class PrescriptionRepository: BaseAsyncRepository<Prescription, long>, IPrescriptionRepository
@@ -15,19 +15,19 @@ public class PrescriptionRepository: BaseAsyncRepository<Prescription, long>, IP
     public PrescriptionRepository(PostgresContext dbContext) 
         : base(dbContext, dbContext.Prescriptions) { }
 
-    public IEnumerable<Prescription> GetAllExpired()
+    public IAsyncEnumerable<Prescription> GetAllExpired()
         => DefaultInclude()
             .Include(x => x.PrescribedToNavigation)
             .Include(x => x.PrescribedToNavigation.PersonalData)
             .Include(x => x.Medicine)
             .Where(x => x.Expiration < DateOnly.FromDateTime(DateTime.Now.AddDays(7)))
             .OrderByDescending(x => x.Expiration)
-            .AsEnumerable();
+            .AsAsyncEnumerable();
 
-    public IEnumerable<Prescription> GetAllForPatient(string cprNumber)
+    public IAsyncEnumerable<Prescription> GetAllForPatient(string cprNumber)
         => DefaultInclude()
             .Include(x => x.Medicine)
             .Where(x => x.PrescribedToCpr == cprNumber)
-            .AsEnumerable();
+            .AsAsyncEnumerable();
 
 }
