@@ -35,7 +35,7 @@ namespace PrescriptionService.DAP
             param.Add("@last_administered_by", prescription.LastAdministeredBy);
 
 
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
