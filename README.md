@@ -17,8 +17,23 @@ This will set up databases and services on the following ports:
 | Consultation Service    | localhost:18080   |              --              |
 
 neo4j
-## mongo
-ConnectionString for local development
+## ConsultationService (mongo)
+Service for creating, booking and retrieving consultations.
+
+When running through docker the service is accessed at http://localhost:18080/
+
+### Example of geolocation
+
+![Creation](/documentation/mongo/consultationcreate.png)
+![Creation Response](/documentation/mongo/consultationcreate_response.png)
+
+When getting bookings available near you, you pass long/lat and distance in meters as path params.
+10.000m will be slightly less than 0.09 latitude, as seen here:
+
+![Success](/documentation/mongo/withinrange.png)
+While >= 0.09 difference will not return a result: 
+
+![No Result](/documentation/mongo/outsiderange.png)
 
 ## postgres
 ### docker
