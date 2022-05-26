@@ -27,7 +27,7 @@ public class Prescription: EntityWithId<long>
     public int? LastAdministeredBy { get; set; }
 
     public Pharmaceut? LastAdministeredByNavigation { get; set; }
-    public Medicine Medicine { get; set; } = null!;
-    public Doctor PrescribedByNavigation { get; set; } = null!;
-    public Patient PrescribedToNavigation { get; set; } = null!;
+    public Medicine? Medicine { get; set; }
+    public Doctor? PrescribedByNavigation { get; set; }
+    public Patient? PrescribedToNavigation { get; set; }
 }

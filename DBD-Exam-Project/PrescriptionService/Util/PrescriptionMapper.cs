@@ -12,18 +12,19 @@ namespace PrescriptionService.Util
         public static PrescriptionDto ToDto(Prescription prescription)
             => new PrescriptionDto
             {
+                Id = prescription.Id,
                 Creation = prescription.Creation,
-            Expiration = prescription.Expiration,
-            Patient = new PatientDto
-            {
-                FirstName = prescription.PrescribedToNavigation.PersonalData.FirstName,
-                LastName = prescription.PrescribedToNavigation.PersonalData.LastName,
-                Email = prescription.PrescribedToNavigation.PersonalData.Email ?? "",
-            },
-            Medicine = new MedicineDto {
-                Name = prescription.Medicine.Name
-            }
-        };
+                Expiration = prescription.Expiration,
+                Patient = prescription.PrescribedToNavigation != null ? new PatientDto
+                {
+                    FirstName = prescription.PrescribedToNavigation.PersonalData.FirstName,
+                    LastName = prescription.PrescribedToNavigation.PersonalData.LastName,
+                    Email = prescription.PrescribedToNavigation.PersonalData.Email ?? ""
+                } : null,
+                Medicine = prescription.Medicine != null ? new MedicineDto {
+                    Name = prescription.Medicine.Name
+                } : null
+            };
 
         public static PatientDto ToDto(Patient patient)
             => new PatientDto
