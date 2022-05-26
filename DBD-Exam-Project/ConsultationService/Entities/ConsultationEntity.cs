@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver.GeoJsonObjectModel;
 
 namespace ConsultationService.Entities;
 
@@ -23,4 +24,6 @@ public class ConsultationEntity
     public string? DoctorId { get; set; }
     [BsonIgnoreIfNullAttribute]
     public string? Regarding { get; set; }
+    [BsonIgnoreIfNullAttribute]
+    public GeoJsonPoint<GeoJson2DCoordinates> Location { get; set; }
 }
