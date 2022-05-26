@@ -24,14 +24,11 @@ public abstract class BaseAsyncRepository<T, IdType> : IAsyncRepository<T, IdTyp
     }
 
     public Task<T?> Get(IdType id)
-        => ContextCollection.FirstOrDefaultAsync(x => x.Id.Equals(id));
+        => DefaultInclude().FirstOrDefaultAsync(x => x.Id.Equals(id));
     
 
     public IAsyncEnumerable<T> GetAll()
-        => CustomQuery().AsAsyncEnumerable();
-
-    public virtual IQueryable<T> CustomQuery()
-        => ContextCollection;
+        => DefaultInclude().AsAsyncEnumerable();
 
     public async Task<T> Create(T entity)
     {
@@ -53,4 +50,7 @@ public abstract class BaseAsyncRepository<T, IdType> : IAsyncRepository<T, IdTyp
         ContextCollection.Remove(entity);
         await Context.SaveChangesAsync();
     }
+
+    protected virtual IQueryable<T> DefaultInclude()
+        => ContextCollection;
 }

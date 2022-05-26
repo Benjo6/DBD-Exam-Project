@@ -16,7 +16,7 @@ public class PrescriptionRepository: BaseAsyncRepository<Prescription, long>, IP
         : base(dbContext, dbContext.Prescriptions) { }
 
     public IEnumerable<Prescription> GetAllExpired()
-        => ContextCollection
+        => DefaultInclude()
             .Include(x => x.PrescribedToNavigation)
             .Include(x => x.PrescribedToNavigation.PersonalData)
             .Include(x => x.Medicine)
@@ -25,8 +25,9 @@ public class PrescriptionRepository: BaseAsyncRepository<Prescription, long>, IP
             .AsEnumerable();
 
     public IEnumerable<Prescription> GetAllForPatient(string cprNumber)
-        => ContextCollection
+        => DefaultInclude()
             .Include(x => x.Medicine)
             .Where(x => x.PrescribedToCpr == cprNumber)
             .AsEnumerable();
+
 }
