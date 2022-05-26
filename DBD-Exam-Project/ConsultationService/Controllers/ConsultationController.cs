@@ -17,6 +17,7 @@ public class ConsultationController : ControllerBase
         _logger = logger;
         _consultationService = consultationService;
     }
+   
 
     [HttpPost]
     public async Task<IActionResult> CreateConsultation(ConsultationCreationDto consultationDto)
@@ -35,7 +36,17 @@ public class ConsultationController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPut("book")]
+    [HttpGet("booking")]
+    public async Task<IActionResult> GetConsultationBookings()
+    {
+        var result = await _consultationService.GetConsultationsOpenForBookingAsync();
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
+    }
+
+    [HttpPut("booking")]
     public async Task<IActionResult> BookConsultation(ConsultationBookingRequestDto consultationDto)
     {
         var result = await _consultationService.BookConsultationAsync(consultationDto);
@@ -54,6 +65,22 @@ public class ConsultationController : ControllerBase
           return NotFound();
 
         return Ok(result);
+    }
+
+    [HttpGet()]
+    public async Task<IActionResult> GetConsultations()
+    {
+        var result = await _consultationService.GetConsultationsAsync();
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
+    }
+
+    [HttpDelete("{consultationId}")]
+    public async Task<IActionResult> DeleteConsultation(string consultationId)
+    {
+        return Ok(await _consultationService.DeleteConsultationAsync(consultationId));
     }
 
     [HttpGet("patient/{patientId}")]

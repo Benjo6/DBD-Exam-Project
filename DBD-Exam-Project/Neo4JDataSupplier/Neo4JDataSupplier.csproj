@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\lib\lib.csproj" />
-    <ProjectReference Include="..\PrescriptionService\PrescriptionService.csproj" />
   </ItemGroup>
 
 </Project>

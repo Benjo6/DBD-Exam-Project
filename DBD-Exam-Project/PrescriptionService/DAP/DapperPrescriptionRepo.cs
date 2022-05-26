@@ -1,38 +1,61 @@
 ﻿using Dapper;
+using lib.DTO;
 using lib.Models;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PrescriptionService.DAP
 {
     public class DapperPrescriptionRepo : IPrescriptionRepo
     {
-        private string _connectionString;
-        private string _host;
-        private string _port;
+        private readonly string _adminConnectionString;
+        private readonly string _customConenctionString;
 
-        public DapperPrescriptionRepo(string connectionString, string host, string port)
+        public DapperPrescriptionRepo(string adminConnectionString, string customConenctionString)
         {
-            _connectionString = connectionString;
-            _host = host;
-            _port = port;
+            _adminConnectionString = adminConnectionString;
+            _customConenctionString = customConenctionString;
+        }
+
+        public async Task<Prescription> CreatePrescription(Prescription prescription)
+        {
+            var query = @$"INSERT INTO prescriptions.prescription(expiration,expiration_warning_sent,creation,medicine_id,prescribed_by,prescribed_to_cpr,last_administered_by)
+                                                                   VALUES(@expiration,@expiration_warning_sent,@creation,@medicine_id,@prescribed_by,@prescribed_to_cpr,@last_administered_by)";
+            var param = new DynamicParameters();
+            param.Add("@expiration", prescription.Expiration);
+            param.Add("@expiration_warning_sent", prescription.ExpirationWarningSent);
+            param.Add("@creation", DateTime.Now);
+            param.Add("@medicine_id", prescription.MedicineId);
+            param.Add("@prescribed_by", prescription.PrescribedBy);
+            param.Add("@prescribed_to_cpr", prescription.PrescribedToCpr);
+            param.Add("@last_administered_by", prescription.LastAdministeredBy);
+
+
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
+            {
+                DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+                var result = connection.Query(sql: query, param: param, commandType: CommandType.Text);
+            };
+            Console.WriteLine($"Id:{prescription.Id}");
+
+            return prescription;
         }
 
         public IEnumerable<Patient> GetAllPatients()
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-                var lookup = new Dictionary<string, Patient>();
+                var query = @$" SELECT * FROM prescriptions.patient;";
 
-                var query = @$" SELECT pat  FROM prescriptions.patient pat";
+                var resultList = connection.Query<Patient>(query);
 
-
-
-                var resultList = lookup.Values;
                 return resultList;
 
 
@@ -40,38 +63,44 @@ namespace PrescriptionService.DAP
 
         }
 
-        public IEnumerable<Pharmacy> GetAllPharmacies()
+        public  IEnumerable<Pharmacy> GetAllPharmacies()
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-                var lookup = new Dictionary<string, Pharmacy>();
 
-                var query = @$" SELECT pha  FROM prescriptions.pharmacy pha";
+                var query = @$" SELECT id, pharmacy_name, address_id FROM prescriptions.pharmacy;";
+
+                var resultList = connection.Query<Pharmacy>(query);
 
 
-
-                var resultList = lookup.Values;
                 return resultList;
 
 
             }
         }
 
+<<<<<<< HEAD
         public IEnumerable<PrescriptionOut> GetAllPrescriptions()
+=======
+        public IEnumerable<Prescription>GetAllPrescriptions()
+>>>>>>> main
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 DefaultTypeMap.MatchNamesWithUnderscores = true;
 
+<<<<<<< HEAD
                 var lookup = new Dictionary<string, PrescriptionOut>();
 
                 var query = @$" SELECT pr  FROM prescriptions.prescription pr";
+=======
+>>>>>>> main
 
+                var query = @$" SELECT * FROM prescriptions.prescription;";
 
-
-                var resultList = lookup.Values;
+                var resultList = connection.Query<Prescription>(query);
                 return resultList;
 
 
@@ -81,15 +110,20 @@ namespace PrescriptionService.DAP
 
         
 
+<<<<<<< HEAD
         public IEnumerable<PrescriptionOut> GetPrescriptionsExpiringLatest(DateTime expiringDate)
+=======
+        public IEnumerable<Prescription> GetPrescriptionsExpiringLatest(DateOnly expiringDate)
+>>>>>>> main
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
                 var lookup = new Dictionary<long, PrescriptionOut>();
 
-                var query = @$"
+                var query =
+                    @$"
                         SELECT
                         pr.id, pr.expiration, pr.creation, pr.medicine_id, pr.prescribed_to, pr.expiration_warning_sent,
                         pat.id, pat.personal_data_id,
@@ -106,8 +140,15 @@ namespace PrescriptionService.DAP
 
                 var param = new DynamicParameters();
                 param.Add("@exp", expiringDate.ToString("yyyy-MM-dd"));
+<<<<<<< HEAD
                 connection.Query<PrescriptionOut, Patient, Medicine, PersonalDatum, PrescriptionOut>(query, (pr, pat, med, dat) => {
                     PrescriptionOut prescription;
+=======
+
+
+                connection.Query<Prescription, Patient, Medicine, PersonalDatum, Prescription>(query, (pr, pat, med, dat) => {
+                    Prescription prescription;
+>>>>>>> main
                     if (!lookup.TryGetValue(pr.Id, out prescription))
                         lookup.Add(pr.Id, prescription = pr);
 
@@ -130,8 +171,10 @@ namespace PrescriptionService.DAP
         {
             Console.WriteLine($"Get prescriptions for {username.Substring(0,6)}-xxxx");
 
-            using (var connection = new NpgsqlConnection($"Host={_host};Port={_port};Database=prescription_db; Include Error Detail=true;Username={username};Password={password}"))
+            string connString = string.Format(_customConenctionString, username, password);
+            using (var connection = new NpgsqlConnection(connString))
             {
+                
                 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
                 var lookup = new Dictionary<long, PrescriptionOut>();
@@ -170,7 +213,7 @@ namespace PrescriptionService.DAP
         public bool MarkPrescriptionWarningSent(long prescriptionId)
         {
             Console.WriteLine($"Mark prescription with id {prescriptionId} as warned about expiration");
-            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_adminConnectionString))
             {
                 Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 

@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Configuration;
 using System.Threading.Tasks;
+using ConsultationService;
+using ConsultationService.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Neo4jClient;
+using PrescriptionService.DAP;
 
 namespace Neo4JDataSupplier
 {
@@ -15,6 +19,10 @@ namespace Neo4JDataSupplier
             var builder = Host.CreateDefaultBuilder()
                 .ConfigureServices((hostContext,services) =>
                 {
+                    services.AddScoped<IConsultationService, MongoConsultationService>();
+                    var connectionString = "Host=localhost;Port=15432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw";
+                    string customConnString = "Host=localhost;Port=5432;Database=prescription_db;Include Error Detail=true;Username={user};Password={pass}";
+                    services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(connectionString, customConnString));
                     services.AddTransient<Neo4jClient>();
                     services.AddSingleton<IGraphClient>(client);
                 }).UseConsoleLifetime();

@@ -24,11 +24,18 @@ namespace PrescriptionService.Controllers
 
         }
 
+        [HttpPost]
+        public Prescription Post([FromBody] Prescription prescription)
+        {
+            var result = _prescriptionRepo.CreatePrescription(prescription);
+            return  result.Result;
+        }
+
 
         [HttpGet(Name = "GetPrescriptions")]
         public IEnumerable<PrescriptionDto> Get()
         {
-            var result = _prescriptionRepo.GetPrescriptionsExpiringLatest(DateTime.Now.AddDays(7)).Select(x => PrescriptionMapper.ToDto(x));
+            var result = _prescriptionRepo.GetPrescriptionsExpiringLatest(DateOnly.FromDateTime(DateTime.Now.AddDays(7))).Select(x => PrescriptionMapper.ToDto(x));
             return result;
         }
 
