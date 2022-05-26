@@ -27,7 +27,7 @@ namespace ConsultationService.Services
 
         public async Task<ConsultationDto> BookConsultationAsync(ConsultationBookingRequestDto consultationDto)
         {
-            var consultationEntity = Util.ConsultationMapper.FromDto(consultationDto);
+            var consultationEntity = ConsultationMapper.FromDto(consultationDto);
             var builder = Builders<ConsultationEntity>
             .Update.Set(x => x.PatientId, consultationDto.PatientId)
             .Set(x => x.Regarding, consultationDto.Regarding);
@@ -37,7 +37,7 @@ namespace ConsultationService.Services
             var result = await _database.GetCollection<ConsultationEntity>("consultations").UpdateOneAsync(x =>
             x.ConsultationId == consultationDto.Id && x.PatientId == null
             , builder, options);
-            return result.ModifiedCount > 0 ? Util.ConsultationMapper.ToDto(consultationEntity) : null;
+            return result.ModifiedCount > 0 ? ConsultationMapper.ToDto(consultationEntity) : null;
         }
 
         public ConsultationDto CreateConsultation(ConsultationCreationDto consultationDto)
@@ -49,7 +49,18 @@ namespace ConsultationService.Services
         {
             var consulationEntity = Util.ConsultationMapper.FromDto(consultationDto);
             await _database.GetCollection<ConsultationEntity>("consultations").InsertOneAsync(consulationEntity);
-            return Util.ConsultationMapper.ToDto(consulationEntity);
+            return ConsultationMapper.ToDto(consulationEntity);
+        }
+
+        public bool DeleteConsultation(string id)
+        {
+            return DeleteConsultationAsync(id).Result;
+        }
+
+        public async Task<bool> DeleteConsultationAsync(string id)
+        {
+            var result = await _database.GetCollection<ConsultationEntity>("consultations").DeleteOneAsync(x => x.ConsultationId == id);
+            return result.DeletedCount == 1;
         }
 
         public ConsultationDto GetConsultation(string id)
@@ -63,6 +74,17 @@ namespace ConsultationService.Services
             return ConsultationMapper.ToDto(consultationEntity);
         }
 
+        public IEnumerable<ConsultationDto> GetConsultations()
+        {
+            return GetConsultationsAsync().Result;
+        }
+
+        public async Task<IEnumerable<ConsultationDto>> GetConsultationsAsync()
+        {
+            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(x => true).ToListAsync();
+            return consultationEntity.Select(ConsultationMapper.ToDto);
+        }
+
         public IEnumerable<ConsultationDto> GetConsultationsForDoctor(string doctorId)
         {
             return GetConsultationsForDoctorAsync(doctorId).Result;
@@ -71,7 +93,7 @@ namespace ConsultationService.Services
         public async Task<IEnumerable<ConsultationDto>> GetConsultationsForDoctorAsync(string doctorId)
         {
             var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(x => x.DoctorId == doctorId).ToListAsync();
-            return consultationEntity.Select(entity => ConsultationMapper.ToDto(entity));
+            return consultationEntity.Select(ConsultationMapper.ToDto);
         }
 
         public IEnumerable<ConsultationDto> GetConsultationsForPatient(string patientId)
@@ -83,7 +105,18 @@ namespace ConsultationService.Services
         {
             var filter = Builders<ConsultationEntity>.Filter.Eq("patientId", patientId);
             var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(filter).ToListAsync();
-            return consultationEntity.Select(entity => ConsultationMapper.ToDto(entity));
+            return consultationEntity.Select(ConsultationMapper.ToDto);
+        }
+
+        public IEnumerable<ConsultationDto> GetConsultationsOpenForBooking()
+        {
+            return GetConsultationsOpenForBookingAsync().Result;
+        }
+
+        public async Task<IEnumerable<ConsultationDto>> GetConsultationsOpenForBookingAsync()
+        {
+            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(x => x.PatientId == null && x.ConsultationStartUtc.HasValue).ToListAsync();
+            return consultationEntity.Select(ConsultationMapper.ToDto);
         }
 
         public ConsultationDto UpdateConsultation(ConsultationDto consultationDto)
