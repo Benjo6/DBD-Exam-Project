@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TestDataAPI.Context;
 using TestDataAPI.DAP;
@@ -139,8 +140,9 @@ namespace TestDataAPI.Seeder
                 Console.WriteLine($"Created{i*perIteration} patients");
 
                 patientFaker
-                    .RuleFor(p => p.Cpr, (f, p) => (CreateCpr(f.Person.DateOfBirth.ToString("ddMMyy"))))
+                    .CustomInstantiator(f => new(CreateCpr(f.Person.DateOfBirth.ToString("ddMMyy"))))
                     .RuleFor(p => p.PersonalData, (f, p) => CreatePersonalData("patient", $"{p.Cpr}", "patient"));
+                
                 patients.AddRange(patientFaker.Generate(perIteration));
                 Console.WriteLine($"Patients created in {timer.Elapsed.Seconds} seconds");
             }
@@ -164,16 +166,16 @@ namespace TestDataAPI.Seeder
             Console.WriteLine("Create Medicines");
             var med = new List<Medicine>();
 
-            med.Add(new Medicine() { Name = "Constaticimol" });
-            med.Add(new Medicine() { Name = "Abracadabrasol" });
-            med.Add(new Medicine() { Name = "Fecetiol" });
-            med.Add(new Medicine() { Name = "Gormanol" });
-            med.Add(new Medicine() { Name = "Crapinal" });
-            med.Add(new Medicine() { Name = "Hamigel" });
-            med.Add(new Medicine() { Name = "Docanital" });
-            med.Add(new Medicine() { Name = "Tyfusal" });
-            med.Add(new Medicine() { Name = "Postgresual" });
-            med.Add(new Medicine() { Name = "Databasimal" });
+            med.Add(new Medicine("Constaticimol"));
+            med.Add(new Medicine("Abracadabrasol"));
+            med.Add(new Medicine("Fecetiol"));
+            med.Add(new Medicine("Gormanol"));
+            med.Add(new Medicine("Crapinal"));
+            med.Add(new Medicine("Hamigel"));
+            med.Add(new Medicine("Docanital"));
+            med.Add(new Medicine("Tyfusal"));
+            med.Add(new Medicine("Postgresual"));
+            med.Add(new Medicine("Databasimal"));
 
             return med;
         }
@@ -181,29 +183,24 @@ namespace TestDataAPI.Seeder
         private List<Pharmacy> CreatePharmacies(List<Address> add)
         {
             Console.WriteLine("Create Pharmacies");
-            pharmacyFaker
+            return pharmacyFaker
+                .CustomInstantiator(f =>  new(f.Company.CompanyName()))
                 .RuleFor(p => p.Address, (p, f) => add[addCount++])
-                .RuleFor(p => p.PharmacyName, (f, p) => f.Company.CompanyName());
-
-            return pharmacyFaker.Generate(PHARMACY_COUNT / _divider);
+                .Generate(PHARMACY_COUNT / _divider);
         }
 
         private List<Address> CreateAddresses()
         {
             Console.WriteLine("Create Addresses");
 
-            addFaker
-                .RuleFor(a => a.StreetName, (f, a) => f.Address.StreetName())
-                .RuleFor(a => a.StreetNumber, (f, a) => f.Address.BuildingNumber())
-                .RuleFor(a => a.ZipCode, (f, a) => f.Address.ZipCode("####"));
-
-            return addFaker.Generate(ADDRESS_COUNT / _divider);
+            return addFaker
+                .CustomInstantiator(f => new(f.Address.StreetName(), f.Address.BuildingNumber(), f.Address.ZipCode("####")))
+                .Generate(ADDRESS_COUNT / _divider);
         }
 
         private Patient CreateTestPatient()
         {
-            var patient = new Patient();
-            patient.Cpr = "0011223344";
+            var patient = new Patient("0011223344");
             patient.Prescriptions = new List<Prescription>{
             new Prescription() { MedicineId= 1, PrescribedBy = 1, PrescribedToNavigation = patient, PrescribedToCpr = patient.Cpr, Creation = DateTime.Now}
             };
@@ -216,8 +213,7 @@ namespace TestDataAPI.Seeder
         private PersonalDatum CreatePersonalData(string emailPostfix, string username, string role, string firstname = null)
         {
             var personalDataFaker = new Faker<PersonalDatum>()
-                    .RuleFor(p => p.FirstName, (f, p) => firstname == null ? f.Name.FirstName() : firstname)
-                    .RuleFor(p => p.LastName, (f, p) => f.Name.LastName())
+                    .CustomInstantiator(f => new(firstname ?? f.Name.FirstName(), f.Name.LastName()))
                     .RuleFor(p => p.Email, (f, p) => $"{p.FirstName}@{p.LastName}.emailPostfix")
                     .FinishWith((f, p) => p.Login = CreateLoginInfo(username, p.FirstName.Replace("'", ""), role));
             return personalDataFaker.Generate();
