@@ -1,23 +1,19 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
-#For more information, please see https://aka.ms/containercompat
-
+# syntax=docker/dockerfile:1
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-COPY ["Neo4J/Neo4J.csproj", "Neo4J/"]
-RUN dotnet restore "Neo4J/Neo4J.csproj"
-COPY . .
-WORKDIR "/src/Neo4J"
-RUN dotnet build "Neo4J.csproj" -c Release -o /app/build
+# Copy csproj and restore as distinct layers
+COPY Neo4J/Neo4J.csproj /app/Neo4J/
+COPY lib /app/lib/
+WORKDIR /app/Neo4J
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "Neo4J.csproj" -c Release -o /app/publish
+# Copy everything else and build
+COPY ./ ./
+RUN dotnet publish Neo4J -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS final
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build-env /app/Neo4J/out .
 ENTRYPOINT ["dotnet", "Neo4J.dll"]

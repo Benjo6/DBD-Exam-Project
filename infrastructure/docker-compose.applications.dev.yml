@@ -50,7 +50,7 @@ services:
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
-      - 18091:80
+      - 18092:80
     restart: always
     
 
