@@ -52,6 +52,32 @@ services:
     ports:
       - 18093:80
     restart: always
+
+  ## TestData-Service ##
+  testdata-service:
+    container_name: 'db-exam-testdata-service'
+    build: 
+      context: ../DBD-Exam-Project
+      dockerfile: TestDataAPI/Dockerfile
+    hostname: db-exam-testdata-service
+    mem_limit: 2048m
+    memswap_limit: 6000m
+    ports:
+      - 18094:80
+    restart: always
+
+  ## CronJob-Service ##
+  cronjob-service:
+    container_name: 'db-exam-cronjob-service'
+    build: 
+      context: ../DBD-Exam-Project
+      dockerfile: CronJobService/Dockerfile
+    hostname: db-exam-cronjob-service
+    mem_limit: 2048m
+    memswap_limit: 6000m
+    ports:
+      - 18095:80
+    restart: always
     
 
 

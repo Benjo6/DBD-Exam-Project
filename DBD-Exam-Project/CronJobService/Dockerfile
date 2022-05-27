@@ -10,16 +10,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 # Copy csproj and restore as distinct layers
-COPY RenewalService/RenewalService.csproj /app/RenewalService/
+COPY CronJobService/CronJobService.csproj /app/CronJobService/
 COPY lib /app/lib/
-WORKDIR /app/RenewalService
+WORKDIR /app/CronJobService
 RUN dotnet restore
 
 # Copy everything else and build
 COPY ./ ./
-RUN dotnet publish RenewalService -c Release -o out
+RUN dotnet publish CronJobService -c Release -o out
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "RenewalService.dll"]
+ENTRYPOINT ["dotnet", "CronJobService.dll"]
