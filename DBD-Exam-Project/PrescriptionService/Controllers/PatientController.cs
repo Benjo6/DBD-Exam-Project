@@ -4,6 +4,7 @@ using lib.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PrescriptionService.Data.Repositories;
+using PrescriptionService.Data.Storage;
 using PrescriptionService.Util;
 
 namespace PrescriptionService.Controllers;
@@ -11,19 +12,14 @@ namespace PrescriptionService.Controllers;
 [ApiController]
 public class PatientController : ControllerBase
 {
-    private readonly IAsyncRepository<Patient> _patientRepository;
-    private readonly IMapper _mapper;
+    private readonly IPatientStorage _storage;
 
-    public PatientController(IAsyncRepository<Patient> patientRepository, IMapper mapper)
+    public PatientController(IPatientStorage storage)
     {
-        _patientRepository = patientRepository;
-        _mapper = mapper;
+        _storage = storage;
     }
 
-    [HttpGet("patients")]
+    [HttpGet]
     public async Task<IEnumerable<PatientDto>> GetAllPatients()
-        => await _patientRepository
-            .GetAll()
-            .Select(_mapper.Map<Patient, PatientDto>)
-            .ToListAsync();
+        => await _storage.GetAll();
 }
