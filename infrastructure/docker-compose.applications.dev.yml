@@ -19,7 +19,7 @@ services:
     container_name: 'db-exam-analysis-service'
     build: 
       context: ../DBD-Exam-Project
-      dockerfile: Neo4j/Dockerfile
+      dockerfile: Neo4J/Dockerfile
     hostname: db-exam-analysis-service
     mem_limit: 2048m
     memswap_limit: 6000m
