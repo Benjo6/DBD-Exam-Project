@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lib", "lib\lib.csproj", "{8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenewalService", "RenewalService\RenewalService.csproj", "{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4J", "Neo4J\Neo4J.csproj", "{38B04F15-0C68-442B-AFA6-CF50CB431BAC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailService", "MailService\MailService.csproj", "{6BC26914-408D-49AE-8D60-50D2D7B85382}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDataAPI", "TestDataAPI\TestDataAPI.csproj", "{35E4B0EF-B093-43D0-BE18-9DD633D7769A}"
@@ -17,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsultationService", "Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4JDataSupplier", "Neo4JDataSupplier\Neo4JDataSupplier.csproj", "{EEA48026-F6BF-448F-92C6-836DB77D52A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrescriptionService", "PrescriptionService\PrescriptionService.csproj", "{6F433A28-7B0A-4021-BD44-563E3ED9D140}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrescriptionService", "PrescriptionService\PrescriptionService.csproj", "{6F433A28-7B0A-4021-BD44-563E3ED9D140}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38B04F15-0C68-442B-AFA6-CF50CB431BAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38B04F15-0C68-442B-AFA6-CF50CB431BAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38B04F15-0C68-442B-AFA6-CF50CB431BAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38B04F15-0C68-442B-AFA6-CF50CB431BAC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6BC26914-408D-49AE-8D60-50D2D7B85382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6BC26914-408D-49AE-8D60-50D2D7B85382}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BC26914-408D-49AE-8D60-50D2D7B85382}.Release|Any CPU.ActiveCfg = Release|Any CPU

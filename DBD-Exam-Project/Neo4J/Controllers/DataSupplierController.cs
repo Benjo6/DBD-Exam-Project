@@ -1,29 +1,32 @@
-﻿using Microsoft.Extensions.Logging;
-using Neo4jClient;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using lib.DTO;
 using lib.Models;
-using lib.DTO;
-using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
+using Neo4jClient;
 using Newtonsoft.Json;
-using System;
-using lib.Converter;
-using System.Text.Json;
+using PrescriptionService.Util;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
-namespace Neo4JDataSupplier
+namespace Neo4J.Controllers
 {
-    public class Neo4jClient
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DataSupplierController : ControllerBase
     {
         private readonly IGraphClient _client;
-        public Neo4jClient(IGraphClient client)
+
+        public DataSupplierController(IGraphClient client)
         {
             _client = client;
         }
 
+        [HttpGet("seedall")]
         public async Task<string> Run()
         {
-            await Prescription();
-            await Patient();
+            await Prescriptions();
+            await Patients();
             await Pharmacies();
             await Medicines();
             await Doctors();
@@ -31,13 +34,14 @@ namespace Neo4JDataSupplier
             return "Task Completed";
         }
 
-        public async Task<IEnumerable<Doctor>> Doctors()
+        [HttpGet("doctors")]
+        public async Task<IEnumerable<DoctorDto>> Doctors()
         {
             using (HttpClient client = new HttpClient())
             {
                 string content = await client.GetStringAsync("https://localhost:44346/api/prescription/doctor");
-                IList<Doctor> doctors = JsonConvert.DeserializeObject<IList<Doctor>>(content);
-                foreach (Doctor item in doctors)
+                IList<DoctorDto> doctors = JsonConvert.DeserializeObject<IList<DoctorDto>>(content);
+                foreach (DoctorDto item in doctors)
                 {
                     await _client.Cypher.Merge("(d:D {Id: $dID } )")
                         .OnMatch()
@@ -55,9 +59,10 @@ namespace Neo4JDataSupplier
             }
         }
 
+        [HttpGet("medicines")]
         public async Task<IEnumerable<MedicineDto>> Medicines()
         {
-            using(HttpClient client = new HttpClient())
+            using (HttpClient client = new HttpClient())
             {
                 string content = await client.GetStringAsync("https://localhost:44346/api/prescription/medicine");
                 IList<MedicineDto> medicines = JsonConvert.DeserializeObject<IList<MedicineDto>>(content);
@@ -79,7 +84,8 @@ namespace Neo4JDataSupplier
             }
         }
 
-        public async Task<IEnumerable<PatientDto>> Patient()
+        [HttpGet("patients")]
+        public async Task<IEnumerable<PatientDto>> Patients()
         {
             using (HttpClient client = new HttpClient())
             {
@@ -102,14 +108,15 @@ namespace Neo4JDataSupplier
                 return patients;
             }
         }
-        public async Task<IEnumerable<PrescriptionDto>> Prescription()
+        [HttpGet("prescriptions")]
+        public async Task<IEnumerable<PrescriptionDto>> Prescriptions()
         {
             using (HttpClient client = new HttpClient())
             {
-                var jsonSerializerSettings = new JsonSerializerSettings();
 
                 string content = await client.GetStringAsync("https://localhost:44346/api/prescription/prescriptions");
-                IList<PrescriptionDto> prescriptions = JsonConvert.DeserializeObject<IList<PrescriptionDto>>(content,jsonSerializerSettings);
+                IEnumerable<PrescriptionDto> prescriptions = JsonConvert.DeserializeObject<IEnumerable<PrescriptionDto>>(content);
+                
                 foreach (PrescriptionDto item in prescriptions)
                 {
                     await _client.Cypher.Merge("(p:Prescription {Id: $pID} )")
@@ -127,6 +134,7 @@ namespace Neo4JDataSupplier
                 return prescriptions;
             }
         }
+        [HttpGet("pharmacies")]
         public async Task<IEnumerable<PharmacyDto>> Pharmacies()
         {
             using (HttpClient client = new HttpClient())
@@ -150,6 +158,7 @@ namespace Neo4JDataSupplier
                 return pharmacies;
             }
         }
+        [HttpGet("consultations")]
         public async Task<IEnumerable<ConsultationDto>> Consultations()
         {
             using (HttpClient client = new HttpClient())
@@ -170,6 +179,6 @@ namespace Neo4JDataSupplier
 
                 return consultations;
             }
-        } 
+        }
     }
 }

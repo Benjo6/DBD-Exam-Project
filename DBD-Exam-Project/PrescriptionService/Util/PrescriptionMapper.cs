@@ -34,6 +34,22 @@ namespace PrescriptionService.Util
                 LastName = patient.PersonalData.LastName,
                 Id = patient.Id
             };
+        public static DoctorDto ToDto(Doctor doctor)
+           => new DoctorDto
+           {
+               Email = doctor.PersonalData.Email ?? "",
+               FirstName = doctor.PersonalData.FirstName,
+               LastName = doctor.PersonalData.LastName,
+               Id = doctor.Id
+           };
+
+
+        public static MedicineDto ToDto(Medicine medicine)
+            => new MedicineDto
+            {
+                Id = medicine.Id,
+                Name = medicine.Name
+            };
 
         public static PharmacyDto ToDto(Pharmacy pharmacy)
             => new PharmacyDto

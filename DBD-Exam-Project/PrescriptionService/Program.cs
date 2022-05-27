@@ -1,5 +1,7 @@
+using lib.Converter;
 using lib.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PrescriptionService.DAP;
@@ -11,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -23,6 +29,8 @@ builder.Services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(admi
 builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
 builder.Services.AddScoped<IAsyncRepository<Patient>, PatientRepository>();
 builder.Services.AddScoped<IAsyncRepository<Pharmacy>, PharmacyRepository>();
+builder.Services.AddScoped<IAsyncRepository<Doctor>, DoctorRepository>();
+builder.Services.AddScoped<IAsyncRepository<Medicine>, MedicineRepository>();
 
 
 var app = builder.Build();

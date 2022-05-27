@@ -5,8 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace lib.Models;
 
 [Table("doctor", Schema = "prescriptions")]
-public class Doctor
+public class Doctor : EntityWithId<int>
 {
+
     [Key, Column("id")]  
     public int Id { get; set; }
     [Column("personal_data_id")]

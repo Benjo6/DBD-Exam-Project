@@ -1,6 +1,8 @@
-﻿using System;
+﻿using lib.Converter;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace lib.Models;
 
@@ -10,6 +12,7 @@ public class Prescription: EntityWithId<long>
     [Column("id"), Key]
     public long Id { get; set; }
     [Column("expiration")]
+    [JsonConverter(typeof(DateOnlyJsonConverter))]
     public DateOnly? Expiration { get; set; }
     [Column("expiration_warning_sent")]
     public bool ExpirationWarningSent { get; set; }
