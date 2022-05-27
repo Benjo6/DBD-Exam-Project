@@ -12,8 +12,7 @@ public class Prescription: EntityWithId<long>
     [Column("id"), Key]
     public long Id { get; set; }
     [Column("expiration")]
-    [JsonConverter(typeof(DateOnlyJsonConverter))]
-    public DateOnly? Expiration { get; set; }
+    public DateTime? Expiration { get; set; }
     [Column("expiration_warning_sent")]
     public bool ExpirationWarningSent { get; set; }
     [Column("creation", TypeName = "timestamp without time zone")]

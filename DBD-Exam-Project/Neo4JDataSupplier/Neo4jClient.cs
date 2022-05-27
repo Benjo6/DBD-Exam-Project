@@ -25,6 +25,7 @@ namespace Neo4JDataSupplier
             await Prescription();
             await Patient();
             await Pharmacies();
+            await Pharamceuts();
             await Medicines();
             await Doctors();
             //await Consultations();
@@ -35,7 +36,7 @@ namespace Neo4JDataSupplier
         {
             using (HttpClient client = new HttpClient())
             {
-                string content = await client.GetStringAsync("https://localhost:44346/api/prescription/doctor");
+                string content = await client.GetStringAsync("https://localhost:44346/api/doctor");
                 IList<Doctor> doctors = JsonConvert.DeserializeObject<IList<Doctor>>(content);
                 foreach (Doctor item in doctors)
                 {
@@ -59,7 +60,7 @@ namespace Neo4JDataSupplier
         {
             using(HttpClient client = new HttpClient())
             {
-                string content = await client.GetStringAsync("https://localhost:44346/api/prescription/medicine");
+                string content = await client.GetStringAsync("https://localhost:44346/api/medicine");
                 IList<MedicineDto> medicines = JsonConvert.DeserializeObject<IList<MedicineDto>>(content);
                 foreach (MedicineDto item in medicines)
                 {
@@ -76,6 +77,29 @@ namespace Neo4JDataSupplier
 
 
                 return medicines;
+            }
+        }
+        public async Task<IEnumerable<PharamceutDto>> Pharamceuts()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string content = await client.GetStringAsync("https://localhost:44346/api/pharamceut");
+                IList<PharamceutDto> pharamceuts = JsonConvert.DeserializeObject<IList<PharamceutDto>>(content);
+                foreach (PharamceutDto item in pharamceuts)
+                {
+                    await _client.Cypher.Merge("(p:Pharamceut {Id: $pID } )")
+                        .OnMatch()
+                        .Set("p=$phar")
+                        .OnCreate()
+                        .Set("p=$phar")
+                        .WithParam("phar", item)
+                        .WithParam("pID", item.Id)
+                        .ExecuteWithoutResultsAsync();
+                }
+
+
+
+                return pharamceuts;
             }
         }
 

@@ -21,18 +21,13 @@ namespace PrescriptionService.Controllers
         private readonly IPrescriptionRepository _prescriptionRepository;
         private readonly IAsyncRepository<Patient> _patientRepository;
         private readonly IAsyncRepository<Pharmacy> _pharmacyRepository;
-        private readonly IAsyncRepository<Medicine> _medicineRepository;
-        private readonly IAsyncRepository<Doctor> _doctorRepository;
 
         public PrescriptionController(
             IPrescriptionRepository prescriptionRepository, 
             IAsyncRepository<Patient> patientRepository,
             IAsyncRepository<Pharmacy> pharmacyRepository
-            ,IAsyncRepository<Doctor> doctorRepository,
-            IAsyncRepository<Medicine> medicineRepository)
+           )
         {
-            _doctorRepository = doctorRepository;
-            _medicineRepository = medicineRepository;
             _prescriptionRepository = prescriptionRepository;
             _patientRepository = patientRepository;
             _pharmacyRepository = pharmacyRepository;
@@ -60,25 +55,9 @@ namespace PrescriptionService.Controllers
                 .ToListAsync();
 
 
-        [HttpGet("medicine")]
-        public async Task<IEnumerable<MedicineDto>> GetAllMedicines()
-            => await _medicineRepository
-            .GetAll()
-            .Select(DtoMapper.ToDto)
-            .ToListAsync();
-
-
         [HttpGet("patient")]
         public async Task<IEnumerable<PatientDto>> GetAllPatients()
             => await _patientRepository
-            .GetAll()
-            .Select(DtoMapper.ToDto)
-            .ToListAsync();
-
-
-        [HttpGet("doctor")]
-        public async Task<IEnumerable<DoctorDto>> GetDoctors()
-            => await _doctorRepository
             .GetAll()
             .Select(DtoMapper.ToDto)
             .ToListAsync();
