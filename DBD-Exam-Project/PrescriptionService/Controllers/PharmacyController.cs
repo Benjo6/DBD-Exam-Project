@@ -1,4 +1,5 @@
-﻿using lib.DTO;
+﻿using AutoMapper;
+using lib.DTO;
 using lib.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,16 +12,18 @@ namespace PrescriptionService.Controllers;
 public class PharmacyController : ControllerBase
 {
     private readonly IAsyncRepository<Pharmacy> _pharmacyRepository;
+    private readonly IMapper _mapper;
 
-    public PharmacyController(IAsyncRepository<Pharmacy> pharmacyRepository)
+    public PharmacyController(IAsyncRepository<Pharmacy> pharmacyRepository, IMapper mapper)
     {
         _pharmacyRepository = pharmacyRepository;
+        _mapper = mapper;
     }
 
     [HttpGet("pharmacy")]
     public IEnumerable<PharmacyDto> GetAllPharmacies()
         => _pharmacyRepository
             .GetAll()
-            .Select(DtoMapper.ToDto)
+            .Select(_mapper.Map<Pharmacy, PharmacyDto>)
             .ToEnumerable();
 }
