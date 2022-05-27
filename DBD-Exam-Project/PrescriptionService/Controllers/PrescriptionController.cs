@@ -19,17 +19,11 @@ namespace PrescriptionService.Controllers
     public class PrescriptionController : ControllerBase
     {
         private readonly IPrescriptionRepository _prescriptionRepository;
-        private readonly IAsyncRepository<Patient> _patientRepository;
-        private readonly IAsyncRepository<Pharmacy> _pharmacyRepository;
 
         public PrescriptionController(
-            IPrescriptionRepository prescriptionRepository, 
-            IAsyncRepository<Patient> patientRepository,
-            IAsyncRepository<Pharmacy> pharmacyRepository)
+            IPrescriptionRepository prescriptionRepository)
         {
             _prescriptionRepository = prescriptionRepository;
-            _patientRepository = patientRepository;
-            _pharmacyRepository = pharmacyRepository;
         }
 
         [HttpPost]
@@ -52,13 +46,7 @@ namespace PrescriptionService.Controllers
                 .GetAllForPatient(username)
                 .Select(DtoMapper.ToDto)
                 .ToListAsync();
-        
-        [HttpGet("patient")]
-        public async Task<IEnumerable<PatientDto>> GetAllPatients()
-            => await _patientRepository
-                .GetAll()
-                .Select(DtoMapper.ToDto)
-                .ToListAsync();
+
 
         [HttpGet("prescriptions")]
         public IEnumerable<PrescriptionDto> GetAllPrescriptions([FromQuery] int count = 100)
@@ -68,13 +56,6 @@ namespace PrescriptionService.Controllers
                 .Select(DtoMapper.ToDto)
                 .ToEnumerable();
 
-
-        [HttpGet("pharmacy")]
-        public IEnumerable<PharmacyDto> GetAllPharmacies()
-            => _pharmacyRepository
-                .GetAll()
-                .Select(DtoMapper.ToDto)
-                .ToEnumerable();
 
         [HttpPut("{id}")]
         public async Task<bool> Update(long id)
