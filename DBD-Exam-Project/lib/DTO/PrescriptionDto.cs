@@ -9,11 +9,11 @@ namespace lib.DTO
     public class PrescriptionDto
     {
         public long Id { get; set; }
-        public DateOnly? Expiration { get; set; }
+        public DateTime? Expiration { get; set; }
         public DateTime Creation { get; set; }
         public MedicineDto? Medicine { get; set; }
         public PatientDto? Patient { get; set; }
-
+        public int? DoctorId { get; set; }
 
     }
 

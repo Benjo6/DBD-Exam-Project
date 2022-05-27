@@ -1,16 +1,7 @@
 ﻿using lib.DTO;
-using lib.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using PrescriptionService.DAP;
-using PrescriptionService.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using PrescriptionService.Data;
-using PrescriptionService.Data.Repositories;
+using PrescriptionService.Data.Storage;
+using PrescriptionService.Models;
 
 namespace PrescriptionService.Controllers
 {
@@ -18,76 +9,35 @@ namespace PrescriptionService.Controllers
     [ApiController]
     public class PrescriptionController : ControllerBase
     {
-        private readonly IPrescriptionRepository _prescriptionRepository;
-        private readonly IAsyncRepository<Patient> _patientRepository;
-        private readonly IAsyncRepository<Pharmacy> _pharmacyRepository;
+        private readonly IPrescriptionStorage _storage;
 
-        public PrescriptionController(
-            IPrescriptionRepository prescriptionRepository, 
-            IAsyncRepository<Patient> patientRepository,
-            IAsyncRepository<Pharmacy> pharmacyRepository)
+        public PrescriptionController(IPrescriptionStorage storage)
         {
-            _prescriptionRepository = prescriptionRepository;
-            _patientRepository = patientRepository;
-            _pharmacyRepository = pharmacyRepository;
+            _storage = storage;
         }
 
         [HttpPost]
-        public async Task<Prescription> Post([FromBody] Prescription prescription)
-            => await _prescriptionRepository.Create(prescription);
+        public async Task<PrescriptionDto> Post([FromBody] PrescriptionDto prescription)
+            => await _storage.Create(prescription);
 
 
-        [HttpGet(Name = "GetPrescriptions")]
-        public async Task<IEnumerable<PrescriptionDto>> Get([FromQuery] int count = 100)
-            => await _prescriptionRepository
-                .GetAllExpired()
-                .Take(count)
-                .Select(DtoMapper.ToDto)
-                .ToListAsync();
-        
-
-        [HttpGet("{username}/{password}")]
-        public async Task<IEnumerable<PrescriptionDto>> GetForPatient(string username, string password)
-            => await _prescriptionRepository
-                .GetAllForPatient(username)
-                .Select(DtoMapper.ToDto)
-                .ToListAsync();
-        
-        [HttpGet("patient")]
-        public async Task<IEnumerable<PatientDto>> GetAllPatients()
-            => await _patientRepository
-                .GetAll()
-                .Select(DtoMapper.ToDto)
-                .ToListAsync();
-
-        [HttpGet("prescriptions")]
-        public IEnumerable<PrescriptionDto> GetAllPrescriptions([FromQuery] int count = 100)
-            => _prescriptionRepository
-                .GetAll()
-                .Take(count)
-                .Select(DtoMapper.ToDto)
-                .ToEnumerable();
+        [HttpGet("expired")]
+        public async Task<IEnumerable<PrescriptionDto>> Get([FromQuery] Page pageInfo)
+            => await _storage.GetAll(expired: true, pageInfo);
 
 
-        [HttpGet("pharmacy")]
-        public IEnumerable<PharmacyDto> GetAllPharmacies()
-            => _pharmacyRepository
-                .GetAll()
-                .Select(DtoMapper.ToDto)
-                .ToEnumerable();
+        [HttpGet("cprNumber")]
+        public async Task<IEnumerable<PrescriptionDto>> GetForPatient(string cprNumber, [FromQuery] Page pageInfo)
+            => await _storage.GetAll(cprNumber, pageInfo);
+
+
+        [HttpGet]
+        public async Task<IEnumerable<PrescriptionDto>> GetAllPrescriptions([FromQuery] Page pageInfo)
+            => await _storage.GetAll(pageInfo: pageInfo);
+
 
         [HttpPut("{id}")]
-        public async Task<bool> Update(long id)
-        {
-            //var result = _prescriptionRepo.MarkPrescriptionWarningSent(id);
-            var result = await _prescriptionRepository.Get(id);
-            if (result is null)
-                return false;
-
-            result.ExpirationWarningSent = true;
-            await _prescriptionRepository.Update(result);
-
-            return true;
-        }
+        public async Task<bool> MarkWarningSent(long id)
+            => await _storage.MarkWarningAsSent(id);
     }
 }

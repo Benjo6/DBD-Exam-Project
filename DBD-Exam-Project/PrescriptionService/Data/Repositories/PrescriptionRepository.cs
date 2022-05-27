@@ -1,8 +1,7 @@
 ﻿using lib.Models;
 using Microsoft.EntityFrameworkCore;
-using PrescriptionService.Data.Repositories;
 
-namespace PrescriptionService.Data;
+namespace PrescriptionService.Data.Repositories;
 
 public interface IPrescriptionRepository: IAsyncRepository<Prescription, long>
 {
@@ -20,7 +19,7 @@ public class PrescriptionRepository: BaseAsyncRepository<Prescription, long>, IP
             .Include(x => x.PrescribedToNavigation)
             .Include(x => x.PrescribedToNavigation.PersonalData)
             .Include(x => x.Medicine)
-            .Where(x => x.Expiration < DateOnly.FromDateTime(DateTime.Now.AddDays(7)))
+            .Where(x => x.Expiration < DateTime.Now.AddDays(7))
             .OrderByDescending(x => x.Expiration)
             .AsAsyncEnumerable();
 

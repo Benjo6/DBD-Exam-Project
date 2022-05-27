@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MessagePack;
 
 namespace lib.Models;
 
-[Table("address", Schema = "prescriptions")]
+[Table("address", Schema = "prescriptions"), MessagePackObject(keyAsPropertyName: true)]
 public class Address
 {
-    [Column("id"), Key]
+    [Column("id"), System.ComponentModel.DataAnnotations.Key]
     public int Id { get; set; }
     [Column("streetname"), MaxLength(64)]
     public string StreetName { get; set; }
@@ -16,7 +17,9 @@ public class Address
     [Column("zipcode"), MaxLength(32)]
     public string ZipCode { get; set; }
 
+    [IgnoreMember]
     public List<PersonalDatum> PersonalData { get; set; } = new();
+    [IgnoreMember]
     public List<Pharmacy> Pharmacies { get; set; } = new();
 
     public Address(string streetName, string streetNumber, string zipCode)
