@@ -94,4 +94,16 @@ public class PrescriptionStorage : IPrescriptionStorage
         }
         return _mapper.Map<PrescriptionDto>(pre);
     }
+
+    public async Task<bool> MarkWarningAsSent(long id)
+    {
+        var result = await _repo.Get(id);
+        if (result is null)
+            return false;
+
+        result.ExpirationWarningSent = true;
+        await _repo.Update(result);
+
+        return true;
+    }
 }
