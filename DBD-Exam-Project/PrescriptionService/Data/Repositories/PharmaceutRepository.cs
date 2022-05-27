@@ -8,10 +8,10 @@ namespace PrescriptionService.Data.Repositories
         public PharmaceutRepository(PostgresContext dbContext) : base(dbContext, dbContext.Pharmaceuts) { }
 
         protected override IQueryable<Pharmaceut> DefaultInclude()
-        {
-            return base.DefaultInclude()
-                .Include(p=>p.PersonalData)
-                .Include(p=>p.Pharmacy);
-        }
+            => base.DefaultInclude()
+                .Include(x => x.PersonalData)
+            .Include(x=>x.Pharmacy);
+
+
     }
 }
