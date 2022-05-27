@@ -12,13 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(
-    options =>
-    {
-        options.SerializerSettings.DateParseHandling = Newtonsoft.Json.DateParseHandling.DateTimeOffset;
-        options.SerializerSettings.Converters.Add(new NewtonDateOnlyJsonConverter());
-    });
+builder.Services.AddControllers();
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
