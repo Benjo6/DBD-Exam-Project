@@ -9,15 +9,15 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-WORKDIR /src
-COPY ["RenewalService/RenewalService.csproj", "RenewalService/"]
-RUN dotnet restore "RenewalService/RenewalService.csproj"
-COPY . .
-WORKDIR "/src/RenewalService"
-RUN dotnet build "RenewalService.csproj" -c Release -o /app/build
+# Copy csproj and restore as distinct layers
+COPY RenewalService/RenewalService.csproj /app/RenewalService/
+COPY lib /app/lib/
+WORKDIR /app/RenewalService
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "RenewalService.csproj" -c Release -o /app/publish
+# Copy everything else and build
+COPY ./ ./
+RUN dotnet publish RenewalService -c Release -o out
 
 FROM base AS final
 WORKDIR /app

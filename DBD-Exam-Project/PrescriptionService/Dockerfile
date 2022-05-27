@@ -6,15 +6,15 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["PrescriptionService/PrescriptionService.csproj", "PrescriptionService/"]
-RUN dotnet restore "PrescriptionService/PrescriptionService.csproj"
-COPY . .
-WORKDIR "/src/PrescriptionService"
-RUN dotnet build "PrescriptionService.csproj" -c Release -o /app/build
+# Copy csproj and restore as distinct layers
+COPY PrescriptionService/PrescriptionService.csproj /app/PrescriptionService/
+COPY lib /app/lib/
+WORKDIR /app/PrescriptionService
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "PrescriptionService.csproj" -c Release -o /app/publish
+# Copy everything else and build
+COPY ./ ./
+RUN dotnet publish PrescriptionService -c Release -o out
 
 FROM base AS final
 WORKDIR /app

@@ -9,15 +9,15 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-WORKDIR /src
-COPY ["MailService/MailService.csproj", "MailService/"]
-RUN dotnet restore "MailService/MailService.csproj"
-COPY . .
-WORKDIR "/src/MailService"
-RUN dotnet build "MailService.csproj" -c Release -o /app/build
+# Copy csproj and restore as distinct layers
+COPY MailService/MailService.csproj /app/MailService/
+COPY lib /app/lib/
+WORKDIR /app/MailService
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "MailService.csproj" -c Release -o /app/publish
+# Copy everything else and build
+COPY ./ ./
+RUN dotnet publish MailService -c Release -o out
 
 FROM base AS final
 WORKDIR /app

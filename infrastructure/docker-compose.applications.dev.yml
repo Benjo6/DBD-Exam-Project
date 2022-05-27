@@ -29,11 +29,11 @@ services:
 
   ## Mail-Service ##
   mail-service:
-    container_name: 'db-exam-analysis-service'
+    container_name: 'db-exam-mail-service'
     build: 
       context: ../DBD-Exam-Project
-      dockerfile: Neo4j/Dockerfile
-    hostname: db-exam-analysis-service
+      dockerfile: MailService/Dockerfile
+    hostname: db-exam-mail-service
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
