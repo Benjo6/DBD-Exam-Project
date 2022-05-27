@@ -1,6 +1,7 @@
 using ConsultationService.Services;
 using lib.DTO;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver.GeoJsonObjectModel;
 
 namespace ConsultationService.Controllers;
 
@@ -36,10 +37,10 @@ public class ConsultationController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("booking")]
-    public async Task<IActionResult> GetConsultationBookings()
+    [HttpGet("booking/{longitude}/{latitude}/{distanceMeters}")]
+    public async Task<IActionResult> GetConsultationBookings(double longitude, double latitude, int distanceMeters)
     {
-        var result = await _consultationService.GetConsultationsOpenForBookingAsync();
+        var result = await _consultationService.GetConsultationsOpenForBookingAsync(new GeoPointDto(longitude, latitude), distanceMeters);
         if (result == null)
             return NotFound();
 

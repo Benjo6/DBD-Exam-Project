@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lib", "lib\lib.csproj", "{881CD67F-9BC1-48BE-94CC-E0B4F80C9076}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenewalService", "RenewalService\RenewalService.csproj", "{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CronJobService", "CronJobService\CronJobService.csproj", "{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4J", "Neo4J\Neo4J.csproj", "{38B04F15-0C68-442B-AFA6-CF50CB431BAC}"
 EndProject
@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsultationService", "Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4JDataSupplier", "Neo4JDataSupplier\Neo4JDataSupplier.csproj", "{EEA48026-F6BF-448F-92C6-836DB77D52A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrescriptionService", "PrescriptionService\PrescriptionService.csproj", "{6F433A28-7B0A-4021-BD44-563E3ED9D140}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrescriptionService", "PrescriptionService\PrescriptionService.csproj", "{6F433A28-7B0A-4021-BD44-563E3ED9D140}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
