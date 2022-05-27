@@ -92,7 +92,7 @@ namespace TestDataAPI.Seeder
 
             prescriptionFaker
                 .RuleFor(p => p.Creation, (f, p) => f.Date.Between(DateTime.Now.AddDays(-30), DateTime.Now))
-                .RuleFor(p => p.Expiration, (f, p) => DateOnly.FromDateTime(p.Creation.AddDays(30)))
+                .RuleFor(p => p.Expiration, (f, p) => p.Creation.AddDays(30))
                 .RuleFor(p => p.PrescribedByNavigation, (f, p) => docs[random.Next(docs.Count)])
                 .RuleFor(p => p.PrescribedToNavigation, (f, p) => patients[random.Next(patients.Count)])
                 .RuleFor(p => p.PrescribedToCpr, (f, p) =>
