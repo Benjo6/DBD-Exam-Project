@@ -14,13 +14,18 @@ This will set up databases and services on the following ports:
 | Neo4j                   | localhost:17474   | db-exam-neo4j:17474          |
 | Neo4j                   | localhost:17687   | db-exam-neo4j:17687          |
 | Redis                   | localhost:16379   | db-exam-redis:16379          |
-| Consultation Service    | localhost:18080   |              --              |
+| Consultation Service    | localhost:18090   |              --              |
+| Analysis Service        | localhost:18091   |              --              |
+| Mail Service            | localhost:18092   |              --              |
+| Prescription Service    | localhost:18093   |              --              |
+| Test Data Api           | localhost:18094   |              --              |
+| CronJob Service         | localhost:18095   |              --              |
 
 neo4j
 ## ConsultationService (mongo)
 Service for creating, booking and retrieving consultations.
 
-When running through docker the service is accessed at http://localhost:18080/
+When running through docker the service is accessed at http://localhost:18090/
 
 ### Example of geolocation
 

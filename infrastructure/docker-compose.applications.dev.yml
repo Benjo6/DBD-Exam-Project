@@ -11,7 +11,7 @@ services:
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
-      - 18080:80
+      - 18090:80
     restart: always
 
   ## Analysis ##
@@ -24,7 +24,7 @@ services:
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
-      - 18090:80
+      - 18091:80
     restart: always
 
   ## Mail-Service ##
@@ -37,7 +37,7 @@ services:
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
-      - 18091:80
+      - 18092:80
     restart: always
 
   ## Prescription-Service ##
@@ -50,7 +50,7 @@ services:
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
-      - 18092:80
+      - 18093:80
     restart: always
     
 
