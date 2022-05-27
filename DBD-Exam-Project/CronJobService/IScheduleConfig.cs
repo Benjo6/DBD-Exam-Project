@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lib.Interfaces
+namespace CronJobService
 {
     public interface IScheduleConfig<T>
     {

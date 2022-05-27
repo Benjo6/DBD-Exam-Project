@@ -47,7 +47,9 @@ services:
 
   mongo:
     container_name: db-exam-mongo
-    image: mongo
+    build: 
+      context: ./mongo
+      dockerfile: Dockerfile
     hostname: db-exam-mongo
     mem_limit: 2048m
     memswap_limit: 6000m

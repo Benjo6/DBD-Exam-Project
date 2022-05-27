@@ -1,5 +1,4 @@
 ﻿using lib.DTO;
-using lib.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RestSharp;
@@ -7,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace RenewalService.Service
+namespace CronJobService.Services
 {
     public class RestSharpRenewalService : IRenewalService
     {

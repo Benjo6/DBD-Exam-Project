@@ -6,15 +6,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RenewalService.Service
+namespace CronJobService.Services
 {
-    public abstract class CronJobService : IHostedService, IDisposable
+    public abstract class CronJobBase : IHostedService, IDisposable
     {
         private System.Timers.Timer _timer;
         private readonly CronExpression _expression;
         private readonly TimeZoneInfo _timeZoneInfo;
 
-        protected CronJobService(string cronExpression, TimeZoneInfo timeZoneInfo)
+        protected CronJobBase(string cronExpression, TimeZoneInfo timeZoneInfo)
         {
             _expression = CronExpression.Parse(cronExpression);
             _timeZoneInfo = timeZoneInfo;

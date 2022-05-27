@@ -11,5 +11,6 @@ namespace lib.DTO
         public string PatientId { get; set; }
         public string DoctorId { get; set; }
         public string Regarding { get; set; }
+        public GeoPointDto GeoPoint { get; set; }
     }
 }
