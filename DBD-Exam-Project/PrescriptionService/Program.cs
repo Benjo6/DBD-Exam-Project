@@ -25,6 +25,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Conn
 
 builder.Services.AddScoped<IRedisCache, RedisCache>();
 builder.Services.AddScoped<IPrescriptionStorage, PrescriptionStorage>();
+builder.Services.AddScoped<IPatientStorage, PatientStorage>();
+builder.Services.AddScoped<IPharmacyStorage, PharmacyStorage>();
 
 builder.Services.AddNpgsql<PostgresContext>(builder.Configuration.GetConnectionString("postgres_admin"));
 builder.Services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(adminConnString, customConnString));
