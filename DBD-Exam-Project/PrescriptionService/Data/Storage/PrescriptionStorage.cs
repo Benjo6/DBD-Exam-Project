@@ -2,9 +2,10 @@
 using AutoMapper;
 using lib.DTO;
 using lib.Models;
+using PrescriptionService.Data.Repositories;
 using PrescriptionService.Models;
 
-namespace PrescriptionService.Data;
+namespace PrescriptionService.Data.Storage;
 
 public class PrescriptionStorage : IPrescriptionStorage
 {

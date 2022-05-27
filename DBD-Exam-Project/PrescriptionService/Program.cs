@@ -2,12 +2,10 @@ using AutoMapper;
 using lib.Configurations;
 using lib.DTO;
 using lib.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using PrescriptionService.DAP;
 using PrescriptionService.Data;
 using PrescriptionService.Data.Repositories;
+using PrescriptionService.Data.Storage;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -2,7 +2,7 @@
 using lib.DTO;
 using PrescriptionService.Models;
 
-namespace PrescriptionService.Data;
+namespace PrescriptionService.Data.Storage;
 
 public interface IPrescriptionStorage
 {

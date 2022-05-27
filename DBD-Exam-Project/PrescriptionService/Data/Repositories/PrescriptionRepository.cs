@@ -1,8 +1,7 @@
 ﻿using lib.Models;
 using Microsoft.EntityFrameworkCore;
-using PrescriptionService.Data.Repositories;
 
-namespace PrescriptionService.Data;
+namespace PrescriptionService.Data.Repositories;
 
 public interface IPrescriptionRepository: IAsyncRepository<Prescription, long>
 {

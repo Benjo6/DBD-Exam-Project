@@ -1,6 +1,6 @@
 ﻿using lib.DTO;
 using Microsoft.AspNetCore.Mvc;
-using PrescriptionService.Data;
+using PrescriptionService.Data.Storage;
 using PrescriptionService.Models;
 
 namespace PrescriptionService.Controllers
