@@ -9,6 +9,6 @@ public class PatientRepository : BaseAsyncRepository<Patient>
 
     protected override IQueryable<Patient> DefaultInclude()
         => base.DefaultInclude()
-            .Include(x => x.PersonalData);
-    
+            .Include(x => x.PersonalData)
+            .Include(x => x.PersonalData.Address);
 }
