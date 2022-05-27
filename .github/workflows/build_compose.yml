@@ -14,3 +14,4 @@ jobs:
       run: docker-compose -f infrastructure/docker-compose.infrastructure.dev.yml build
     - name: Build compose applications
       run: docker-compose -f infrastructure/docker-compose.applications.dev.yml build
+      
