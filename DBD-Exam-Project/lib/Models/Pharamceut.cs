@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MessagePack;
 
 namespace lib.Models;
 
-[Table("pharmaceut", Schema = "prescriptions")]
+[Table("pharmaceut", Schema = "prescriptions"), MessagePackObject(keyAsPropertyName: true)]
 public class Pharmaceut
 {
-    [Column("id"), Key]
+    [Column("id"), System.ComponentModel.DataAnnotations.Key]
     public int Id { get; set; }
     [Column("pharmacy_id")]
     public int? PharamacyId { get; set; }
@@ -16,5 +16,6 @@ public class Pharmaceut
 
     public PersonalDatum PersonalData { get; set; } = null!;
     public Pharmacy? Pharmacy { get; set; }
+    [IgnoreMember]
     public List<Prescription> Prescriptions { get; set; } = new();
 }

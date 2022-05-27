@@ -1,16 +1,16 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MessagePack;
 
 namespace lib.Models;
 
-[Table("prescription", Schema = "prescriptions")]
+[Table("prescription", Schema = "prescriptions"), MessagePackObject(keyAsPropertyName: true)]
 public class Prescription: EntityWithId<long>
 {
-    [Column("id"), Key]
+    [Column("id"), System.ComponentModel.DataAnnotations.Key, MessagePack.Key(nameof(Id))]
     public long Id { get; set; }
     [Column("expiration")]
-    public DateOnly? Expiration { get; set; }
+    public DateTime? Expiration { get; set; }
     [Column("expiration_warning_sent")]
     public bool ExpirationWarningSent { get; set; }
     [Column("creation", TypeName = "timestamp without time zone")]
