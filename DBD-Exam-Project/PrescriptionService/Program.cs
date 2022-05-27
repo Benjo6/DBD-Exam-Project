@@ -25,7 +25,7 @@ string customConnString = builder.Configuration.GetConnectionString("postgres_cu
 RedisCacheConfig settings = builder.Configuration.GetSection(RedisCacheConfig.ConfigKey).Get<RedisCacheConfig>();
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(settings.EndPoints));
 
-builder.Services.AddScoped<IPrescriptionCache, PrescriptionCache>();
+builder.Services.AddScoped<IRedisCache, RedisCache>();
 builder.Services.AddScoped<IPrescriptionStorage, PrescriptionStorage>();
 
 builder.Services.AddNpgsql<PostgresContext>(builder.Configuration.GetConnectionString("postgres_admin"));
