@@ -1,11 +1,6 @@
-﻿using AutoMapper;
-using lib.DTO;
-using lib.Models;
-using Microsoft.AspNetCore.Http;
+﻿using lib.DTO;
 using Microsoft.AspNetCore.Mvc;
-using PrescriptionService.Data.Repositories;
 using PrescriptionService.Data.Storage;
-using PrescriptionService.Util;
 
 namespace PrescriptionService.Controllers;
 [Route("api/[controller]")]

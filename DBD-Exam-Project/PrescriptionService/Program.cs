@@ -2,7 +2,6 @@ using AutoMapper;
 using lib.Configurations;
 using lib.DTO;
 using lib.Models;
-using PrescriptionService.DAP;
 using PrescriptionService.Data;
 using PrescriptionService.Data.Repositories;
 using PrescriptionService.Data.Storage;
