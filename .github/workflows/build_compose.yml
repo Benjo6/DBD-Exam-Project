@@ -2,7 +2,7 @@ name: Build Compose
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ feature/build-validation ]
 
 jobs:
   build:
