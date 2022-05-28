@@ -13,7 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 
 builder.Services.AddControllers();
-
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+});
 
 
 builder.Services.AddEndpointsApiExplorer();
