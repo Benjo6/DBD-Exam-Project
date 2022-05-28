@@ -13,5 +13,6 @@ public class PersonDto
     public string LastName { get; set; } = string.Empty;
     public string? Email { get; set; }
     public string? CphNumber { get; set; }
+    public string? PharmacyName { get; set; }
     public PersonType Type { get; set; }
 }
