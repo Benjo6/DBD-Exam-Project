@@ -5,8 +5,8 @@ namespace PrescriptionService.Data.Repositories;
 
 public class DoctorRepository : BaseAsyncRepository<Doctor>
 {
-    public DoctorRepository(DbContext dbContext, DbSet<Doctor> contextCollection) 
-        : base(dbContext, contextCollection) { }
+    public DoctorRepository(PostgresContext dbContext) 
+        : base(dbContext, dbContext.Doctors) { }
 
     protected override IQueryable<Doctor> DefaultInclude()
         => base.DefaultInclude()
