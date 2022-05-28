@@ -1,10 +1,20 @@
-﻿using lib.Models;
+﻿#nullable enable
+using lib.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace PrescriptionService.Data.Repositories;
 
-public class MedicineRepository: BaseAsyncRepository<Medicine>
+public interface IMedicineRepository: IAsyncRepository<Medicine>
 {
-    public MedicineRepository(DbContext dbContext, DbSet<Medicine> contextCollection) 
-        : base(dbContext, contextCollection) { }
+    Task<Medicine?> Get(string name);
+}
+
+public class MedicineRepository: BaseAsyncRepository<Medicine>, IMedicineRepository
+{
+    public MedicineRepository(PostgresContext dbContext) 
+        : base(dbContext, dbContext.Medicines) { }
+
+    public Task<Medicine?> Get(string name)
+        => DefaultInclude()
+            .FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
 }

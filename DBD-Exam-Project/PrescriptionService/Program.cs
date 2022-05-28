@@ -33,6 +33,7 @@ builder.Services.AddScoped<IPrescriptionStorage, PrescriptionStorage>();
 builder.Services.AddScoped<IPatientStorage, PatientStorage>();
 builder.Services.AddScoped<IDoctorStorage, DoctorStorage>();
 builder.Services.AddScoped<IPharmaceutStorage, PharmaceutStorage>();
+builder.Services.AddScoped<IMedicineStorage, MedicineStorage>();
 builder.Services.AddScoped<IPharmacyStorage, PharmacyStorage>();
 
 builder.Services.AddNpgsql<PostgresContext>(builder.Configuration.GetConnectionString("postgres_admin"));
@@ -40,6 +41,7 @@ builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IAsyncRepository<Doctor>, DoctorRepository>();
 builder.Services.AddScoped<IAsyncRepository<Pharmaceut>, PharmaceutRepository>();
+builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
 builder.Services.AddScoped<IAsyncRepository<Pharmacy>, PharmacyRepository>();
 
 builder.Services.AddSingleton<IMapper>(
@@ -76,6 +78,10 @@ builder.Services.AddSingleton<IMapper>(
                     .ReverseMap();
                 cfg.CreateMap<Pharmacy, PharmacyDto>()
                     .ForMember(dist => dist.Name, opt => opt.MapFrom(src => src.PharmacyName))
+                    .ReverseMap();
+                cfg.CreateMap<Medicine, string>()
+                    .ConvertUsing(src => src.Name);
+                cfg.CreateMap<Medicine, MedicineDto>()
                     .ReverseMap();
             })));
 
