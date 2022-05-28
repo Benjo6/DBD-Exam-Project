@@ -28,7 +28,7 @@ namespace CronJobService.Services
         {
             _logger.LogInformation($"{DateTime.Now:hh:mm:ss} ConsultationJob is working.");
 
-            // TODO implement consultation creation
+            _consultationCreationService.CreateNewConsultationOpenings();
 
             return Task.CompletedTask;
         }
