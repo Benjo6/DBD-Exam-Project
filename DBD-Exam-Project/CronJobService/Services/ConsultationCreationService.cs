@@ -48,14 +48,23 @@ namespace CronJobService.Services
             };
 
             var consultationClient = new RestClient(_consultationServiceUrl);
-            
+            var consultationMetadataRequest = new RestRequest("ConsultationMetadata");
+            var metadata = consultationClient.GetAsync<ConsultationMetadataDto>(consultationMetadataRequest, CancellationToken.None).Result;
+            if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1))
+            {
+                _logger.LogInformation("{0} >= {1} - No consultations will be added", metadata.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
+                return;
+            }
+            _logger.LogInformation("{0} < {1} - Consultations will be added", metadata?.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
+
+            int count = 0;
             var time = DateTime.Today.AddDays(1).AddHours(8);
             while(time < DateTime.Today.AddDays(1).AddHours(16))
             {
                 // TODO update when doctor controller is up
                 for (int i = 1; i <= 10; i++)
                 {
-                    var consultationRequest = new RestRequest("Consultations");
+                    var consultationRequest = new RestRequest("Consultation");
                     var consultation = new ConsultationCreationDto() {
                         DoctorId = i.ToString(),
                         ConsultationStartUtc = time,
@@ -63,10 +72,18 @@ namespace CronJobService.Services
                     };
                     consultationRequest.AddJsonBody(consultation);
                     var consultationResponse = consultationClient.PostAsync(consultationRequest, CancellationToken.None).Result;
+                    count++;
                 }
                 time = time.AddMinutes(20);
             }
-            
+            var metadataToCreate = new ConsultationMetadataDto() {
+                DayOfConsultationsAdded = DateTime.Today.AddDays(1),
+                CreatedCount = count,
+                CreatedUtc = DateTime.UtcNow
+            };
+            var consultationMetadataCreRequest = new RestRequest("ConsultationMetadata");
+            var metadataCreated = consultationClient.PostAsync<ConsultationMetadataDto>(consultationMetadataRequest, CancellationToken.None).Result;
+
         }
     }
 }
