@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ConsultationService\ConsultationService.csproj" />
     <ProjectReference Include="..\lib\lib.csproj" />
   </ItemGroup>
 
