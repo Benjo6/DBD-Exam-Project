@@ -41,6 +41,7 @@ namespace CronJobService
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CronJobService", Version = "v1" });
             });
             services.AddSingleton<IRenewalService, RestSharpRenewalService>();
+            services.AddSingleton<IConsultationCreationService, ConsultationCreationService>();
 
         }
 
