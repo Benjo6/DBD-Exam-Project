@@ -10,10 +10,10 @@ This will set up databases and services on the following ports:
 | Service  | Local Development | From other docker containers |
 |----------|-------------------|------------------------------|
 | Postgres                | localhost:15432   | db-exam-postgres:5432           |
-| Mongo                   | localhost:17017   | db-exam-mongo:17017             |
-| Neo4j                   | localhost:17474   | db-exam-neo4j:17474             |
-| Neo4j                   | localhost:17687   | db-exam-neo4j:17687             |
-| Redis                   | localhost:16379   | db-exam-redis:16379             |
+| Mongo                   | localhost:17017   | db-exam-mongo:27017             |
+| Neo4j                   | localhost:17474   | db-exam-neo4j:7474              |
+| Neo4j                   | localhost:17687   | db-exam-neo4j:7687              |
+| Redis                   | localhost:16379   | db-exam-redis:6379              |
 | Consultation Service    | localhost:18090   | db-exam-consultation-service:80 |
 | Analysis Service        | localhost:18091   | db-exam-analysis-service:80     |
 | Mail Service            | localhost:18092   | db-exam-mail-service:80         |
