@@ -60,12 +60,14 @@ builder.Services.AddSingleton<IMapper>(
                     .ForMember(dist => dist.LastName, opt => opt.MapFrom(src => src.PersonalData.LastName))
                     .ForMember(dist => dist.Email, opt => opt.MapFrom(src => src.PersonalData.Email))
                     .ForMember(dist => dist.CphNumber, opt => opt.MapFrom(src => src.Cpr))
+                    .ForMember(dist => dist.Address, opt => opt.MapFrom(src => src.PersonalData.Address))
                     .ReverseMap();
                 cfg.CreateMap<Doctor, PersonDto>()
                     .ForMember(dist => dist.Type, opt => opt.MapFrom(src => PersonType.Doctor))
                     .ForMember(dist => dist.FirstName, opt => opt.MapFrom(src => src.PersonalData.FirstName))
                     .ForMember(dist => dist.LastName, opt => opt.MapFrom(src => src.PersonalData.LastName))
                     .ForMember(dist => dist.Email, opt => opt.MapFrom(src => src.PersonalData.Email))
+                    .ForMember(dist => dist.Address, opt => opt.MapFrom(src => src.PersonalData.Address))
                     .ReverseMap();
                 cfg.CreateMap<Pharmaceut, PersonDto>()
                     .ForMember(dist => dist.Type, opt => opt.MapFrom(src => PersonType.Pharmaceut))
@@ -73,6 +75,7 @@ builder.Services.AddSingleton<IMapper>(
                     .ForMember(dist => dist.LastName, opt => opt.MapFrom(src => src.PersonalData.LastName))
                     .ForMember(dist => dist.Email, opt => opt.MapFrom(src => src.PersonalData.Email))
                     .ForMember(dist => dist.PharmacyName, opt => opt.MapFrom(src => src.Pharmacy.PharmacyName))
+                    .ForMember(dist => dist.Address, opt => opt.MapFrom(src => src.PersonalData.Address))
                     .ReverseMap();
                 cfg.CreateMap<Address, AddressDto>()
                     .ReverseMap();
