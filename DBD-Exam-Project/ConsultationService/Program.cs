@@ -18,6 +18,7 @@ builder.Services.Configure<DatabaseSettings>(
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddScoped<IConsultationService, MongoConsultationService>();
+builder.Services.AddScoped<IConsultationMetadataService, MongoConsultationMetadataService>();
 
 var app = builder.Build();
 

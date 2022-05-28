@@ -1,19 +1,38 @@
+using ConsultationService.Entities;
+using ConsultationService.Util;
 using lib.DTO;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+
 namespace ConsultationService.Services
 {
     public class MongoConsultationMetadataService : IConsultationMetadataService
     {
-        public MongoConsultationMetadataService()
-        {
+        private MongoClient _client;
+        private IMongoDatabase _database;
+        private const string Collection = "consultations-metadata";
 
-        }
-        public Task<ConsultationMetadataDto> GetLatestMetadataAsync()
+        public MongoConsultationMetadataService(IOptions<DatabaseSettings> settings)
         {
-            throw new NotImplementedException();
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
+            _client = new MongoClient(settings.Value.MongoConnectionString ?? throw new ArgumentNullException("MongoConnectionString"));
+            _database = _client.GetDatabase("consultations");
         }
-        public Task<ConsultationMetadataDto> AddMetadataAsync(ConsultationMetadataDto consultationMetadata)
+        public async Task<ConsultationMetadataDto> GetLatestMetadataAsync()
         {
-            throw new NotImplementedException();
+            var consultationEntity = await _database.GetCollection<ConsultationMetadataEntity>(Collection).Find(x => true).SortByDescending(x => x.DayOfConsultationsAdded).FirstOrDefaultAsync();
+            return ConsultationMetadataMapper.ToDto(consultationEntity); ;
+        }
+        public async Task<ConsultationMetadataDto> AddMetadataAsync(ConsultationMetadataDto consultationMetadata)
+        {
+            if (consultationMetadata == null)
+                throw new ArgumentNullException(nameof(consultationMetadata));
+
+            var consulationEntity = ConsultationMetadataMapper.FromDto(consultationMetadata);
+            await _database.GetCollection<ConsultationMetadataEntity>(Collection).InsertOneAsync(consulationEntity);
+            return ConsultationMetadataMapper.ToDto(consulationEntity);
         }
     }
 }

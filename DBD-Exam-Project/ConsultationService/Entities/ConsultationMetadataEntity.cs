@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ConsultationService.Entities
 {
-    public class ConsultationsCreatedMetadataEntity
+    public class ConsultationMetadataEntity
     {
         [BsonIgnoreIfNull]
         public DateTime CreatedUtc { get; set; }

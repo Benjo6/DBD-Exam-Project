@@ -1,7 +1,6 @@
 using ConsultationService.Services;
 using lib.DTO;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver.GeoJsonObjectModel;
 
 namespace ConsultationService.Controllers;
 
@@ -17,8 +16,7 @@ public class ConsultationMetadataController : ControllerBase
     {
         _logger = logger;
         _consultationMetadataService = consultationMetadataService;
-    }
-   
+    }   
 
     [HttpPost]
     public async Task<IActionResult> CreateConsultationMetadata(ConsultationMetadataDto consultationMetadataDto)
