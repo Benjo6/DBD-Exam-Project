@@ -3,7 +3,6 @@ using System.Configuration;
 using System.Threading.Tasks;
 using ConsultationService;
 using ConsultationService.Services;
-using lib.Converter;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
