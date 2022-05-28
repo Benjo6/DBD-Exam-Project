@@ -6,6 +6,8 @@ using lib.Models;
 using lib.DTO;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System;
+using System.Text.Json;
 
 namespace Neo4JDataSupplier
 {
@@ -19,20 +21,94 @@ namespace Neo4JDataSupplier
 
         public async Task<string> Run()
         {
-            //await Prescription();
+            await Prescription();
             await Patient();
             await Pharmacies();
-            await Consultations();
+            await Pharamceuts();
+            await Medicines();
+            await Doctors();
+            //await Consultations();
             return "Task Completed";
         }
 
-        public async Task<IEnumerable<Patient>> Patient()
+        public async Task<IEnumerable<DoctorDto>> Doctors()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string content = await client.GetStringAsync("https://localhost:44346/api/doctor");
+                IList<DoctorDto> doctors = JsonConvert.DeserializeObject<IList<DoctorDto>>(content);
+                foreach (DoctorDto item in doctors)
+                {
+                    await _client.Cypher.Merge("(d:D {Id: $dID } )")
+                        .OnMatch()
+                        .Set("d=$doc")
+                        .OnCreate()
+                        .Set("d=$doc")
+                        .WithParam("doc", item)
+                        .WithParam("dID", item.Id)
+                        .ExecuteWithoutResultsAsync();
+                }
+
+
+
+                return doctors;
+            }
+        }
+
+        public async Task<IEnumerable<MedicineDto>> Medicines()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string content = await client.GetStringAsync("https://localhost:44346/api/medicine");
+                IList<MedicineDto> medicines = JsonConvert.DeserializeObject<IList<MedicineDto>>(content);
+                foreach (MedicineDto item in medicines)
+                {
+                    await _client.Cypher.Merge("(m:Medicine {Id: $mID } )")
+                        .OnMatch()
+                        .Set("m=$med")
+                        .OnCreate()
+                        .Set("m=$med")
+                        .WithParam("med", item)
+                        .WithParam("mID", item.Id)
+                        .ExecuteWithoutResultsAsync();
+                }
+
+
+
+                return medicines;
+            }
+        }
+        public async Task<IEnumerable<PharamceutDto>> Pharamceuts()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string content = await client.GetStringAsync("https://localhost:44346/api/pharamceut");
+                IList<PharamceutDto> pharamceuts = JsonConvert.DeserializeObject<IList<PharamceutDto>>(content);
+                foreach (PharamceutDto item in pharamceuts)
+                {
+                    await _client.Cypher.Merge("(p:Pharamceut {Id: $pID } )")
+                        .OnMatch()
+                        .Set("p=$phar")
+                        .OnCreate()
+                        .Set("p=$phar")
+                        .WithParam("phar", item)
+                        .WithParam("pID", item.Id)
+                        .ExecuteWithoutResultsAsync();
+                }
+
+
+
+                return pharamceuts;
+            }
+        }
+
+        public async Task<IEnumerable<PatientDto>> Patient()
         {
             using (HttpClient client = new HttpClient())
             {
                 string content = await client.GetStringAsync("https://localhost:44346/api/prescription/patient");
-                IList<Patient> patients = JsonConvert.DeserializeObject<IList<Patient>>(content);
-                foreach (Patient item in patients)
+                IList<PatientDto> patients = JsonConvert.DeserializeObject<IList<PatientDto>>(content);
+                foreach (PatientDto item in patients)
                 {
                     await _client.Cypher.Merge("(p:Patient {Id: $pID } )")
                         .OnMatch()
@@ -53,8 +129,10 @@ namespace Neo4JDataSupplier
         {
             using (HttpClient client = new HttpClient())
             {
+                var jsonSerializerSettings = new JsonSerializerSettings();
+
                 string content = await client.GetStringAsync("https://localhost:44346/api/prescription/prescriptions");
-                IList<PrescriptionDto> prescriptions = JsonConvert.DeserializeObject<IList<PrescriptionDto>>(content);
+                IList<PrescriptionDto> prescriptions = JsonConvert.DeserializeObject<IList<PrescriptionDto>>(content, jsonSerializerSettings);
                 foreach (PrescriptionDto item in prescriptions)
                 {
                     await _client.Cypher.Merge("(p:Prescription {Id: $pID} )")
@@ -72,13 +150,13 @@ namespace Neo4JDataSupplier
                 return prescriptions;
             }
         }
-        public async Task<IEnumerable<Pharmacy>> Pharmacies()
+        public async Task<IEnumerable<PharmacyDto>> Pharmacies()
         {
             using (HttpClient client = new HttpClient())
             {
                 string content = await client.GetStringAsync("https://localhost:44346/api/prescription/pharmacy");
-                IList<Pharmacy> pharmacies = JsonConvert.DeserializeObject<IList<Pharmacy>>(content);
-                foreach (Pharmacy item in pharmacies)
+                IList<PharmacyDto> pharmacies = JsonConvert.DeserializeObject<IList<PharmacyDto>>(content);
+                foreach (PharmacyDto item in pharmacies)
                 {
                     await _client.Cypher.Merge("(p:Pharmacy {Id: $pID} )")
                         .OnMatch()
@@ -115,6 +193,6 @@ namespace Neo4JDataSupplier
 
                 return consultations;
             }
-        } 
+        }
     }
 }
