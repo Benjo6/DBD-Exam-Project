@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CronJobService.Services
+namespace lib.Interfaces
 {
     public interface IRenewalService
     {

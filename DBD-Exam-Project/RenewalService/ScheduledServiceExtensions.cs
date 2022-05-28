@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using CronJobService.Services;
+﻿using lib.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using RenewalService.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CronJobService
+namespace RenewalService
 {
     public static class ScheduledServiceExtensions
     {
-        public static IServiceCollection AddCronJob<T>(this IServiceCollection services,Action<IScheduleConfig<T>> options) where T : CronJobBase
+        public static IServiceCollection AddCronJob<T>(this IServiceCollection services,Action<IScheduleConfig<T>> options) where T : CronJobService
         {
             if (options == null)
             {

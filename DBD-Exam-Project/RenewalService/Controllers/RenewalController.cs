@@ -1,4 +1,4 @@
-﻿using CronJobService.Services;
+﻿using lib.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CronJobService.Controllers
+namespace RenewalService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,6 +1,5 @@
 using ConsultationService.Entities;
 using lib.DTO;
-using MongoDB.Driver.GeoJsonObjectModel;
 
 namespace ConsultationService.Util
 {
@@ -10,16 +9,14 @@ namespace ConsultationService.Util
             if (entity == null)
                 return null;
 
-            var point = entity.Location != null ? new GeoPointDto(entity.Location.Coordinates.X, entity.Location.Coordinates.Y) : null;
-
-            var dto = new ConsultationDto() {
+            var dto = new ConsultationDto(){
                 Id = entity.ConsultationId,
                 DoctorId = entity.DoctorId,
                 PatientId = entity.PatientId,
                 Regarding = entity.Regarding,
                 ConsultationStartUtc = entity.ConsultationStartUtc,
-                CreatedUtc = entity.CreatedUtc,
-                GeoPoint = point
+                CreatedUtc = entity.CreatedUtc
+
             };
             return dto;
         }
@@ -49,8 +46,7 @@ namespace ConsultationService.Util
             var entity = new ConsultationEntity(){
                 ConsultationStartUtc = dto.ConsultationStartUtc,
                 DoctorId = dto.DoctorId,
-                CreatedUtc = DateTime.UtcNow,
-                Location = new GeoJsonPoint<GeoJson2DCoordinates>(new GeoJson2DCoordinates(dto.GeoPoint.Longitude, dto.GeoPoint.Latitude))
+                CreatedUtc = DateTime.UtcNow
             };
             return entity;
         }

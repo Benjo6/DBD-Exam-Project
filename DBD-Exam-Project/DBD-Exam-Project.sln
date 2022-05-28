@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lib", "lib\lib.csproj", "{881CD67F-9BC1-48BE-94CC-E0B4F80C9076}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CronJobService", "CronJobService\CronJobService.csproj", "{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenewalService", "RenewalService\RenewalService.csproj", "{CB5FE4F2-D15C-4D79-8BC8-E515017A9F3F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailService", "MailService\MailService.csproj", "{6BC26914-408D-49AE-8D60-50D2D7B85382}"
 EndProject

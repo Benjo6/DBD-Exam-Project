@@ -1,82 +1,17 @@
 version: '2.4'
 services:
 
-  ## Consultation ##
+  ## PConsultation ##
   consultation-service:
     container_name: 'db-exam-consultation-service'
     build: 
       context: ../DBD-Exam-Project
       dockerfile: ConsultationService/Dockerfile.compose
     hostname: db-exam-consultation-service
-    mem_limit: 2048m
+    mem_limit: 400m
     memswap_limit: 6000m
     ports:
-      - 18090:80
-    restart: always
-
-  ## Analysis ##
-  analysis-service:
-    container_name: 'db-exam-analysis-service'
-    build: 
-      context: ../DBD-Exam-Project
-      dockerfile: Neo4J/Dockerfile
-    hostname: db-exam-analysis-service
-    mem_limit: 2048m
-    memswap_limit: 6000m
-    ports:
-      - 18091:80
-    restart: always
-
-  ## Mail-Service ##
-  mail-service:
-    container_name: 'db-exam-mail-service'
-    build: 
-      context: ../DBD-Exam-Project
-      dockerfile: MailService/Dockerfile
-    hostname: db-exam-mail-service
-    mem_limit: 2048m
-    memswap_limit: 6000m
-    ports:
-      - 18092:80
-    restart: always
-
-  ## Prescription-Service ##
-  prescription-service:
-    container_name: 'db-exam-prescription-service'
-    build: 
-      context: ../DBD-Exam-Project
-      dockerfile: PrescriptionService/Dockerfile
-    hostname: db-exam-prescription-service
-    mem_limit: 2048m
-    memswap_limit: 6000m
-    ports:
-      - 18093:80
-    restart: always
-
-  ## TestData-Service ##
-  testdata-service:
-    container_name: 'db-exam-testdata-service'
-    build: 
-      context: ../DBD-Exam-Project
-      dockerfile: TestDataAPI/Dockerfile
-    hostname: db-exam-testdata-service
-    mem_limit: 2048m
-    memswap_limit: 6000m
-    ports:
-      - 18094:80
-    restart: always
-
-  ## CronJob-Service ##
-  cronjob-service:
-    container_name: 'db-exam-cronjob-service'
-    build: 
-      context: ../DBD-Exam-Project
-      dockerfile: CronJobService/Dockerfile
-    hostname: db-exam-cronjob-service
-    mem_limit: 2048m
-    memswap_limit: 6000m
-    ports:
-      - 18095:80
+      - 18080:80
     restart: always
     
 

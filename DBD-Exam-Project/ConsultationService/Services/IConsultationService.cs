@@ -18,7 +18,7 @@ namespace ConsultationService.Services
         public Task<ConsultationDto> UpdateConsultationAsync(ConsultationDto consultationDto);
         public ConsultationDto BookConsultation(ConsultationBookingRequestDto consultationDto);
         public Task<ConsultationDto> BookConsultationAsync(ConsultationBookingRequestDto consultationDto);
-        public IEnumerable<ConsultationDto> GetConsultationsOpenForBooking(GeoPointDto geoPoint, int distanceMeters);
-        public Task<IEnumerable<ConsultationDto>> GetConsultationsOpenForBookingAsync(GeoPointDto geoPoint, int distanceMeters);
+        public IEnumerable<ConsultationDto> GetConsultationsOpenForBooking();
+        public Task<IEnumerable<ConsultationDto>> GetConsultationsOpenForBookingAsync();
     }
 }

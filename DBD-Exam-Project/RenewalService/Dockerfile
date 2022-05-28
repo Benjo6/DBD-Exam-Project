@@ -10,16 +10,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["Neo4J/Neo4J.csproj", "Neo4J/"]
-RUN dotnet restore "Neo4J/Neo4J.csproj"
+COPY ["RenewalService/RenewalService.csproj", "RenewalService/"]
+RUN dotnet restore "RenewalService/RenewalService.csproj"
 COPY . .
-WORKDIR "/src/Neo4J"
-RUN dotnet build "Neo4J.csproj" -c Release -o /app/build
+WORKDIR "/src/RenewalService"
+RUN dotnet build "RenewalService.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Neo4J.csproj" -c Release -o /app/publish
+RUN dotnet publish "RenewalService.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Neo4J.dll"]
+ENTRYPOINT ["dotnet", "RenewalService.dll"]
