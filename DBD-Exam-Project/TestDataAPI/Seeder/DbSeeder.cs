@@ -59,7 +59,7 @@ namespace TestDataAPI.Seeder
             var pharmacies = CreatePharmacies(add);
             var meds = CreateMedicines();
             var patients = CreatePatients(add);
-            var pharmaceuts = CreatePharmaceuts(add);
+            var pharmaceuts = CreatePharmaceuts(add,pharmacies);
             var doctors = CreateDoctors(add);
             var prescriptions = CreatePrescriptions(meds, doctors, patients);
 
@@ -117,12 +117,14 @@ namespace TestDataAPI.Seeder
             return doctorFaker.Generate(DOCTOR_COUNT / _divider);
         }
 
-        private List<Pharmaceut> CreatePharmaceuts(List<Address> add)
+        private List<Pharmaceut> CreatePharmaceuts(List<Address> add, List<Pharmacy> pharmacies)
         {
+            var random = new Random();
             Console.WriteLine("Create Pharmaceuts");
             int count = 0;
             pharmaceutFaker
-                .RuleFor(p => p.PersonalData, (f, p) => CreatePersonalData("pharmaceut", $"pharmaceut{count++}", "pharmaceut"));
+                .RuleFor(p => p.PersonalData, (f, p) => CreatePersonalData("pharmaceut", $"pharmaceut{count++}", "pharmaceut"))
+                .RuleFor(p=>p.Pharmacy, (f, p) => pharmacies[random.Next(pharmacies.Count)]);
 
             return pharmaceutFaker.Generate(PHARMACEUT_COUNT / _divider);
         }
