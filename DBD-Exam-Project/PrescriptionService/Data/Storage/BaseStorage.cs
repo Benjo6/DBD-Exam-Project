@@ -34,7 +34,7 @@ public class BaseStorage<TDto, TDbModel, TKey>
             return cachedData.Select(Mapper.Map<TDbModel, TDto>);
 
         List<TDbModel> data = await initalResult
-            .Skip(pageInfo.Number * pageInfo.Size)
+            .Skip((pageInfo.Number - 1) * pageInfo.Size)
             .Take(pageInfo.Size)
             .ToListAsync();
 
