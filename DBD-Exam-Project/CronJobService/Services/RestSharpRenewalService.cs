@@ -16,8 +16,8 @@ namespace CronJobService.Services
 
         public RestSharpRenewalService(IConfiguration config, ILogger<RestSharpRenewalService> logger)
         {
-            _prescriptionServiceEndpoint = config["PrescriptionEndpoint"] ?? throw new ArgumentNullException("PrescriptionEndpoint");
-            _notificationServiceEndpoint = config["NotificationEndpoint"] ?? throw new ArgumentNullException("NotificationEndpoint");
+            _prescriptionServiceEndpoint = config["PrescriptionServiceUrl"] ?? throw new ArgumentNullException("PrescriptionServiceUrl");
+            _notificationServiceEndpoint = config["NotificationServiceUrl"] ?? throw new ArgumentNullException("NotificationServiceUrl");
             _logger = logger;
             _logger.LogInformation($"RenewalService instantiated with endpoints: {_prescriptionServiceEndpoint} {_notificationServiceEndpoint}");
         }
