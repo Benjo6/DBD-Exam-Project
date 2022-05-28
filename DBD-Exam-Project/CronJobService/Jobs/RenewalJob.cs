@@ -1,4 +1,4 @@
-﻿using lib.Interfaces;
+﻿using CronJobService.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RenewalService.Service
+namespace CronJobService.Service
 {
-    public class RenewalJob : CronJobService
+    public class RenewalJob : CronJobBase
     {
         private ILogger<RenewalJob> _logger;
         private IRenewalService _renewalService;

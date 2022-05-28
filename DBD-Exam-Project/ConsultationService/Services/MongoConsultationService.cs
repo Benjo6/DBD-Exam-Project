@@ -3,6 +3,8 @@ using lib.DTO;
 using ConsultationService.Entities;
 using ConsultationService.Util;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver.GeoJsonObjectModel;
+using MongoDB.Bson;
 
 namespace ConsultationService.Services
 {
@@ -47,7 +49,10 @@ namespace ConsultationService.Services
 
         public async Task<ConsultationDto> CreateConsultationAsync(ConsultationCreationDto consultationDto)
         {
-            var consulationEntity = Util.ConsultationMapper.FromDto(consultationDto);
+            if (consultationDto.DoctorId == null || consultationDto.GeoPoint == null)
+                throw new ArgumentException(nameof(consultationDto));
+
+            var consulationEntity = ConsultationMapper.FromDto(consultationDto);
             await _database.GetCollection<ConsultationEntity>("consultations").InsertOneAsync(consulationEntity);
             return ConsultationMapper.ToDto(consulationEntity);
         }
@@ -108,14 +113,18 @@ namespace ConsultationService.Services
             return consultationEntity.Select(ConsultationMapper.ToDto);
         }
 
-        public IEnumerable<ConsultationDto> GetConsultationsOpenForBooking()
+        public IEnumerable<ConsultationDto> GetConsultationsOpenForBooking(GeoPointDto position, int distanceMeters)
         {
-            return GetConsultationsOpenForBookingAsync().Result;
+            return GetConsultationsOpenForBookingAsync(position, distanceMeters).Result;
         }
 
-        public async Task<IEnumerable<ConsultationDto>> GetConsultationsOpenForBookingAsync()
+        public async Task<IEnumerable<ConsultationDto>> GetConsultationsOpenForBookingAsync(GeoPointDto position, int distanceMeters)
         {
-            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(x => x.PatientId == null && x.ConsultationStartUtc.HasValue).ToListAsync();
+            var builder = Builders<ConsultationEntity>.Filter;
+            var point = GeoJson.Point(GeoJson.Position(position.Longitude, position.Latitude));
+            var filter = builder.Near(x => x.Location, point, maxDistance: distanceMeters) & Builders<ConsultationEntity>.Filter.Eq(x => x.PatientId, null) & Builders<ConsultationEntity>.Filter.Exists(x => x.ConsultationStartUtc);
+
+            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(filter).ToListAsync();
             return consultationEntity.Select(ConsultationMapper.ToDto);
         }
 
