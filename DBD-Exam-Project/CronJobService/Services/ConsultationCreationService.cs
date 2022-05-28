@@ -1,6 +1,7 @@
 ﻿using lib.DTO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -16,16 +17,17 @@ namespace CronJobService.Services
         private ILogger<ConsultationCreationService> _logger;
         private IConfiguration _config;
 
-        private string _mongoConnectionString;
         private string _prescriptionServiceUrl;
         private string _consultationServiceUrl;
 
         public ConsultationCreationService(ILogger<ConsultationCreationService> logger, IConfiguration config)
         {
             _logger = logger;
-            _mongoConnectionString = config.GetConnectionString("mongodb");
             _prescriptionServiceUrl = config["PrescriptionServiceUrl"];
             _consultationServiceUrl = config["ConsultationServiceUrl"];
+
+            _logger.LogInformation("{0}:{1}", nameof(_prescriptionServiceUrl), _prescriptionServiceUrl);
+            _logger.LogInformation("{0}:{1}", nameof(_consultationServiceUrl), _consultationServiceUrl);
 
         }
         public void CreateNewConsultationOpenings()
@@ -72,6 +74,11 @@ namespace CronJobService.Services
                     };
                     consultationRequest.AddJsonBody(consultation);
                     var consultationResponse = consultationClient.PostAsync(consultationRequest, CancellationToken.None).Result;
+                    if (!consultationResponse.IsSuccessful)
+                    {
+                        _logger.LogWarning("Error response while attempting to create consultation: {0}", consultationResponse.ErrorMessage);
+                        break;
+                    }
                     count++;
                 }
                 time = time.AddMinutes(20);
@@ -82,8 +89,8 @@ namespace CronJobService.Services
                 CreatedUtc = DateTime.UtcNow
             };
             var consultationMetadataCreRequest = new RestRequest("ConsultationMetadata");
-            var metadataCreated = consultationClient.PostAsync<ConsultationMetadataDto>(consultationMetadataRequest, CancellationToken.None).Result;
-
+            var metadataCreated = consultationClient.PostAsync<ConsultationMetadataDto>(consultationMetadataCreRequest, CancellationToken.None).Result;
+            _logger.LogInformation("{0}\ncreated", JsonConvert.SerializeObject(metadataCreated, Formatting.Indented));
         }
     }
 }
