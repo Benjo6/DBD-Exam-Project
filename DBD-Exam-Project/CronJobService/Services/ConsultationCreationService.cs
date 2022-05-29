@@ -48,9 +48,9 @@ namespace CronJobService.Services
 
             try
             {
-
                 var consultationClient = new RestClient(_consultationServiceUrl);
                 var consultationMetadataRequest = new RestRequest("api/ConsultationMetadata");
+                consultationMetadataRequest.AddHeader("content-type", "application/json");
                 var metadata = consultationClient.GetAsync<ConsultationMetadataDto>(consultationMetadataRequest, CancellationToken.None).Result;
                 if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1))
                 {
