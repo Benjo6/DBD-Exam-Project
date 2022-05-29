@@ -24,6 +24,9 @@ public class BaseStorage<TDto, TDbModel, TKey>
         Mapper = mapper;
     }
 
+    protected async Task<IEnumerable<TDto>> GetAll(IAsyncEnumerable<TDbModel> initalResult, Page pageInfo)
+        => await GetAll(initalResult, $"p{pageInfo.Number}s{pageInfo.Size}", pageInfo);
+
     protected async Task<IEnumerable<TDto>> GetAll(IAsyncEnumerable<TDbModel> initalResult, string bulkKey, Page pageInfo)
     {
         IEnumerable<TDbModel> cachedData = await Cache.BulkRetrive<TDbModel, TKey>(bulkKey);
@@ -31,11 +34,13 @@ public class BaseStorage<TDto, TDbModel, TKey>
             return cachedData.Select(Mapper.Map<TDbModel, TDto>);
 
         List<TDbModel> data = await initalResult
-            .Skip(pageInfo.Number * pageInfo.Size)
+            .Skip((pageInfo.Number - 1) * pageInfo.Size)
             .Take(pageInfo.Size)
             .ToListAsync();
 
-        await Cache.BulkStore<TDbModel, TKey>(data, bulkKey);
+        if(data.Any())
+            await Cache.BulkStore<TDbModel, TKey>(data, bulkKey);
+        
         return data.Select(Mapper.Map<TDbModel, TDto>);
     }
 }

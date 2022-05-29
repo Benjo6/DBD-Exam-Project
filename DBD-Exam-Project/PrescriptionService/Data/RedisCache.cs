@@ -21,11 +21,19 @@ public class RedisCache: IRedisCache
         _bulkRetentionTimeSec = redisConfig.Value.BulkRetentionTimeSec > 0 ? TimeSpan.FromSeconds(redisConfig.Value.BulkRetentionTimeSec) : null;
     }
 
-    public async Task Store<TSource, TKey>(TSource source) where TSource : class, EntityWithId<TKey>
+    public async Task Store<TSource, TKey>(TSource source) 
+        where TSource : class, EntityWithId<TKey>
+        where TKey : notnull
+        => await Store(source, source.Id);
+    
+
+    public async Task Store<TSource, TKey>(TSource source, TKey keyValue) 
+        where TSource : notnull
+        where TKey : notnull
     {
         IDatabase db = _connection.GetDatabase();
         byte[] messagePack = MessagePackSerializer.Serialize(source);
-        RedisKey key = new($"model:{source.GetType().Name}:{source.Id}");
+        RedisKey key = new($"model:{source.GetType().Name}:{keyValue}");
         await db.StringSetAsync(key, messagePack, _retentionTimeSec);
     }
 
@@ -58,7 +66,7 @@ public class RedisCache: IRedisCache
             : Enumerable.Empty<TResult>();
     }
 
-    public async Task<TResult?> Retrive<TResult, TKey>(TKey id) where TResult : class, EntityWithId<TKey> where TKey : notnull
+    public async Task<TResult?> Retrive<TResult, TKey>(TKey id) where TResult : class where TKey : notnull
     {
         IDatabase db = _connection.GetDatabase();
         RedisKey key = new($"model:{typeof(TResult).Name}:{id}");
