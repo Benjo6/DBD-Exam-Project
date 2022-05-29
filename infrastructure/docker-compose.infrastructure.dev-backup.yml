@@ -1,0 +1,95 @@
+version: '2.4'
+services:
+
+  ## Postgres ##
+  postgres:
+    container_name: 'db-exam-postgres'
+    build: 
+      context: ./postgres
+      dockerfile: Dockerfile
+    hostname: db-exam-postgres
+    mem_limit: 2048m
+    memswap_limit: 6000m
+    ports:
+      - 15432:5432
+    volumes:
+     - postgres_data:/var/lib/postgresql/data
+    restart: always
+    environment:
+      POSTGRES_USER: prescription_user
+      POSTGRES_PASSWORD: prescription_pw
+
+## Neo4j ##
+  neo:
+    container_name: db-exam-neo4j
+    build: 
+      context: ./neo4j
+      dockerfile: Dockerfile
+    hostname: db-exam-neo4j
+    mem_limit: 2048m
+    memswap_limit: 6000m
+    ports:
+      - 17474:7474
+      - 17687:7687
+    volumes:
+      - neo4j_data:/data
+      - ./neo4j/logs:/logs
+      #- ./neo4j/import:/var/lib/neo4j/import (uncomment if import is needed)
+    environment:
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*,algo.*,gds.*
+      - NEO4J_dbms_security_procedures_whitelist=apoc.*,algo.*,gds.*
+      - NEO4JLABS_PLUGINS=["apoc", "graph-data-science"]
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_AUTH=none
+      - apoc.import.file.enabled=true
+
+## Mongo ##
+
+  mongo:
+    container_name: db-exam-mongo
+    build: 
+      context: ./mongo
+      dockerfile: Dockerfile
+    hostname: db-exam-mongo
+    mem_limit: 2048m
+    memswap_limit: 6000m
+    restart: always
+    ports:
+      - 17017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongopw
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    container_name: db-exam-mongo-express
+    image: mongo-express
+    restart: always
+    ports:
+      - 18081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: mongo
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mongopw
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:mongopw@mongo:27017/
+
+## Redis ##
+
+  redis:
+    container_name: db-exam-redis
+    image: "redis:alpine"
+    hostname: db-exam-redis
+    mem_limit: 2048m
+    memswap_limit: 6000m
+    restart: always
+    ports:
+      - "16379:6379"
+
+networks:
+  default:
+    name: db-exam
+
+volumes:
+  postgres_data:
+  mongo_data:
+  neo4j_data:
