@@ -1,11 +1,18 @@
 ﻿@page "/users"
 @using Frontend.Pages.SubPages;
+@using lib.DTO
 
 <h3>Users</h3>
 
 <Tabs>
     <TabPane Tab="Patients">
-        <PersonTable PeopleFetcher="service => service.GetPeopleAsync(lib.DTO.PersonType.Patient)"/>
+        <PersonTable PeopleType="@PersonType.Patient"/>
+    </TabPane>
+    <TabPane Tab="Doctors">
+        <PersonTable PeopleType="@PersonType.Doctor"/>
+    </TabPane>
+    <TabPane Tab="Pharmaceuts">
+        <PersonTable PeopleType="@PersonType.Pharmaceut"/>
     </TabPane>
 </Tabs>
 

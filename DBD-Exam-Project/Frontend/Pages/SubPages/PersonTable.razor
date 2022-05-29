@@ -7,18 +7,18 @@
     <Column Title="First name" @bind-Field="@context.FirstName"/>
     <Column Title="Last name" @bind-Field="@context.LastName"/>
     <Column @bind-Field="@context.Email"/>
-    @if(context.Type == PersonType.Patient)
+    @if(PeopleType == PersonType.Patient)
     {
         <Column Title="Cpr number" @bind-Field="@context.CphNumber"/>
-    } 
-    else if(context.Type == PersonType.Pharmaceut)
+    }
+    else if(PeopleType == PersonType.Pharmaceut)
     {
-        <Column Title="Pharmacy name" @bind-Field="@context.PharmacyName"/>
+        <Column Title="Pharmacy name" @bind-Field="@context.PharmacyName" />
     }
     <ActionColumn>
         <Space>
             <SpaceItem>
-                <Button OnClick="() => OnViewDataClicked(context)">View data as user</Button>
+                <Button OnClick="() => OnViewDataClicked(context)">View other pages as user</Button>
             </SpaceItem>
         </Space>
     </ActionColumn>
@@ -27,16 +27,16 @@
 
 @code {
     [Parameter]
-    public Func<IPeopleService, Task<IEnumerable<PersonDto>>>? PeopleFetcher { get; set; }
+    public PersonType? PeopleType { get; set; } = null;
 
     public IEnumerable<PersonDto> People { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        if (PeopleFetcher == null)
+        if (PeopleType == null)
             People = Enumerable.Empty<PersonDto>();
         else
-            People = await PeopleFetcher.Invoke(PeopleService);
+            People = await PeopleService.GetPeopleAsync(PeopleType.Value);
     }
 
     private void OnViewDataClicked(PersonDto person)
