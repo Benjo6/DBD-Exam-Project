@@ -9,17 +9,17 @@ This will set up databases and services on the following ports:
 
 | Service  | Local Development | From other docker containers |
 |----------|-------------------|------------------------------|
-| Postgres                | localhost:15432   | db-exam-postgres:5432           |
-| Mongo                   | localhost:17017   | db-exam-mongo:27017             |
-| Neo4j                   | localhost:17474   | db-exam-neo4j:7474              |
-| Neo4j                   | localhost:17687   | db-exam-neo4j:7687              |
-| Redis                   | localhost:16379   | db-exam-redis:6379              |
-| Consultation Service    | localhost:18090   | db-exam-consultation-service:80 |
-| Analysis Service        | localhost:18091   | db-exam-analysis-service:80     |
-| Mail Service            | localhost:18092   | db-exam-mail-service:80         |
-| Prescription Service    | localhost:18093   | db-exam-prescription-service:80 |
-| Test Data Api           | localhost:18094   | db-exam-testdata-service:80     |
-| CronJob Service         | localhost:18095   | db-exam-cronjob-service:80      |
+| Postgres                | localhost:15432   | postgres:5432           |
+| Mongo                   | localhost:17017   | mongo:27017             |
+| Neo4j                   | localhost:17474   | neo:7474              |
+| Neo4j                   | localhost:17687   | neo:7687              |
+| Redis                   | localhost:16379   | redis:6379              |
+| Consultation Service    | localhost:18090   | consultation-service:80 |
+| Analysis Service        | localhost:18091   | analysis-service:80     |
+| Mail Service            | localhost:18092   | mail-service:80         |
+| Prescription Service    | localhost:18093   | prescription-service:80 |
+| Test Data Api           | localhost:18094   | testdata-service:80     |
+| CronJob Service         | localhost:18095   | cronjob-service:80      |
 
 | Tool | Url |
 | - | - |
@@ -46,9 +46,3 @@ While >= 0.09 difference will not return a result:
 
 ![No Result](/documentation/mongo/outsiderange.png)
 
-## postgres
-### docker
-```"Host=prescription-database;Port=5432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw"```
-### localhost
-```"Host=localhost;Port=15432;Database=prescription_db;Include Error Detail=true;Username=prescription_user;Password=prescription_pw"```
-redis
