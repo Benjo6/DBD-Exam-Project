@@ -3,6 +3,7 @@ services:
 
 ## PG Admin ##
   pgadmin:
+    container_name: db-exam-pgadmin
     image: dpage/pgadmin4:latest
     ports:
       - "10010:80"
@@ -28,9 +29,10 @@ services:
 ## Redis Insight ##
 
   redis-insight:
-      image: redislabs/redisinsight
-      ports:
-        - 10030:8001
+    container_name: db-exam-redis-insight
+    image: redislabs/redisinsight
+    ports:
+      - 10030:8001
 
 networks:
   default:
