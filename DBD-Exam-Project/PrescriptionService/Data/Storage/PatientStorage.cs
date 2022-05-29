@@ -30,7 +30,7 @@ public class PatientStorage: BaseStorage<PersonDto, Patient>, IPatientStorage
 
         string bulkKey = $"p{pageInfo.Number}s{pageInfo.Size}";
 
-        return await GetAll(_repo.GetAll(), bulkKey, pageInfo);
+        return await GetAll(() => _repo.GetAll(), bulkKey, pageInfo);
     }
 
     public async Task<PersonDto> Get(int id)

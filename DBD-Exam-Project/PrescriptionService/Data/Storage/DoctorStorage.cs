@@ -25,7 +25,7 @@ public class DoctorStorage : BaseStorage<PersonDto, Doctor>, IDoctorStorage
     public Task<IEnumerable<PersonDto>> GetAll(Page? pageInfo = null)
     {
         pageInfo ??= new Page();
-        return GetAll(_repo.GetAll(), pageInfo);
+        return GetAll(() => _repo.GetAll(), pageInfo);
     }
 
     public async Task<PersonDto> Get(int id)
