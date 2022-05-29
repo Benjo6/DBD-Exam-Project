@@ -74,6 +74,7 @@ namespace CronJobService.Services
                             GeoPoint = geoPointDtos[i % geoPointDtos.Count]
                         };
                         consultationRequest.AddJsonBody(consultation);
+                        consultationRequest.AddHeader("content-type", "application/json");
                         var consultationResponse = consultationClient.PostAsync(consultationRequest, CancellationToken.None).Result;
                         if (!consultationResponse.IsSuccessful)
                         {
