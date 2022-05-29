@@ -8,15 +8,18 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace Neo4JDataSupplier
 {
     public class Neo4jClient
     {
+        private readonly IConfiguration _config;
         private readonly IGraphClient _client;
-        public Neo4jClient(IGraphClient client)
+        public Neo4jClient(IGraphClient client, IConfiguration config)
         {
             _client = client;
+            _config = config;
         }
 
         public async Task<string> Run()
@@ -26,14 +29,14 @@ namespace Neo4JDataSupplier
             //await Pharmacies();
             //await Pharamceuts();
             //await Medicines();
-            //await Doctors();
+            await Doctors();
             //await Consultations();
-            await Prescribed();
-            await Prescribed_By();
-            await Work_For();
-            await Booked();
-            await Schedule_For();
-            await Prescribed_To();
+            //await Prescribed();
+            //await Prescribed_By();
+            //await Work_For();
+            //await Booked();
+            //await Schedule_For();
+            //await Prescribed_To();
 
             return "Task Completed";
         }
@@ -42,7 +45,7 @@ namespace Neo4JDataSupplier
         {
             using (HttpClient client = new HttpClient())
             {
-                string content = await client.GetStringAsync("https://localhost:44346/api/doctor");
+                string content = await client.GetStringAsync(_config.GetValue<string>("ConnectionStrings:prescription_service") + "Persons/doctors");
                 IList<PersonDto> doctors = JsonConvert.DeserializeObject<IList<PersonDto>>(content);
                 foreach (PersonDto item in doctors)
                 {
@@ -62,21 +65,16 @@ namespace Neo4JDataSupplier
             }
         }
 
-        public async Task<IEnumerable<MedicineDto>> Medicines()
+        public async Task<IEnumerable<string>> Medicines()
         {
             using (HttpClient client = new HttpClient())
             {
-                string content = await client.GetStringAsync("https://localhost:44346/api/medicine");
-                IList<MedicineDto> medicines = JsonConvert.DeserializeObject<IList<MedicineDto>>(content);
-                foreach (MedicineDto item in medicines)
+                string content = await client.GetStringAsync(_config.GetValue<string>("ConnectionStrings:prescription_service") + "Medicines");
+                IList<string> medicines = JsonConvert.DeserializeObject<IList<string>>(content);
+                foreach (string item in medicines)
                 {
-                    await _client.Cypher.Merge("(m:Medicine {Id: $mID } )")
-                        .OnMatch()
-                        .Set("m=$med")
-                        .OnCreate()
-                        .Set("m=$med")
+                    await _client.Cypher.Merge("(m:Medicine {Name: $med } )")
                         .WithParam("med", item)
-                        .WithParam("mID", item.Id)
                         .ExecuteWithoutResultsAsync();
                 }
 
@@ -89,7 +87,7 @@ namespace Neo4JDataSupplier
         {
             using (HttpClient client = new HttpClient())
             {
-                string content = await client.GetStringAsync("https://localhost:44346/api/pharamceut");
+                string content = await client.GetStringAsync(_config.GetValue<string>("ConnectionStrings:prescription_service") + "Persons/pharmaceuts");
                 IList<PersonDto> pharamceuts = JsonConvert.DeserializeObject<IList<PersonDto>>(content);
                 foreach (PersonDto item in pharamceuts)
                 {
@@ -113,7 +111,7 @@ namespace Neo4JDataSupplier
         {
             using (HttpClient client = new HttpClient())
             {
-                string content = await client.GetStringAsync("https://localhost:44346/api/prescription/patient");
+                string content = await client.GetStringAsync(_config.GetValue<string>("ConnectionStrings:prescription_service") + "Persons/patients");
                 IList<PersonDto> patients = JsonConvert.DeserializeObject<IList<PersonDto>>(content);
                 foreach (PersonDto item in patients)
                 {
@@ -138,7 +136,7 @@ namespace Neo4JDataSupplier
             {
                 var jsonSerializerSettings = new JsonSerializerSettings();
 
-                string content = await client.GetStringAsync("https://localhost:44346/api/prescription/prescriptions");
+                string content = await client.GetStringAsync(_config.GetValue<string>("ConnectionStrings:prescription_service") + "/Prescriptions?Size=5000");
                 IList<PrescriptionDto> prescriptions = JsonConvert.DeserializeObject<IList<PrescriptionDto>>(content, jsonSerializerSettings);
                 foreach (PrescriptionDto item in prescriptions)
                 {
@@ -161,7 +159,7 @@ namespace Neo4JDataSupplier
         {
             using (HttpClient client = new HttpClient())
             {
-                string content = await client.GetStringAsync("https://localhost:44346/api/prescription/pharmacy");
+                string content = await client.GetStringAsync(_config.GetValue<string>("ConnectionStrings:prescription_service") + "Pharmacy/pharmacy");
                 IList<PharmacyDto> pharmacies = JsonConvert.DeserializeObject<IList<PharmacyDto>>(content);
                 foreach (PharmacyDto item in pharmacies)
                 {
@@ -176,7 +174,6 @@ namespace Neo4JDataSupplier
                 }
 
 
-
                 return pharmacies;
             }
         }
@@ -184,7 +181,7 @@ namespace Neo4JDataSupplier
         {
             using (HttpClient client = new HttpClient())
             {
-                string content = await client.GetStringAsync("http://localhost:18080/api/Consultation");
+                string content = await client.GetStringAsync(_config.GetValue<string>("ConnectionStrings:consultation_service") + "Consultation");
                 IList<ConsultationDto> consultations = JsonConvert.DeserializeObject<IList<ConsultationDto>>(content);
                 foreach (ConsultationDto item in consultations)
                 {
@@ -205,8 +202,7 @@ namespace Neo4JDataSupplier
         public async Task<string> Prescribed()
         {
             await _client.Cypher.Match("(p:Prescription)", "(m:Medicine)")
-                .Where("p.MedicineId = m.Id")
-                // .Where((PrescriptionDto p, MedicineDto m) => p.MedicineId == m.Id)
+                .Where((PrescriptionDto p, MedicineDto m) => p.MedicineName == m.Name)
                 .Merge("(p)-[:prescribed]->(m)")
                 .ExecuteWithoutResultsAsync();
 
@@ -215,8 +211,7 @@ namespace Neo4JDataSupplier
         public async Task<string> Prescribed_By()
         {
             await _client.Cypher.Match("(d:Doctor)", "(p:Prescription)")
-                .Where("d.Id = p.DoctorId")
-             //   .Where((DoctorDto d,PrescriptionDto p ) => d.Id==p.DoctorId)
+       //Need to add the mapper data        // .Where((PersonDto d, PrescriptionDto p) => d.Id == p.DoctorId)
                 .Merge("(d)-[:prescribed_by]->(p)")
                 .ExecuteWithoutResultsAsync();
 
@@ -225,8 +220,7 @@ namespace Neo4JDataSupplier
         public async Task<string> Prescribed_To()
         {
             await _client.Cypher.Match("(p:Prescription)", "(pa:Patient)")
-                .Where("p.Id = pa.PatientId")
-               // .Where((PatientDto pa, PrescriptionDto p) => pa.Id == p.PatientId)
+                //Need to add the mapper data   //.Where((PersonDto pa, PrescriptionDto p) => pa.Id == p.PatientId)
                 .Merge("(p)-[:prescribed_to]->(pa)")
                 .ExecuteWithoutResultsAsync();
 
@@ -253,7 +247,7 @@ namespace Neo4JDataSupplier
         public async Task<string> Work_For()
         {
             await _client.Cypher.Match("(pha:Pharmacy)", "(p:Pharamceut)")
-                .Where((PharamceutDto p, PharmacyDto pha) => p.PharmacyName==pha.Name)
+                .Where((PersonDto p, PharmacyDto pha) => p.PharmacyName == pha.Name)
                 .Merge("(p)-[:work_for]->(pha)")
                 .ExecuteWithoutResultsAsync();
 

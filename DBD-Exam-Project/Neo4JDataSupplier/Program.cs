@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Neo4jClient;
@@ -10,17 +11,23 @@ namespace Neo4JDataSupplier
 {
     public class Program
     {
+
         static async Task Main(string[] args)
         {
             var client = new BoltGraphClient(new Uri("bolt://localhost:7687"), "neo4j", "2wsxcde3");
             await client.ConnectAsync();
             var builder = Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration((hostContext, app) =>
+                {
+                    app.AddJsonFile("appsettings.json", optional: true, true);
+                })
                 .ConfigureServices((hostContext, services) =>
                 {
 
                     services.AddTransient<Neo4jClient>();
                     services.AddSingleton<IGraphClient>(client);
-                }).UseConsoleLifetime();
+                })
+                .UseConsoleLifetime();
 
             var host = builder.Build();
 
