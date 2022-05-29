@@ -46,48 +46,59 @@ namespace CronJobService.Services
                 new GeoPointDto(55.6413, 12.4763)
             };
 
-            var consultationClient = new RestClient(_consultationServiceUrl);
-            var consultationMetadataRequest = new RestRequest("api/ConsultationMetadata");
-            var metadata = consultationClient.GetAsync<ConsultationMetadataDto>(consultationMetadataRequest, CancellationToken.None).Result;
-            if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1))
+            try
             {
-                _logger.LogInformation("{0} >= {1} - No consultations will be added", metadata.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
-                return;
-            }
-            _logger.LogInformation("{0} < {1} - Consultations will be added", metadata?.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
 
-            int count = 0;
-            var time = DateTime.Today.AddDays(1).AddHours(8);
-            while(time < DateTime.Today.AddDays(1).AddHours(16))
-            {
-                // TODO update when doctor controller is up
-                for (int i = 1; i <= 10; i++)
+                var consultationClient = new RestClient(_consultationServiceUrl);
+                var consultationMetadataRequest = new RestRequest("api/ConsultationMetadata");
+                var metadata = consultationClient.GetAsync<ConsultationMetadataDto>(consultationMetadataRequest, CancellationToken.None).Result;
+                if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1))
                 {
-                    var consultationRequest = new RestRequest("api/Consultation", Method.Post);
-                    var consultation = new ConsultationCreationDto() {
-                        DoctorId = i.ToString(),
-                        ConsultationStartUtc = time,
-                        GeoPoint = geoPointDtos[i % geoPointDtos.Count]
-                    };
-                    consultationRequest.AddJsonBody(consultation);
-                    var consultationResponse = consultationClient.PostAsync(consultationRequest, CancellationToken.None).Result;
-                    if (!consultationResponse.IsSuccessful)
-                    {
-                        _logger.LogWarning("Error response while attempting to create consultation: {0}", consultationResponse.StatusCode);
-                        break;
-                    }
-                    count++;
+                    _logger.LogInformation("{0} >= {1} - No consultations will be added", metadata.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
+                    return;
                 }
-                time = time.AddMinutes(20);
+                _logger.LogInformation("{0} < {1} - Consultations will be added", metadata?.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
+
+                int count = 0;
+                var time = DateTime.Today.AddDays(1).AddHours(8);
+                while (time < DateTime.Today.AddDays(1).AddHours(16))
+                {
+                    // TODO update when doctor controller is up
+                    for (int i = 1; i <= 10; i++)
+                    {
+                        var consultationRequest = new RestRequest("api/Consultation", Method.Post);
+                        var consultation = new ConsultationCreationDto()
+                        {
+                            DoctorId = i.ToString(),
+                            ConsultationStartUtc = time,
+                            GeoPoint = geoPointDtos[i % geoPointDtos.Count]
+                        };
+                        consultationRequest.AddJsonBody(consultation);
+                        var consultationResponse = consultationClient.PostAsync(consultationRequest, CancellationToken.None).Result;
+                        if (!consultationResponse.IsSuccessful)
+                        {
+                            _logger.LogWarning("Error response while attempting to create consultation: {0}", consultationResponse.StatusCode);
+                            break;
+                        }
+                        count++;
+                    }
+                    time = time.AddMinutes(20);
+                }
+                var metadataToCreate = new ConsultationMetadataDto()
+                {
+                    DayOfConsultationsAdded = DateTime.Today.AddDays(1),
+                    CreatedCount = count,
+                    CreatedUtc = DateTime.UtcNow
+                };
+                var consultationMetadataCreRequest = new RestRequest("api/ConsultationMetadata");
+                var metadataCreated = consultationClient.PostAsync<ConsultationMetadataDto>(consultationMetadataCreRequest, CancellationToken.None).Result;
+                _logger.LogInformation("{0}\ncreated", JsonConvert.SerializeObject(metadataCreated, Formatting.Indented));
             }
-            var metadataToCreate = new ConsultationMetadataDto() {
-                DayOfConsultationsAdded = DateTime.Today.AddDays(1),
-                CreatedCount = count,
-                CreatedUtc = DateTime.UtcNow
-            };
-            var consultationMetadataCreRequest = new RestRequest("api/ConsultationMetadata");
-            var metadataCreated = consultationClient.PostAsync<ConsultationMetadataDto>(consultationMetadataCreRequest, CancellationToken.None).Result;
-            _logger.LogInformation("{0}\ncreated", JsonConvert.SerializeObject(metadataCreated, Formatting.Indented));
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in ConsultationCreationJob:");
+                throw;
+            }
         }
     }
 }
