@@ -1,4 +1,4 @@
-version: '2.4'
+version: '3'
 services:
 
   ## Consultation ##
@@ -7,7 +7,6 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: ConsultationService/Dockerfile.compose
-    hostname: db-exam-consultation-service
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
@@ -20,7 +19,6 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: Neo4J/Dockerfile
-    hostname: db-exam-analysis-service
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
@@ -33,7 +31,6 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: MailService/Dockerfile
-    hostname: db-exam-mail-service
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
@@ -46,7 +43,6 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: PrescriptionService/Dockerfile
-    hostname: db-exam-prescription-service
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
@@ -59,7 +55,6 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: TestDataAPI/Dockerfile
-    hostname: db-exam-testdata-service
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
@@ -72,7 +67,6 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: CronJobService/Dockerfile
-    hostname: db-exam-cronjob-service
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
