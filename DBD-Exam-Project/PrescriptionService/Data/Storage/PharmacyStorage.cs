@@ -1,10 +1,16 @@
-﻿using AutoMapper;
+﻿#nullable enable
+using AutoMapper;
 using lib.DTO;
 using lib.Models;
 using PrescriptionService.Data.Repositories;
 using PrescriptionService.Models;
 
 namespace PrescriptionService.Data.Storage;
+
+public interface IPharmacyStorage
+{
+    Task<IEnumerable<PharmacyDto>> GetAll(Page? page = null);
+}
 
 public class PharmacyStorage : BaseStorage<PharmacyDto, Pharmacy>, IPharmacyStorage
 {

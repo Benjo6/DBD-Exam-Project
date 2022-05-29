@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using AutoMapper;
 using lib.Configurations;
 using lib.DTO;
@@ -11,7 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -22,11 +31,17 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Conn
 builder.Services.AddScoped<IRedisCache, RedisCache>();
 builder.Services.AddScoped<IPrescriptionStorage, PrescriptionStorage>();
 builder.Services.AddScoped<IPatientStorage, PatientStorage>();
+builder.Services.AddScoped<IDoctorStorage, DoctorStorage>();
+builder.Services.AddScoped<IPharmaceutStorage, PharmaceutStorage>();
+builder.Services.AddScoped<IMedicineStorage, MedicineStorage>();
 builder.Services.AddScoped<IPharmacyStorage, PharmacyStorage>();
 
 builder.Services.AddNpgsql<PostgresContext>(builder.Configuration.GetConnectionString("postgres_admin"));
 builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
-builder.Services.AddScoped<IAsyncRepository<Patient>, PatientRepository>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IAsyncRepository<Doctor>, DoctorRepository>();
+builder.Services.AddScoped<IAsyncRepository<Pharmaceut>, PharmaceutRepository>();
+builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
 builder.Services.AddScoped<IAsyncRepository<Pharmacy>, PharmacyRepository>();
 
 builder.Services.AddSingleton<IMapper>(
@@ -36,20 +51,40 @@ builder.Services.AddSingleton<IMapper>(
             {
                 cfg.CreateMap<Prescription, PrescriptionDto>()
                     .ForMember(dist => dist.Patient, opt => opt.MapFrom(src => src.PrescribedToNavigation))
-                    .ForMember(dist => dist.DoctorId, opt => opt.MapFrom(src => src.PrescribedBy))
+                    .ForMember(dist => dist.Doctor, opt => opt.MapFrom(src => src.PrescribedByNavigation))
+                    .ForMember(dist => dist.MedicineName, opt => opt.MapFrom(src => src.Medicine.Name))
                     .ReverseMap();
-                cfg.CreateMap<Medicine, MedicineDto>()
-                    .ReverseMap();
-                cfg.CreateMap<Patient, PatientDto>()
+                cfg.CreateMap<Patient, PersonDto>()
+                    .ForMember(dist => dist.Type, opt => opt.MapFrom(src => PersonType.Patient))
                     .ForMember(dist => dist.FirstName, opt => opt.MapFrom(src => src.PersonalData.FirstName))
                     .ForMember(dist => dist.LastName, opt => opt.MapFrom(src => src.PersonalData.LastName))
                     .ForMember(dist => dist.Email, opt => opt.MapFrom(src => src.PersonalData.Email))
                     .ForMember(dist => dist.CphNumber, opt => opt.MapFrom(src => src.Cpr))
+                    .ForMember(dist => dist.Address, opt => opt.MapFrom(src => src.PersonalData.Address))
+                    .ReverseMap();
+                cfg.CreateMap<Doctor, PersonDto>()
+                    .ForMember(dist => dist.Type, opt => opt.MapFrom(src => PersonType.Doctor))
+                    .ForMember(dist => dist.FirstName, opt => opt.MapFrom(src => src.PersonalData.FirstName))
+                    .ForMember(dist => dist.LastName, opt => opt.MapFrom(src => src.PersonalData.LastName))
+                    .ForMember(dist => dist.Email, opt => opt.MapFrom(src => src.PersonalData.Email))
+                    .ForMember(dist => dist.Address, opt => opt.MapFrom(src => src.PersonalData.Address))
+                    .ReverseMap();
+                cfg.CreateMap<Pharmaceut, PersonDto>()
+                    .ForMember(dist => dist.Type, opt => opt.MapFrom(src => PersonType.Pharmaceut))
+                    .ForMember(dist => dist.FirstName, opt => opt.MapFrom(src => src.PersonalData.FirstName))
+                    .ForMember(dist => dist.LastName, opt => opt.MapFrom(src => src.PersonalData.LastName))
+                    .ForMember(dist => dist.Email, opt => opt.MapFrom(src => src.PersonalData.Email))
+                    .ForMember(dist => dist.PharmacyName, opt => opt.MapFrom(src => src.Pharmacy.PharmacyName))
+                    .ForMember(dist => dist.Address, opt => opt.MapFrom(src => src.PersonalData.Address))
                     .ReverseMap();
                 cfg.CreateMap<Address, AddressDto>()
                     .ReverseMap();
                 cfg.CreateMap<Pharmacy, PharmacyDto>()
                     .ForMember(dist => dist.Name, opt => opt.MapFrom(src => src.PharmacyName))
+                    .ReverseMap();
+                cfg.CreateMap<Medicine, string>()
+                    .ConvertUsing(src => src.Name);
+                cfg.CreateMap<Medicine, MedicineDto>()
                     .ReverseMap();
             })));
 

@@ -43,7 +43,7 @@ namespace CronJobService.Services
                     MailRequestDto mailRequest = new MailRequestDto();
                     mailRequest.ToEmail = email;
                     mailRequest.Subject = "Prescription Expiring";
-                    mailRequest.Body = $"Your prescription for {prescription.Medicine.Name} expires {prescription.Expiration}";
+                    mailRequest.Body = $"Your prescription for {prescription.MedicineName} expires {prescription.Expiration}";
                     var notificationRequest = new RestRequest("api/Email/send").AddBody(mailRequest);
 
                     var response = notificationClient.PostAsync(notificationRequest, cancellationToken).Result;

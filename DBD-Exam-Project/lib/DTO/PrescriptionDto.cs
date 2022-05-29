@@ -11,10 +11,9 @@ namespace lib.DTO
         public long Id { get; set; }
         public DateTime? Expiration { get; set; }
         public DateTime Creation { get; set; }
-        public MedicineDto? Medicine { get; set; }
-        public PatientDto? Patient { get; set; }
-        public int? DoctorId { get; set; }
-
+        public string? MedicineName { get; set; }
+        public PersonDto? Patient { get; set; }
+        public PersonDto? Doctor { get; set; }
     }
 
    

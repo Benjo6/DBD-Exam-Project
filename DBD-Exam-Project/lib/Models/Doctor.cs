@@ -5,7 +5,7 @@ using MessagePack;
 namespace lib.Models;
 
 [Table("doctor", Schema = "prescriptions"), MessagePackObject(keyAsPropertyName: true)]
-public class Doctor
+public class Doctor: EntityWithId<int>
 {
     [System.ComponentModel.DataAnnotations.Key, Column("id")]  
     public int Id { get; set; }

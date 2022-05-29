@@ -6,7 +6,7 @@ using MessagePack;
 namespace lib.Models;
 
 [Table("medicine", Schema = "prescriptions"), MessagePackObject(keyAsPropertyName: true)]
-public class Medicine
+public class Medicine : EntityWithId<int>
 {
     public Medicine(string name)
     {

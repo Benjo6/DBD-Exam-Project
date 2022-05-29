@@ -31,13 +31,13 @@ namespace Neo4JDataSupplier
             return "Task Completed";
         }
 
-        public async Task<IEnumerable<DoctorDto>> Doctors()
+        public async Task<IEnumerable<PersonDto>> Doctors()
         {
             using (HttpClient client = new HttpClient())
             {
                 string content = await client.GetStringAsync("https://localhost:44346/api/doctor");
-                IList<DoctorDto> doctors = JsonConvert.DeserializeObject<IList<DoctorDto>>(content);
-                foreach (DoctorDto item in doctors)
+                IList<PersonDto> doctors = JsonConvert.DeserializeObject<IList<PersonDto>>(content);
+                foreach (PersonDto item in doctors)
                 {
                     await _client.Cypher.Merge("(d:D {Id: $dID } )")
                         .OnMatch()
@@ -78,13 +78,13 @@ namespace Neo4JDataSupplier
                 return medicines;
             }
         }
-        public async Task<IEnumerable<PharamceutDto>> Pharamceuts()
+        public async Task<IEnumerable<PersonDto>> Pharamceuts()
         {
             using (HttpClient client = new HttpClient())
             {
                 string content = await client.GetStringAsync("https://localhost:44346/api/pharamceut");
-                IList<PharamceutDto> pharamceuts = JsonConvert.DeserializeObject<IList<PharamceutDto>>(content);
-                foreach (PharamceutDto item in pharamceuts)
+                IList<PersonDto> pharamceuts = JsonConvert.DeserializeObject<IList<PersonDto>>(content);
+                foreach (PersonDto item in pharamceuts)
                 {
                     await _client.Cypher.Merge("(p:Pharamceut {Id: $pID } )")
                         .OnMatch()
@@ -102,13 +102,13 @@ namespace Neo4JDataSupplier
             }
         }
 
-        public async Task<IEnumerable<PatientDto>> Patient()
+        public async Task<IEnumerable<PersonDto>> Patient()
         {
             using (HttpClient client = new HttpClient())
             {
                 string content = await client.GetStringAsync("https://localhost:44346/api/prescription/patient");
-                IList<PatientDto> patients = JsonConvert.DeserializeObject<IList<PatientDto>>(content);
-                foreach (PatientDto item in patients)
+                IList<PersonDto> patients = JsonConvert.DeserializeObject<IList<PersonDto>>(content);
+                foreach (PersonDto item in patients)
                 {
                     await _client.Cypher.Merge("(p:Patient {Id: $pID } )")
                         .OnMatch()

@@ -6,14 +6,19 @@ namespace PrescriptionService.Data;
 
 public interface IRedisCache
 {
-    Task Store<TSource, TKey>(TSource source) where TSource : class, EntityWithId<TKey>;
+    Task Store<TSource, TKey>(TSource source) 
+        where TSource : class, EntityWithId<TKey>
+        where TKey : notnull;
+    Task Store<TSource, TKey>(TSource source, TKey keyValue)
+        where TSource : notnull
+        where TKey : notnull;
     Task BulkStore<TSource, TKey>(IEnumerable<TSource> source, string bulkKey)
         where TSource : class, EntityWithId<TKey>
         where TKey : notnull;
     Task<IEnumerable<TResult>> BulkRetrive<TResult, TKey>(string bulkKey)
         where TResult: class, EntityWithId<TKey>;
-    Task<TResult?> Retrive<TResult, TKey>(TKey id) 
-        where TResult : class, EntityWithId<TKey>
+    Task<TResult?> Retrive<TResult, TKey>(TKey id)
+        where TResult : class
         where TKey : notnull;
     Task<bool> ExistsInBulk<TSource, TKey>(TKey id, string bulkKey)
         where TKey : notnull;
