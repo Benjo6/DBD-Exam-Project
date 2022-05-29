@@ -91,8 +91,9 @@ namespace CronJobService.Services
                     CreatedCount = count,
                     CreatedUtc = DateTime.UtcNow
                 };
-                var consultationMetadataCreRequest = new RestRequest("api/ConsultationMetadata");
-                var metadataCreated = consultationClient.PostAsync<ConsultationMetadataDto>(consultationMetadataCreRequest, CancellationToken.None).Result;
+                var consultationMetadataCreateRequest = new RestRequest("api/ConsultationMetadata");
+                consultationMetadataCreateRequest.AddJsonBody(metadataToCreate);
+                var metadataCreated = consultationClient.PostAsync<ConsultationMetadataDto>(consultationMetadataCreateRequest, CancellationToken.None).Result;
                 _logger.LogInformation("{0}\ncreated", JsonConvert.SerializeObject(metadataCreated, Formatting.Indented));
             }
             catch (Exception ex)
