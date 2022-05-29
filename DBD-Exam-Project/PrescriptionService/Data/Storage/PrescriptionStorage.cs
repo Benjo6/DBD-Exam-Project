@@ -44,7 +44,7 @@ public class PrescriptionStorage : BaseStorage<PrescriptionDto, Prescription, lo
             ? $"p{pageInfo.Number}s{pageInfo.Size}" 
             : $"p{pageInfo.Number}s{pageInfo.Size}expired";
 
-        return await GetAll(expired ? _repo.GetAllExpired() : _repo.GetAll(), bulkKey, pageInfo);
+        return await GetAll(() => expired ? _repo.GetAllExpired() : _repo.GetAll(), bulkKey, pageInfo);
     }
 
     public async Task<IEnumerable<PrescriptionDto>> GetAll(string cprNumber, Page? pageInfo = null)
@@ -52,7 +52,7 @@ public class PrescriptionStorage : BaseStorage<PrescriptionDto, Prescription, lo
         pageInfo ??= new();
 
         string bulkKey = $"p{pageInfo.Number}s{pageInfo.Size}user{cprNumber}";
-        return await GetAll(_repo.GetAllForPatient(cprNumber), bulkKey, pageInfo);
+        return await GetAll(() => _repo.GetAllForPatient(cprNumber), bulkKey, pageInfo);
     }
 
     public async Task<IEnumerable<PrescriptionDto>> GetAll(int doctorId, Page? pageInfo = null)
@@ -60,7 +60,7 @@ public class PrescriptionStorage : BaseStorage<PrescriptionDto, Prescription, lo
         pageInfo ??= new();
 
         string bulkKey = $"p{pageInfo.Number}s{pageInfo.Size}doctor{doctorId}";
-        return await GetAll(_repo.GetAllForDoctor(doctorId), bulkKey, pageInfo);
+        return await GetAll(() => _repo.GetAllForDoctor(doctorId), bulkKey, pageInfo);
     }
 
     public async Task<PrescriptionDto> Get(long id)

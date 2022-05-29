@@ -8,12 +8,14 @@ namespace CronJobService.Services
     public class ConsultationJob : CronJobBase
     {
         private ILogger<ConsultationJob> _logger;
-        private IRenewalService _renewalService;
+        private IConsultationCreationService _consultationCreationService;
 
-        public ConsultationJob(IScheduleConfig<ConsultationJob> config, ILogger<ConsultationJob> logger)
+        public ConsultationJob(IScheduleConfig<ConsultationJob> config, ILogger<ConsultationJob> logger, IConsultationCreationService consultationCreationService)
         : base(config.CronExpression, config.TimeZoneInfo)
         {
             _logger = logger;
+            _consultationCreationService = consultationCreationService;
+
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -26,7 +28,7 @@ namespace CronJobService.Services
         {
             _logger.LogInformation($"{DateTime.Now:hh:mm:ss} ConsultationJob is working.");
 
-            // TODO implement consultation creation
+            _consultationCreationService.CreateNewConsultationOpenings();
 
             return Task.CompletedTask;
         }

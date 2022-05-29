@@ -23,7 +23,7 @@ public class PharmaceutStorage : BaseStorage<PersonDto, Pharmaceut>, IPharmaceut
     }
 
     public Task<IEnumerable<PersonDto>> GetAll(Page? pageInfo = null)
-        => GetAll(_repo.GetAll(), pageInfo ?? new());
+        => GetAll(() => _repo.GetAll(), pageInfo ?? new());
 
     public async Task<PersonDto> Get(int id)
     {
