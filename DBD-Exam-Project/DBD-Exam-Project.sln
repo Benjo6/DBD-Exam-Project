@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4JDataSupplier", "Neo4JD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrescriptionService", "PrescriptionService\PrescriptionService.csproj", "{6F433A28-7B0A-4021-BD44-563E3ED9D140}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Frontend.csproj", "{C56831F5-5019-4028-8639-81FE40233E36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{6F433A28-7B0A-4021-BD44-563E3ED9D140}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F433A28-7B0A-4021-BD44-563E3ED9D140}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F433A28-7B0A-4021-BD44-563E3ED9D140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C56831F5-5019-4028-8639-81FE40233E36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C56831F5-5019-4028-8639-81FE40233E36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C56831F5-5019-4028-8639-81FE40233E36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C56831F5-5019-4028-8639-81FE40233E36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
