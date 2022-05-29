@@ -4,13 +4,15 @@ services:
 ## Postgres ##
   postgres:
     container_name: 'db-exam-postgres'
-    image: postgres:14.2-alpine
+    build: 
+      context: ./postgres
+      dockerfile: Dockerfile
+    hostname: db-exam-postgres
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
       - 15432:5432
     volumes:
-     - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
      - postgres_data:/var/lib/postgresql/data
     restart: always
     environment:
@@ -20,7 +22,10 @@ services:
 ## Neo4j ##
   neo:
     container_name: db-exam-neo4j
-    image: neo4j:4.4.7
+    build: 
+      context: ./neo4j
+      dockerfile: Dockerfile
+    hostname: db-exam-neo4j
     mem_limit: 2048m
     memswap_limit: 6000m
     ports:
@@ -29,7 +34,6 @@ services:
     volumes:
       - neo4j_data:/data
       - ./neo4j/logs:/logs
-      - ./neo4j/conf:/var/lib/neo4j/conf/
       #- ./neo4j/import:/var/lib/neo4j/import (uncomment if import is needed)
     environment:
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*,algo.*,gds.*
@@ -42,7 +46,10 @@ services:
 ## Mongo ##
   mongo:
     container_name: db-exam-mongo
-    image: mongo:5.0.8
+    build: 
+      context: ./mongo
+      dockerfile: Dockerfile
+    hostname: db-exam-mongo
     mem_limit: 2048m
     memswap_limit: 6000m
     restart: always
@@ -53,12 +60,12 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: mongopw
     volumes:
       - mongo_data:/data/db
-      - ./mongo/setup.js:/docker-entrypoint-initdb.d/setup.js
 
 ## Redis ##
   redis:
     container_name: db-exam-redis
     image: "redis:alpine"
+    hostname: db-exam-redis
     mem_limit: 2048m
     memswap_limit: 6000m
     restart: always
