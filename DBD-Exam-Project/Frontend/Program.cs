@@ -1,6 +1,4 @@
 using Frontend.Data;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +8,15 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddAntDesign();
+
+string prescriptionConnectionString = builder.Configuration.GetConnectionString("PrescriptionService");
+builder.Services
+    .AddHttpClient(
+    "PrescriptionClient", 
+    conf => conf.BaseAddress = new(prescriptionConnectionString));
+
+
+builder.Services.AddScoped<IPeopleService, PeopleService>();
 
 var app = builder.Build();
 
