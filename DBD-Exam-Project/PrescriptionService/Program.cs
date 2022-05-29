@@ -36,7 +36,7 @@ builder.Services.AddScoped<IPharmaceutStorage, PharmaceutStorage>();
 builder.Services.AddScoped<IMedicineStorage, MedicineStorage>();
 builder.Services.AddScoped<IPharmacyStorage, PharmacyStorage>();
 
-builder.Services.AddNpgsql<PostgresContext>(builder.Configuration.GetConnectionString("postgres_admin"));
+builder.Services.AddNpgsql<PostgresContext>(builder.Configuration.GetConnectionString("postgres"));
 builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IAsyncRepository<Doctor>, DoctorRepository>();
