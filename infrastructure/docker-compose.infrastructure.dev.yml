@@ -7,9 +7,10 @@ services:
     build: 
       context: ./postgres
       dockerfile: Dockerfile
-    hostname: db-exam-postgres
-    mem_limit: 2048m
-    memswap_limit: 6000m
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     ports:
       - 15432:5432
     volumes:
@@ -25,9 +26,10 @@ services:
     build: 
       context: ./neo4j
       dockerfile: Dockerfile
-    hostname: db-exam-neo4j
-    mem_limit: 2048m
-    memswap_limit: 6000m
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     ports:
       - 17474:7474
       - 17687:7687
@@ -49,9 +51,10 @@ services:
     build: 
       context: ./mongo
       dockerfile: Dockerfile
-    hostname: db-exam-mongo
-    mem_limit: 2048m
-    memswap_limit: 6000m
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     restart: always
     ports:
       - 17017:27017
@@ -65,9 +68,10 @@ services:
   redis:
     container_name: db-exam-redis
     image: "redis:alpine"
-    hostname: db-exam-redis
-    mem_limit: 2048m
-    memswap_limit: 6000m
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     restart: always
     ports:
       - "16379:6379"
