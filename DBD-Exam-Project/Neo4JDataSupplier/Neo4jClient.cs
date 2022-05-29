@@ -21,13 +21,20 @@ namespace Neo4JDataSupplier
 
         public async Task<string> Run()
         {
-            await Prescription();
-            await Patient();
-            await Pharmacies();
-            await Pharamceuts();
-            await Medicines();
-            await Doctors();
+            //await Prescription();
+            //await Patient();
+            //await Pharmacies();
+            //await Pharamceuts();
+            //await Medicines();
+            //await Doctors();
             //await Consultations();
+            await Prescribed();
+            await Prescribed_By();
+            await Work_For();
+            await Booked();
+            await Schedule_For();
+            await Prescribed_To();
+
             return "Task Completed";
         }
 
@@ -39,7 +46,7 @@ namespace Neo4JDataSupplier
                 IList<DoctorDto> doctors = JsonConvert.DeserializeObject<IList<DoctorDto>>(content);
                 foreach (DoctorDto item in doctors)
                 {
-                    await _client.Cypher.Merge("(d:D {Id: $dID } )")
+                    await _client.Cypher.Merge("(d:Doctor {Id: $dID } )")
                         .OnMatch()
                         .Set("d=$doc")
                         .OnCreate()
@@ -194,5 +201,64 @@ namespace Neo4JDataSupplier
                 return consultations;
             }
         }
+
+        public async Task<string> Prescribed()
+        {
+            await _client.Cypher.Match("(p:Prescription)", "(m:Medicine)")
+                .Where("p.MedicineId = m.Id")
+                // .Where((PrescriptionDto p, MedicineDto m) => p.MedicineId == m.Id)
+                .Merge("(p)-[:prescribed]->(m)")
+                .ExecuteWithoutResultsAsync();
+
+            return "Task Completed for method Prescribed";
+        }
+        public async Task<string> Prescribed_By()
+        {
+            await _client.Cypher.Match("(d:Doctor)", "(p:Prescription)")
+                .Where("d.Id = p.DoctorId")
+             //   .Where((DoctorDto d,PrescriptionDto p ) => d.Id==p.DoctorId)
+                .Merge("(d)-[:prescribed_by]->(p)")
+                .ExecuteWithoutResultsAsync();
+
+            return "Task Completed for method Prescribed_By";
+        }
+        public async Task<string> Prescribed_To()
+        {
+            await _client.Cypher.Match("(p:Prescription)", "(pa:Patient)")
+                .Where("p.Id = pa.PatientId")
+               // .Where((PatientDto pa, PrescriptionDto p) => pa.Id == p.PatientId)
+                .Merge("(p)-[:prescribed_to]->(pa)")
+                .ExecuteWithoutResultsAsync();
+
+            return "Task Completed for method Prescribed_To";
+        }
+        public async Task<string> Schedule_For()
+        {
+            await _client.Cypher.Match("(c:Consultation)", "(d:Doctor)")
+                .Where("c.DoctorId = d.Id")
+                .Merge("(c)-[:schedule_For]->(d)")
+                .ExecuteWithoutResultsAsync();
+
+            return "Task Completed for method Schedule_For";
+        }
+        public async Task<string> Booked()
+        {
+            await _client.Cypher.Match("(c:Consultation)", "(p:Patient)")
+                .Where("c.PatientId = p.Id")
+                .Merge("(p)-[:booked]->(c)")
+                .ExecuteWithoutResultsAsync();
+
+            return "Task Completed for method Booked";
+        }
+        public async Task<string> Work_For()
+        {
+            await _client.Cypher.Match("(pha:Pharmacy)", "(p:Pharamceut)")
+                .Where((PharamceutDto p, PharmacyDto pha) => p.PharmacyName==pha.Name)
+                .Merge("(p)-[:work_for]->(pha)")
+                .ExecuteWithoutResultsAsync();
+
+            return "Task Completed for method Work_For";
+        }
+
     }
 }
