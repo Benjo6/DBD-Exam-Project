@@ -18,17 +18,23 @@ namespace Neo4JDataSupplier
             var builder = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration((hostContext, app) =>
                 {
+                    
                     app.AddJsonFile("appsettings.json", optional: true, true);
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-
                     services.AddTransient<Neo4jClient>();
                     services.AddSingleton<IGraphClient>(client);
+                    
                 })
                 .UseConsoleLifetime();
+            
+          
+       
 
             var host = builder.Build();
+
+       
 
             using (var serviceScope = host.Services.CreateScope())
             {

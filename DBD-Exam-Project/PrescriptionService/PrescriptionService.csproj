@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\lib\lib.csproj" />
+    <ProjectReference Include="..\Neo4JDataSupplier\Neo4JDataSupplier.csproj" />
   </ItemGroup>
 
 </Project>
