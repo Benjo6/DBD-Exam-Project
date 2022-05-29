@@ -13,17 +13,6 @@ services:
       - 18090:80
     restart: always
 
-  ## Analysis ##
-  analysis-service:
-    container_name: 'db-exam-analysis-service'
-    build: 
-      context: ../DBD-Exam-Project
-      dockerfile: Neo4J/Dockerfile
-    mem_limit: 2048m
-    memswap_limit: 6000m
-    ports:
-      - 18091:80
-    restart: always
 
   ## Mail-Service ##
   mail-service:
