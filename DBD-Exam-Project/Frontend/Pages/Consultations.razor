@@ -13,9 +13,12 @@
 <Table TItem="ConsultationDto" DataSource="@consultations">
     <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc"/>
     <Column Title="Created" @bind-Field="@context.CreatedUtc" />
-    <Column Title="Patient ID" @bind-Field="@context.PatientId" />
     <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
-    <Column Title="Regarding" @bind-Field="@context.Regarding" />
+    <ActionColumn>
+        <Space>
+            <SpaceItem><Button Danger OnClick="()=>Book(context.Id)">Book</Button></SpaceItem>
+        </Space>
+    </ActionColumn>
 </Table>
 
 @code {
