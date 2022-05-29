@@ -1,0 +1,46 @@
+﻿@using lib.DTO
+@using Frontend.Data
+@inject IPeopleService PeopleService
+
+<Table TItem="PersonDto" DataSource="@People">
+    <Column @bind-Field="@context.Id"/>
+    <Column Title="First name" @bind-Field="@context.FirstName"/>
+    <Column Title="Last name" @bind-Field="@context.LastName"/>
+    <Column @bind-Field="@context.Email"/>
+    @if(context.Type == PersonType.Patient)
+    {
+        <Column Title="Cpr number" @bind-Field="@context.CphNumber"/>
+    } 
+    else if(context.Type == PersonType.Pharmaceut)
+    {
+        <Column Title="Pharmacy name" @bind-Field="@context.PharmacyName"/>
+    }
+    <ActionColumn>
+        <Space>
+            <SpaceItem>
+                <Button OnClick="() => OnViewDataClicked(context)">View data as user</Button>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
+</Table>
+
+
+@code {
+    [Parameter]
+    public Func<IPeopleService, Task<IEnumerable<PersonDto>>>? PeopleFetcher { get; set; }
+
+    public IEnumerable<PersonDto> People { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (PeopleFetcher == null)
+            People = Enumerable.Empty<PersonDto>();
+        else
+            People = await PeopleFetcher.Invoke(PeopleService);
+    }
+
+    private void OnViewDataClicked(PersonDto person)
+    {
+        Console.WriteLine("Your MOm!!");
+    }
+}

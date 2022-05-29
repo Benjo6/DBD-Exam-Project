@@ -1,0 +1,14 @@
+﻿@page "/users"
+@using Frontend.Pages.SubPages;
+
+<h3>Users</h3>
+
+<Tabs>
+    <TabPane Tab="Patients">
+        <PersonTable PeopleFetcher="service => service.GetPeopleAsync(lib.DTO.PersonType.Patient)"/>
+    </TabPane>
+</Tabs>
+
+@code {
+
+}
