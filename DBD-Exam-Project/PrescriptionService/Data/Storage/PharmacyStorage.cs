@@ -28,6 +28,6 @@ public class PharmacyStorage : BaseStorage<PharmacyDto, Pharmacy>, IPharmacyStor
 
         string bulkKey = $"p{pageInfo.Number}s{pageInfo.Size}";
 
-        return await GetAll(_repo.GetAll(), bulkKey, pageInfo);
+        return await GetAll(() => _repo.GetAll(), bulkKey, pageInfo);
     }
 }

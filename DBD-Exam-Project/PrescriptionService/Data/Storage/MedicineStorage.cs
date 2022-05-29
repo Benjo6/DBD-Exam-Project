@@ -29,7 +29,7 @@ public class MedicineStorage : BaseStorage<string, Medicine>, IMedicineStorage
         
         string bulkKey = $"p{pageInfo.Number}s{pageInfo.Size}";
 
-        return await GetAll(_repo.GetAll(), bulkKey, pageInfo);
+        return await GetAll(() => _repo.GetAll(), bulkKey, pageInfo);
     }
 
     public async Task<MedicineDto> Get(string name)
