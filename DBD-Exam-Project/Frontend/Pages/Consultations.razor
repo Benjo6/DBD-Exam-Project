@@ -1,0 +1,33 @@
+﻿@page "/consultations"
+
+<PageTitle>Consultations</PageTitle>
+
+@using Frontend.Data
+@using lib.DTO
+@using System.ComponentModel
+@using AntDesign.TableModels
+@inject IConsultationService ConsultationService
+
+<h1>Consultations</h1>
+
+<Table TItem="ConsultationDto" DataSource="@consultations">
+    <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc"/>
+    <Column Title="Created" @bind-Field="@context.CreatedUtc" />
+    <Column Title="Patient ID" @bind-Field="@context.PatientId" />
+    <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
+    <Column Title="Regarding" @bind-Field="@context.Regarding" />
+</Table>
+
+@code {
+    private List<ConsultationDto>? consultations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        consultations = await ConsultationService.GetConsultationsAsync();
+    }
+
+    private void Book(String id)
+    {
+        return;
+    }
+}
