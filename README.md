@@ -21,6 +21,12 @@ This will set up databases and services on the following ports:
 | Test Data Api           | localhost:18094   | db-exam-testdata-service:80     |
 | CronJob Service         | localhost:18095   | db-exam-cronjob-service:80      |
 
+| Tool | Url |
+| - | - |
+| PG Admin | http://localhost:10010
+| Mongo Express | http://localhost:10020
+| Redis Insight | http://localhost:10030
+
 neo4j
 ## ConsultationService (mongo)
 Service for creating, booking and retrieving consultations.
