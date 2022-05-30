@@ -5,6 +5,6 @@ sh.addShard("rs-sh-02/mongo-shard2-rs2:27017")
 
 const db = new Mongo().getDB('consultations');
 sh.enableSharding("consultations")
-db.adminCommand( { shardCollection: "consultations.consultations", key: { supplierId: "hashed" } } )
+db.adminCommand( { shardCollection: "consultations.consultations", key: { patientId: "hashed" } } )
 
 db.consultations.createIndex( { Location : "2dsphere" } )
