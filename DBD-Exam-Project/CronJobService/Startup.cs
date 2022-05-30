@@ -31,7 +31,7 @@ namespace CronJobService
 
             services.AddCronJob<ConsultationJob>(consultationJob =>
             {
-                consultationJob.CronExpression = @"*/3 * * * *";
+                consultationJob.CronExpression = @"*/15 * * * *";
                 consultationJob.TimeZoneInfo = TimeZoneInfo.Utc;
             });
 

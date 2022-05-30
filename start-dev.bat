@@ -8,9 +8,10 @@ docker compose -f infrastructure/docker-compose.tools.yml up -d
 
 
 
-docker compose -f infrastructure/docker-compose.infrastructure.dev.yml sleep 5 && exec mongo-conf1 mongosh --quiet --file /scripts/setup_conf.js
+docker compose -f infrastructure/docker-compose.infrastructure.dev.yml exec mongo-conf1 sleep 20
+docker compose -f infrastructure/docker-compose.infrastructure.dev.yml exec mongo-conf1 mongosh --quiet --file /scripts/setup_conf.js
 
 docker compose -f infrastructure/docker-compose.infrastructure.dev.yml exec mongo-shard1-rs1 mongosh --quiet --file /scripts/setup_shard1.js
 docker compose -f infrastructure/docker-compose.infrastructure.dev.yml exec mongo-shard2-rs1 mongosh --quiet --file /scripts/setup_shard2.js
-
-docker compose -f infrastructure/docker-compose.infrastructure.dev.yml exec mongos mongosh --quiet --file /scripts/setup_mongos.js
+docker compose -f infrastructure/docker-compose.infrastructure.dev.yml exec mongo-conf1 sleep 10
+docker compose -f infrastructure/docker-compose.infrastructure.dev.yml exec mongo-router mongosh --quiet --file /scripts/setup_mongorouter.js

@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
 
 ## Postgres ##
@@ -48,7 +48,7 @@ services:
 ## Mongo ##
 
   mongo-conf1:
-    container_name: mongo-conf1
+    container_name: db-exam-mongo-conf1
     build: 
       context: ./mongo
       dockerfile: Dockerfile
@@ -57,10 +57,10 @@ services:
         limits:
           memory: 2048M
     restart: always
-    command: sh -c "exec mongod --port 27017 --configsvr --replSet rs-config-server --bind_ip_all && cat /docker-entrypoint-initdb.d/setup_conf.js | mongo"
+    command: sh -c "exec mongod --port 27017 --configsvr --replSet rs-config-server --bind_ip_all"
 
   mongo-conf2:
-    container_name: mongo-conf2
+    container_name: db-exam-mongo-conf2
     build: 
       context: ./mongo
       dockerfile: Dockerfile
@@ -69,10 +69,10 @@ services:
         limits:
           memory: 2048M
     restart: always
-    command: sh -c "exec mongod --port 27017 --configsvr --replSet rs-config-server --bind_ip_all && cat /docker-entrypoint-initdb.d/setup_conf.js | mongo"
+    command: sh -c "exec mongod --port 27017 --configsvr --replSet rs-config-server --bind_ip_all"
 
   mongo-conf3:
-    container_name: mongo-conf3
+    container_name: db-exam-mongo-conf3
     build: 
       context: ./mongo
       dockerfile: Dockerfile
@@ -81,10 +81,10 @@ services:
         limits:
           memory: 2048M
     restart: always
-    command: sh -c "exec mongod --port 27017 --configsvr --replSet rs-config-server --bind_ip_all && cat /docker-entrypoint-initdb.d/setup_conf.js | mongo"
+    command: sh -c "exec mongod --port 27017 --configsvr --replSet rs-config-server --bind_ip_all"
 
   mongo-shard1-rs1:
-    container_name: mongo-shard1-rs1
+    container_name: db-exam-mongo-shard1-rs1
     build: 
       context: ./mongo
       dockerfile: Dockerfile
@@ -94,13 +94,11 @@ services:
           memory: 2048M
     restart: always
     command: mongod --port 27017 --shardsvr --replSet rs-sh-01 --bind_ip_all
-    ports:
-      - 17019:27017
     volumes:
       - mongo_s1r1_data:/data/db
 
   mongo-shard1-rs2:
-    container_name: mongo-shard1-rs2
+    container_name: db-exam-mongo-shard1-rs2
     build: 
       context: ./mongo
       dockerfile: Dockerfile
@@ -113,8 +111,8 @@ services:
     volumes:
       - mongo_s1r2_data:/data/db
 
-  mongo-shard2-rs1:
-    container_name: mongo-shard2-rs1
+  mongo-shard1-rs3:
+    container_name: db-exam-mongo-shard1-rs3
     build: 
       context: ./mongo
       dockerfile: Dockerfile
@@ -123,14 +121,26 @@ services:
         limits:
           memory: 2048M
     restart: always
-    ports:
-      - 17018:27017
+    command: mongod --port 27017 --shardsvr --replSet rs-sh-01 --bind_ip_all
+    volumes:
+      - mongo_s1r3_data:/data/db
+
+  mongo-shard2-rs1:
+    container_name: db-exam-mongo-shard2-rs1
+    build: 
+      context: ./mongo
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    restart: always
     command: mongod --port 27017 --shardsvr --replSet rs-sh-02 --bind_ip_all
     volumes:
       - mongo_s2r1_data:/data/db
 
   mongo-shard2-rs2:
-    container_name: mongo-shard2-rs2
+    container_name: db-exam-mongo-shard2-rs2
     build: 
       context: ./mongo
       dockerfile: Dockerfile
@@ -143,8 +153,22 @@ services:
     volumes:
       - mongo_s2r2_data:/data/db
 
-  mongos:
-    container_name: mongos
+  mongo-shard2-rs3:
+    container_name: db-exam-mongo-shard2-rs3
+    build: 
+      context: ./mongo
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    restart: always
+    command: mongod --port 27017 --shardsvr --replSet rs-sh-02 --bind_ip_all
+    volumes:
+      - mongo_s2r3_data:/data/db
+
+  mongo-router:
+    container_name: db-exam-mongo-router
     build: 
       context: ./mongo
       dockerfile: Dockerfile
@@ -161,7 +185,7 @@ services:
       - 17017:27017
     command: mongos --port 27017 --configdb rs-config-server/mongo-conf1:27017,mongo-conf2:27017,mongo-conf3:27017 --bind_ip_all
     volumes:
-      - mongos_data:/data/db
+      - mongo_router_data:/data/db
 
 ## Redis ##
   redis:
@@ -181,9 +205,11 @@ networks:
 
 volumes:
   postgres_data:
-  mongos_data:
+  mongo_router_data:
   mongo_s1r1_data:
   mongo_s1r2_data:
+  mongo_s1r3_data:
   mongo_s2r1_data:
   mongo_s2r2_data:
+  mongo_s2r3_data:
   neo4j_data:
