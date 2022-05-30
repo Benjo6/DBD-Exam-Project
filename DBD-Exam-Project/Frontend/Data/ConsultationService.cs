@@ -25,7 +25,7 @@ public class ConsultationService : IConsultationService
             ?? new List<ConsultationDto>();
 
     public async Task<List<ConsultationDto>> GetPersonalizedConsultationsDoctor(String id)
-    => await _client.GetFromJsonAsync<List<ConsultationDto>>($"Consultation/patient/{id}")
+    => await _client.GetFromJsonAsync<List<ConsultationDto>>($"Consultation/doctor/{id}")
         ?? new List<ConsultationDto>();
 }
 
