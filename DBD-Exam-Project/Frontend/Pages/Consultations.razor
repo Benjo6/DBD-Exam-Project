@@ -55,10 +55,9 @@
     private double latitude = 10;
     private int distance;
 
-    private void HandleOk(MouseEventArgs e)
+    private async Task HandleOk(MouseEventArgs e)
     {
-        Console.WriteLine(e);
-        _visible = false;
+        await ConsultationService.BookAvailableConsultationAsync(bookingReqDTO);
     }
 
     private void HandleCancel(MouseEventArgs e)
