@@ -26,7 +26,7 @@
         <ActionColumn>
             <Space>
                 <SpaceItem>
-                    <Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+                    <Button Type="primary" OnClick="() => HandleViewModal(context)">
                         Book
                     </Button>
                 </SpaceItem>
@@ -55,9 +55,17 @@
     private double latitude = 10;
     private int distance;
 
+    private void HandleViewModal(ConsultationDto context)
+    {
+        bookingReqDTO.Id = context.Id;
+        bookingReqDTO.PatientId = "1";
+        _visible = true;
+    }
+
     private async Task HandleOk(MouseEventArgs e)
     {
         await ConsultationService.BookAvailableConsultationAsync(bookingReqDTO);
+        _visible = false;
     }
 
     private void HandleCancel(MouseEventArgs e)
