@@ -21,9 +21,9 @@
         <Text>Max distance to potential consultation</Text>
         <AntDesign.InputNumber @bind-Value="distance" Min="1" Max="1000000000" DefaultValue="3"></AntDesign.InputNumber>
         <Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Search</Button>
-        @if (consultations != null)
+        @if (availableConsultations != null)
         {
-            <Table TItem="ConsultationDto" DataSource="@consultations">
+            <Table TItem="ConsultationDto" DataSource="@availableConsultations">
                 <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc" />
                 <Column Title="Created" @bind-Field="@context.CreatedUtc" />
                 <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
@@ -51,14 +51,24 @@
 
 
 @code {
-    private List<ConsultationDto>? consultations;
-    string title = "Book consultation";
-    bool _visible = false;
+    //Table content
+    private List<ConsultationDto>? availableConsultations;
+    private List<ConsultationDto>? personalizedConsultations;
+    
+    //DTO Holders
     ConsultationDto? selected;
     ConsultationBookingRequestDto bookingReqDTO = new();
+
+    //HARDCODED - MUST BE UPDATED!
     private double longitude = 10;
     private double latitude = 10;
+
+    //Distance when searching
     private int distance;
+
+    //Modal
+    string title = "Book consultation";
+    bool _visible = false;
     private void HandleViewModal(ConsultationDto context)
     {
         selected = context;
@@ -68,7 +78,7 @@
     }
     private async Task HandleOk(MouseEventArgs e)
     {
-        consultations?.Remove(selected!);
+        availableConsultations?.Remove(selected!);
         await ConsultationService.BookAvailableConsultationAsync(bookingReqDTO);
         _visible = false;
         await _message.Success("Your consultation has now been booked.");
@@ -79,12 +89,11 @@
         _visible = false;
         bookingReqDTO.Regarding = "";
     }
+
+
     private async Task RequestAvailableConsultations()
     {
-        consultations = await ConsultationService.GetAvailableConsultationsAsync(longitude, latitude, distance);
+        availableConsultations = await ConsultationService.GetAvailableConsultationsAsync(longitude, latitude, distance);
     }
-    private void Book(String id)
-    {
-        return;
-    }
+
 }
