@@ -7,13 +7,14 @@
 @using System.ComponentModel
 @using AntDesign.TableModels
 @using System.Text.RegularExpressions
+@inject MessageService _message
 @inject IConsultationService ConsultationService
 
 <h1>Consultations</h1>
 <h3>Find available consultation</h3>
 <Text>Max distance to potential consultation</Text>
 <AntDesign.InputNumber @bind-Value="distance" Min="1" Max="1000000000" DefaultValue="3"></AntDesign.InputNumber>
-<Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Primary</Button>
+<Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Search</Button>
 
 
 @if (consultations != null)
@@ -26,9 +27,7 @@
         <ActionColumn>
             <Space>
                 <SpaceItem>
-                    <Button Type="primary" OnClick="() => HandleViewModal(context)">
-                        Book
-                    </Button>
+                    <Button Type="primary" OnClick="() => HandleViewModal(context)">Book</Button>
                 </SpaceItem>
             </Space>
         </ActionColumn>
@@ -36,9 +35,9 @@
 }
 
 <Modal Title="@title"
-    Visible="@_visible"
-    OnOk="@HandleOk"
-    OnCancel="@HandleCancel">
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
     <p>Please specify your reason for the consultation</p>
     <Input Placeholder="Basic usage" @bind-Value="@bookingReqDTO.Regarding" />
 </Modal>
@@ -46,7 +45,7 @@
 @code {
     private List<ConsultationDto>? consultations;
 
-    string title = "BasicModal";
+    string title = "Book consultation";
     bool _visible = false;
 
     ConsultationDto? selected;
@@ -67,9 +66,10 @@
 
     private async Task HandleOk(MouseEventArgs e)
     {
-        consultations.Remove(selected);
+        consultations?.Remove(selected!);
         await ConsultationService.BookAvailableConsultationAsync(bookingReqDTO);
         _visible = false;
+        await _message.Success("Your consultation has now been booked.");
     }
 
     private void HandleCancel(MouseEventArgs e)
