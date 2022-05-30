@@ -53,10 +53,9 @@
         else if (UserProvider.CurrentUser.Type == PersonType.Patient)
         {
             <h3>You are a patient</h3>
-        }
-        else
+        } else
         {
-            <h3>You are a pharmaceut</h3>
+            <h1>Something went wrong, please make sure you are logged in.</h1>
         }
     </TabPane>
 </Tabs>
@@ -78,7 +77,7 @@
     //Distance when searching
     private int distance;
 
-    //Modal
+    //Modal functionality
     string title = "Book consultation";
     bool _visible = false;
     private void HandleViewModal(ConsultationDto context)
@@ -102,7 +101,7 @@
         bookingReqDTO.Regarding = "";
     }
 
-
+    //Handling request of available consultations
     private async Task RequestAvailableConsultations()
     {
         availableConsultations = await ConsultationService.GetAvailableConsultationsAsync(longitude, latitude, distance);
