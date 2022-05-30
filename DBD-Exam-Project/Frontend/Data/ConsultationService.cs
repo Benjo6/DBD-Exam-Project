@@ -11,12 +11,12 @@ public class ConsultationService : IConsultationService
         _client = factory.CreateClient("ConsultationClient");
     }
 
-    public async Task<List<ConsultationDto>> GetConsultationsAsync()
-        => await _client.GetFromJsonAsync<List<ConsultationDto>>("Consultation")
+    public async Task<List<ConsultationDto>> GetAvailableConsultationsAsync(double longitude, double latitude, int distance)
+        => await _client.GetFromJsonAsync<List<ConsultationDto>>($"Consultation/booking/{longitude}/{latitude}/{distance}")
             ?? new List<ConsultationDto>();
 }
 
 public interface IConsultationService
 {
-    Task<List<ConsultationDto>> GetConsultationsAsync();
+    Task<List<ConsultationDto>> GetAvailableConsultationsAsync(double longitude, double latitude, int distance);
 }

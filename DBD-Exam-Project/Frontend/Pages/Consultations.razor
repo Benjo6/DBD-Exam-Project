@@ -6,11 +6,20 @@
 @using lib.DTO
 @using System.ComponentModel
 @using AntDesign.TableModels
+@using System.Text.RegularExpressions
 @inject IConsultationService ConsultationService
 
 <h1>Consultations</h1>
+<h3>Find available consultation</h3>
+<Text>Max distance to potential consultation</Text>
+<AntDesign.InputNumber @bind-Value="distance" Min="1" Max="1000000000" DefaultValue="3"></AntDesign.InputNumber>
+<Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Primary</Button>
 
-<Table TItem="ConsultationDto" DataSource="@consultations">
+
+@if (consultations != null)
+{
+    
+    <Table TItem="ConsultationDto" DataSource="@consultations">
     <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc"/>
     <Column Title="Created" @bind-Field="@context.CreatedUtc" />
     <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
@@ -20,13 +29,19 @@
         </Space>
     </ActionColumn>
 </Table>
+}
+
 
 @code {
     private List<ConsultationDto>? consultations;
 
-    protected override async Task OnInitializedAsync()
+    private double longitude = 10;
+    private double latitude = 10;
+    private int distance;
+
+    private async Task RequestAvailableConsultations()
     {
-        consultations = await ConsultationService.GetConsultationsAsync();
+        consultations = await ConsultationService.GetAvailableConsultationsAsync(longitude, latitude, distance);
     }
 
     private void Book(String id)
