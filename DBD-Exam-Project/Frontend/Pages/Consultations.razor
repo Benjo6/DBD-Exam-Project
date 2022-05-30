@@ -46,6 +46,18 @@
     </TabPane>
     <TabPane Tab="Your consultations">
         <h1>This will be a page for your own consultations</h1>
+        @if (UserProvider.CurrentUser.Type == PersonType.Doctor)
+        {
+            <h3>You are a doctor</h3>
+        }
+        else if (UserProvider.CurrentUser.Type == PersonType.Patient)
+        {
+            <h3>You are a patient</h3>
+        }
+        else
+        {
+            <h3>You are a pharmaceut</h3>
+        }
     </TabPane>
 </Tabs>
 
@@ -54,7 +66,7 @@
     //Table content
     private List<ConsultationDto>? availableConsultations;
     private List<ConsultationDto>? personalizedConsultations;
-    
+
     //DTO Holders
     ConsultationDto? selected;
     ConsultationBookingRequestDto bookingReqDTO = new();
