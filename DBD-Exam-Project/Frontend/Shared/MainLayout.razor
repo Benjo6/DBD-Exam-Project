@@ -12,9 +12,34 @@
         <div class="top-row px-4">
             @if(CurrentUser != null)
             {
-                <div>@CurrentUser.FirstName | @CurrentUser.Type</div>
+                <Popover Placement="@Placement.BottomRight" Trigger="@(new[] { Trigger.Hover })">
+                    <TitleTemplate>
+                        <span>User</span>
+                    </TitleTemplate>
+                    <ContentTemplate>
+                        <div>
+                            
+                            <div><Text Strong>First name: </Text>@CurrentUser.LastName</div>
+                            <div><Text Strong>Last name: </Text>@CurrentUser.FirstName</div>
+                            <div><Text Strong>Email: </Text>@CurrentUser.Email</div>
+                            @if(CurrentUser.Type == PersonType.Patient)
+                            {
+                                <div><Text Strong>Cpr number: </Text>@CurrentUser.CphNumber</div>
+                            }
+                            else if(CurrentUser.Type == PersonType.Pharmaceut)
+                            {
+                                <div><Text Strong>Pharmacy name: </Text>@CurrentUser.PharmacyName</div>
+                            }
+                            <div><Text Strong>Type: </Text>@CurrentUser.Type</div>
+                            
+                        </div>
+                    </ContentTemplate>
+                    <ChildContent>
+                        <div>@CurrentUser.FirstName | @CurrentUser.Type</div>
+                    </ChildContent>
+                </Popover>
+                
             }
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
         <article class="content px-4">
