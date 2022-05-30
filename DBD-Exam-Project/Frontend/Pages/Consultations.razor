@@ -3,67 +3,69 @@
 <PageTitle>Consultations</PageTitle>
 
 @using Frontend.Data
+
 @using lib.DTO
 @using System.ComponentModel
 @using AntDesign.TableModels
 @using System.Text.RegularExpressions
 @inject MessageService _message
 @inject IConsultationService ConsultationService
+@inject UserProvider UserProvider
 
 <h1>Consultations</h1>
-<h3>Find available consultation</h3>
-<Text>Max distance to potential consultation</Text>
-<AntDesign.InputNumber @bind-Value="distance" Min="1" Max="1000000000" DefaultValue="3"></AntDesign.InputNumber>
-<Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Search</Button>
 
 
-@if (consultations != null)
-{
+<Tabs>
+    <TabPane Tab="Consultation Booking">
+        <h3>Find available consultation</h3>
+        <Text>Max distance to potential consultation</Text>
+        <AntDesign.InputNumber @bind-Value="distance" Min="1" Max="1000000000" DefaultValue="3"></AntDesign.InputNumber>
+        <Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Search</Button>
+        @if (consultations != null)
+        {
+            <Table TItem="ConsultationDto" DataSource="@consultations">
+                <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc" />
+                <Column Title="Created" @bind-Field="@context.CreatedUtc" />
+                <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
+                <ActionColumn>
+                    <Space>
+                        <SpaceItem>
+                            <Button Type="primary" OnClick="() => HandleViewModal(context)">Book</Button>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </Table>
+        }
+        <Modal Title="@title"
+               Visible="@_visible"
+               OnOk="@HandleOk"
+               OnCancel="@HandleCancel">
+            <p>Please specify your reason for the consultation</p>
+            <Input Placeholder="Basic usage" @bind-Value="@bookingReqDTO.Regarding" />
+        </Modal>
+    </TabPane>
+    <TabPane Tab="Your consultations">
+        <h1>This will be a page for your own consultations</h1>
+    </TabPane>
+</Tabs>
 
-    <Table TItem="ConsultationDto" DataSource="@consultations">
-        <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc" />
-        <Column Title="Created" @bind-Field="@context.CreatedUtc" />
-        <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
-        <ActionColumn>
-            <Space>
-                <SpaceItem>
-                    <Button Type="primary" OnClick="() => HandleViewModal(context)">Book</Button>
-                </SpaceItem>
-            </Space>
-        </ActionColumn>
-    </Table>
-}
-
-<Modal Title="@title"
-       Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel">
-    <p>Please specify your reason for the consultation</p>
-    <Input Placeholder="Basic usage" @bind-Value="@bookingReqDTO.Regarding" />
-</Modal>
 
 @code {
     private List<ConsultationDto>? consultations;
-
     string title = "Book consultation";
     bool _visible = false;
-
     ConsultationDto? selected;
-
     ConsultationBookingRequestDto bookingReqDTO = new();
-
     private double longitude = 10;
     private double latitude = 10;
     private int distance;
-
     private void HandleViewModal(ConsultationDto context)
     {
         selected = context;
         bookingReqDTO.Id = selected.Id;
-        bookingReqDTO.PatientId = "1";
+        bookingReqDTO.PatientId = UserProvider.CurrentUser.Id.ToString();
         _visible = true;
     }
-
     private async Task HandleOk(MouseEventArgs e)
     {
         consultations?.Remove(selected!);
@@ -71,19 +73,16 @@
         _visible = false;
         await _message.Success("Your consultation has now been booked.");
     }
-
     private void HandleCancel(MouseEventArgs e)
     {
         Console.WriteLine(e);
         _visible = false;
         bookingReqDTO.Regarding = "";
     }
-
     private async Task RequestAvailableConsultations()
     {
         consultations = await ConsultationService.GetAvailableConsultationsAsync(longitude, latitude, distance);
     }
-
     private void Book(String id)
     {
         return;
