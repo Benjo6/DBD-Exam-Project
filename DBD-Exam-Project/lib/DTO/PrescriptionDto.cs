@@ -14,8 +14,6 @@ namespace lib.DTO
         public string? MedicineName { get; set; }
         public PersonDto? Patient { get; set; }
         public PersonDto? Doctor { get; set; }
-        public int? PatientId { get; set; }
-        public int? DoctorId { get; set; }
 
     }
 

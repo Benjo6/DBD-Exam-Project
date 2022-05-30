@@ -54,8 +54,8 @@ builder.Services.AddSingleton<IMapper>(
                     .ForMember(dist => dist.Patient, opt => opt.MapFrom(src => src.PrescribedToNavigation))
                     .ForMember(dist => dist.Doctor, opt => opt.MapFrom(src => src.PrescribedByNavigation))
                     .ForMember(dist => dist.MedicineName, opt => opt.MapFrom(src => src.Medicine.Name))
-                    .ForMember(dist=>dist.DoctorId,opt=>opt.MapFrom(src=> src.PrescribedBy))
-                    .ForMember(dist => dist.PatientId, opt => opt.MapFrom(src => src.PrescribedTo))
+                    .ForPath(dist => dist.Patient.Id, opt => opt.MapFrom(src => src.PrescribedTo))
+                    .ForPath(dist => dist.Doctor.Id, opt => opt.MapFrom(src => src.PrescribedTo))
                     .ReverseMap();
                 cfg.CreateMap<Patient, PersonDto>()
                     .ForMember(dist => dist.Type, opt => opt.MapFrom(src => PersonType.Patient))
