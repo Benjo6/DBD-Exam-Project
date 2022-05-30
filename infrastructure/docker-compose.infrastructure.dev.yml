@@ -152,6 +152,10 @@ services:
       resources:
         limits:
           memory: 2048M
+    depends_on:
+      - mongo-conf1
+      - mongo-conf2
+      - mongo-conf3
     restart: always
     ports:
       - 17017:27017
