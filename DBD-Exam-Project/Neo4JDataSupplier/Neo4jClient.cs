@@ -1,34 +1,33 @@
-﻿using Microsoft.Extensions.Logging;
-using Neo4jClient;
+﻿using Neo4jClient;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using lib.Models;
 using lib.DTO;
 using System.Net.Http;
 using Newtonsoft.Json;
-using System;
-using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Neo4JDataSupplier.Model;
+using AutoMapper;
 
 namespace Neo4JDataSupplier
 {
     public class Neo4jClient
     {
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
         private readonly IGraphClient _client;
-        public Neo4jClient(IGraphClient client, IConfiguration config)
+        public Neo4jClient(IGraphClient client, IConfiguration config, IMapper mapper)
         {
             _client = client;
             _config = config;
+            _mapper = mapper;
         }
 
         public async Task<string> Run()
         {
             //await Patient();
             //await Pharmacies();
-            //await Prescription();
-            await Pharamceuts();
+            await Prescription();
+            //await Pharamceuts();
             //await Medicines();
             //await Doctors();
             //await Consultations();
@@ -131,13 +130,14 @@ namespace Neo4JDataSupplier
                 return patients;
             }
         }
-        public async Task<IEnumerable<PrescriptionDto>> Prescription()
+        public async Task<IEnumerable<PrescriptionNDto>> Prescription()
         {
             using (HttpClient client = new HttpClient())
             {
                 string content = await client.GetStringAsync(_config.GetValue<string>("ConnectionStrings:prescription_service") + "Prescriptions?Size=20001");
-                IList<PrescriptionDto> prescriptions = JsonConvert.DeserializeObject<IList<PrescriptionDto>>(content);
-                foreach (PrescriptionDto item in prescriptions)
+                IList<PrescriptionDto> p = JsonConvert.DeserializeObject<IList<PrescriptionDto>>(content);
+                var prescriptions= _mapper.Map<IList<PrescriptionDto>, IList<PrescriptionNDto>>(p);
+                foreach (PrescriptionNDto item in prescriptions)
                 {
                     await _client.Cypher.Merge("(p:Prescription {Id: $pID} )")
                         .OnMatch()
@@ -210,7 +210,7 @@ namespace Neo4JDataSupplier
         public async Task<string> Prescribed_By()
         {
             await _client.Cypher.Match("(d:Doctor)", "(p:Prescription)")
-                .Where((PersonDto d, PrescriptionDto p) => d.Id == p.DoctorId)
+                .Where((PersonDto d, PrescriptionNDto p) => d.Id == p.DoctorId)
                 .Merge("(d)-[:prescribed_by]->(p)")
                 .ExecuteWithoutResultsAsync();
 
@@ -219,7 +219,7 @@ namespace Neo4JDataSupplier
         public async Task<string> Prescribed_To()
         {
             await _client.Cypher.Match("(p:Prescription)", "(pa:Patient)")
-                .Where((PersonDto pa, PrescriptionDto p) => pa.Id == p.PatientId)
+                .Where((PersonDto pa, PrescriptionNDto p) => pa.Id == p.PatientId)
                 .Merge("(p)-[:prescribed_to]->(pa)")
                 .ExecuteWithoutResultsAsync();
 

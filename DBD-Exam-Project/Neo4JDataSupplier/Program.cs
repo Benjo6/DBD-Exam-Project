@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Configuration;
 using System.Threading.Tasks;
+using AutoMapper;
+using lib.DTO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Neo4jClient;
+using Neo4JDataSupplier.Model;
 
 namespace Neo4JDataSupplier
 {
@@ -25,9 +28,10 @@ namespace Neo4JDataSupplier
                 {
                     services.AddTransient<Neo4jClient>();
                     services.AddSingleton<IGraphClient>(client);
-                    
-                })
-                .UseConsoleLifetime();
+                    services.AddSingleton<IMapper>(
+                        new Mapper(
+                            new MapperConfiguration(cfg => cfg.CreateMap<PrescriptionDto, PrescriptionNDto>())));
+                }).UseConsoleLifetime();
             
           
        
