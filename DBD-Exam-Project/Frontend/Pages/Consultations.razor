@@ -18,26 +18,55 @@
 
 @if (consultations != null)
 {
-    
+
     <Table TItem="ConsultationDto" DataSource="@consultations">
-    <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc"/>
-    <Column Title="Created" @bind-Field="@context.CreatedUtc" />
-    <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
-    <ActionColumn>
-        <Space>
-            <SpaceItem><Button Danger OnClick="()=>Book(context.Id)">Book</Button></SpaceItem>
-        </Space>
-    </ActionColumn>
-</Table>
+        <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc" />
+        <Column Title="Created" @bind-Field="@context.CreatedUtc" />
+        <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
+        <ActionColumn>
+            <Space>
+                <SpaceItem>
+                    <Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+                        Book
+                    </Button>
+                </SpaceItem>
+            </Space>
+        </ActionColumn>
+    </Table>
 }
 
+<Modal Title="@title"
+    Visible="@_visible"
+    OnOk="@HandleOk"
+    OnCancel="@HandleCancel">
+    <p>Please specify your reason for the consultation</p>
+    <Input Placeholder="Basic usage" @bind-Value="@regarding" />
+</Modal>
 
 @code {
     private List<ConsultationDto>? consultations;
 
+    string title = "BasicModal";
+    bool _visible = false;
+
+    string regarding { get; set; }
+
     private double longitude = 10;
     private double latitude = 10;
     private int distance;
+
+    private void HandleOk(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+        regarding = "";
+    }
 
     private async Task RequestAvailableConsultations()
     {
