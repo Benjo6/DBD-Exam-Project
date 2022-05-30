@@ -49,6 +49,8 @@
     string title = "BasicModal";
     bool _visible = false;
 
+    ConsultationDto? selected;
+
     ConsultationBookingRequestDto bookingReqDTO = new();
 
     private double longitude = 10;
@@ -57,13 +59,15 @@
 
     private void HandleViewModal(ConsultationDto context)
     {
-        bookingReqDTO.Id = context.Id;
+        selected = context;
+        bookingReqDTO.Id = selected.Id;
         bookingReqDTO.PatientId = "1";
         _visible = true;
     }
 
     private async Task HandleOk(MouseEventArgs e)
     {
+        consultations.Remove(selected);
         await ConsultationService.BookAvailableConsultationAsync(bookingReqDTO);
         _visible = false;
     }
