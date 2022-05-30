@@ -16,34 +16,37 @@
 
 
 <Tabs>
-    <TabPane Tab="Consultation Booking">
-        <h3>Find available consultation</h3>
-        <Text>Max distance to potential consultation</Text>
-        <AntDesign.InputNumber @bind-Value="distance" Min="1" Max="1000000000" DefaultValue="3"></AntDesign.InputNumber>
-        <Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Search</Button>
-        @if (availableConsultations != null)
-        {
-            <Table TItem="ConsultationDto" DataSource="@availableConsultations">
-                <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc" />
-                <Column Title="Created" @bind-Field="@context.CreatedUtc" />
-                <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
-                <ActionColumn>
-                    <Space>
-                        <SpaceItem>
-                            <Button Type="primary" OnClick="() => HandleViewModal(context)">Book</Button>
-                        </SpaceItem>
-                    </Space>
-                </ActionColumn>
-            </Table>
-        }
-        <Modal Title="@title"
+    @if (UserProvider.CurrentUser.Type == PersonType.Patient)
+    {
+        <TabPane Tab="Consultation Booking">
+            <h3>Find available consultation</h3>
+            <Text>Max distance to potential consultation</Text>
+            <AntDesign.InputNumber @bind-Value="distance" Min="1" Max="1000000000" DefaultValue="3"></AntDesign.InputNumber>
+            <Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Search</Button>
+            @if (availableConsultations != null)
+            {
+                <Table TItem="ConsultationDto" DataSource="@availableConsultations">
+                    <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc" />
+                    <Column Title="Created" @bind-Field="@context.CreatedUtc" />
+                    <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
+                    <ActionColumn>
+                        <Space>
+                            <SpaceItem>
+                                <Button Type="primary" OnClick="() => HandleViewModal(context)">Book</Button>
+                            </SpaceItem>
+                        </Space>
+                    </ActionColumn>
+                </Table>
+            }
+            <Modal Title="@title"
                Visible="@_visible"
                OnOk="@HandleOk"
                OnCancel="@HandleCancel">
-            <p>Please specify your reason for the consultation</p>
-            <Input Placeholder="Basic usage" @bind-Value="@bookingReqDTO.Regarding" />
-        </Modal>
-    </TabPane>
+                <p>Please specify your reason for the consultation</p>
+                <Input Placeholder="Basic usage" @bind-Value="@bookingReqDTO.Regarding" />
+            </Modal>
+        </TabPane>
+    }
     <TabPane Tab="Your consultations">
         @if (UserProvider.CurrentUser.Type == PersonType.Doctor || UserProvider.CurrentUser.Type == PersonType.Patient)
         {
@@ -124,7 +127,8 @@
         if (UserProvider.CurrentUser.Type == PersonType.Doctor)
         {
             await RequestPersonalizedConsultationsDoctor();
-        } else if (UserProvider.CurrentUser.Type == PersonType.Patient)
+        }
+        else if (UserProvider.CurrentUser.Type == PersonType.Patient)
         {
             await RequestPersonalizedConsultationsPatient();
         }
