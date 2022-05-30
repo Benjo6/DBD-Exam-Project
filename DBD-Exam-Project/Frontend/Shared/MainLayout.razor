@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject UserProvider UserProvider
 
 <PageTitle>Frontend</PageTitle>
 
@@ -9,6 +10,10 @@
 
     <main>
         <div class="top-row px-4">
+            @if(CurrentUser != null)
+            {
+                <div>@CurrentUser.FirstName | @CurrentUser.Type</div>
+            }
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
@@ -17,3 +22,19 @@
         </article>
     </main>
 </div>
+
+@code {
+    PersonDto? CurrentUser { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CurrentUser = UserProvider.CurrentUser;
+        UserProvider.OnUserChanged += OnUserChanged;
+    }
+
+    void OnUserChanged(object? obj, EventArgs arg)
+    {
+        CurrentUser = UserProvider.CurrentUser;
+        StateHasChanged();
+    }
+}

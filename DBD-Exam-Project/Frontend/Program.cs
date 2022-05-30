@@ -1,3 +1,4 @@
+using Frontend.Authentication;
 using Frontend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.Services
 
 
 builder.Services.AddScoped<IPeopleService, PeopleService>();
+builder.Services.AddScoped<UserProvider>();
 
 var app = builder.Build();
 

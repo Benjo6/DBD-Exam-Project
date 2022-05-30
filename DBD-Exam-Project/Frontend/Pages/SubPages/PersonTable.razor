@@ -18,7 +18,7 @@
     <ActionColumn>
         <Space>
             <SpaceItem>
-                <Button OnClick="() => OnViewDataClicked(context)">View other pages as user</Button>
+                <Button OnClick="@(async () => await OnViewDataClicked(context))">View other pages as user</Button>
             </SpaceItem>
         </Space>
     </ActionColumn>
@@ -28,6 +28,9 @@
 @code {
     [Parameter]
     public PersonType? PeopleType { get; set; } = null;
+
+    [Parameter]
+    public EventCallback<PersonDto> OnButtonClicked { get; set; }
 
     public IEnumerable<PersonDto> People { get; set; } = null!;
 
@@ -39,8 +42,9 @@
             People = await PeopleService.GetPeopleAsync(PeopleType.Value);
     }
 
-    private void OnViewDataClicked(PersonDto person)
+    private async Task OnViewDataClicked(PersonDto person)
     {
-        Console.WriteLine("Your MOm!!");
+        if (OnButtonClicked.HasDelegate)
+            await OnButtonClicked.InvokeAsync(person);
     }
 }
