@@ -8,8 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddScoped<IConsultationService,ConsultationService>();
 
 builder.Services.AddAntDesign();
+
+string consultationConnectionString = builder.Configuration.GetConnectionString("ConsultationService");
+builder.Services.AddHttpClient(
+    "ConsultationClient",
+    conf => conf.BaseAddress = new(consultationConnectionString));
 
 var app = builder.Build();
 
