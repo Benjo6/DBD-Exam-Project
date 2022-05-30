@@ -40,7 +40,7 @@
     OnOk="@HandleOk"
     OnCancel="@HandleCancel">
     <p>Please specify your reason for the consultation</p>
-    <Input Placeholder="Basic usage" @bind-Value="@regarding" />
+    <Input Placeholder="Basic usage" @bind-Value="@bookingReqDTO.Regarding" />
 </Modal>
 
 @code {
@@ -49,7 +49,7 @@
     string title = "BasicModal";
     bool _visible = false;
 
-    string regarding { get; set; }
+    ConsultationBookingRequestDto bookingReqDTO = new();
 
     private double longitude = 10;
     private double latitude = 10;
@@ -65,7 +65,7 @@
     {
         Console.WriteLine(e);
         _visible = false;
-        regarding = "";
+        bookingReqDTO.Regarding = "";
     }
 
     private async Task RequestAvailableConsultations()
