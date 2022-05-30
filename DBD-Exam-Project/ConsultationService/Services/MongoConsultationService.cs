@@ -108,8 +108,7 @@ namespace ConsultationService.Services
 
         public async Task<IEnumerable<ConsultationDto>> GetConsultationsForPatientAsync(string patientId)
         {
-            var filter = Builders<ConsultationEntity>.Filter.Eq("patientId", patientId);
-            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(filter).ToListAsync();
+            var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(x => x.PatientId == patientId).ToListAsync();
             return consultationEntity.Select(ConsultationMapper.ToDto);
         }
 
