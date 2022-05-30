@@ -1,0 +1,26 @@
+﻿@page "/medicine"
+@inject IPrescriptionService PrescriptionService
+
+<h3>Medicine</h3>
+
+@if(_data != null)
+{
+    <AntList Bordered DataSource="@_data" Size="small">
+        <Header>Header</Header>
+        <ChildContent Context="item">
+            <ListItem>
+                @item
+            </ListItem>
+        </ChildContent>
+        <Footer>Footer</Footer>
+    </AntList>
+}
+
+@code {
+    IEnumerable<string>? _data;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _data = await PrescriptionService.GetMedicine();
+    }
+}

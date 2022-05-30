@@ -7,8 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddScoped<IConsultationService,ConsultationService>();
+builder.Services.AddScoped<IConsultationService, ConsultationService>();
 builder.Services.AddScoped<IPeopleService, PeopleService>();
+builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
 builder.Services.AddScoped<UserProvider>();
 
 builder.Services.AddAntDesign();
