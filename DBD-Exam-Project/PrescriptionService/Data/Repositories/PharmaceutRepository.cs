@@ -11,5 +11,7 @@ public class PharmaceutRepository: BaseAsyncRepository<Pharmaceut>
     protected override IQueryable<Pharmaceut> DefaultInclude()
         => base.DefaultInclude()
             .Include(x => x.PersonalData)
-            .Include(x => x.PersonalData.Address);
+            .Include(x => x.PersonalData.Address)
+            .Include(x=>x.Pharmacy)
+        ;
 }

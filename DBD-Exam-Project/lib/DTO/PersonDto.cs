@@ -14,6 +14,6 @@ public class PersonDto
     public string? Email { get; set; }
     public string? CphNumber { get; set; }
     public string? PharmacyName { get; set; }
-    public PersonType Type { get; set; }
+    public PersonType? Type { get; set; }
     public AddressDto? Address { get; set; }
 }
