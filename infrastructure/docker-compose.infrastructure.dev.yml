@@ -51,7 +51,7 @@ services:
     container_name: mongo-conf1
     build: 
       context: ./mongo
-      dockerfile: Dockerfile.config
+      dockerfile: Dockerfile
     deploy:
       resources:
         limits:
@@ -63,7 +63,7 @@ services:
     container_name: mongo-conf2
     build: 
       context: ./mongo
-      dockerfile: Dockerfile.config
+      dockerfile: Dockerfile
     deploy:
       resources:
         limits:
@@ -75,7 +75,7 @@ services:
     container_name: mongo-conf3
     build: 
       context: ./mongo
-      dockerfile: Dockerfile.config
+      dockerfile: Dockerfile
     deploy:
       resources:
         limits:
@@ -87,7 +87,7 @@ services:
     container_name: mongo-shard1-rs1
     build: 
       context: ./mongo
-      dockerfile: Dockerfile.shard1
+      dockerfile: Dockerfile
     deploy:
       resources:
         limits:
@@ -103,7 +103,7 @@ services:
     container_name: mongo-shard1-rs2
     build: 
       context: ./mongo
-      dockerfile: Dockerfile.shard1
+      dockerfile: Dockerfile
     deploy:
       resources:
         limits:
@@ -117,7 +117,7 @@ services:
     container_name: mongo-shard2-rs1
     build: 
       context: ./mongo
-      dockerfile: Dockerfile.shard2
+      dockerfile: Dockerfile
     deploy:
       resources:
         limits:
@@ -133,7 +133,7 @@ services:
     container_name: mongo-shard2-rs2
     build: 
       context: ./mongo
-      dockerfile: Dockerfile.shard2
+      dockerfile: Dockerfile
     deploy:
       resources:
         limits:
@@ -147,7 +147,7 @@ services:
     container_name: mongos
     build: 
       context: ./mongo
-      dockerfile: Dockerfile.mongos
+      dockerfile: Dockerfile
     deploy:
       resources:
         limits:
@@ -156,9 +156,6 @@ services:
     ports:
       - 17017:27017
     command: mongos --port 27017 --configdb rs-config-server/mongo-conf1:27017,mongo-conf2:27017,mongo-conf3:27017 --bind_ip_all
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: mongo
-      MONGO_INITDB_ROOT_PASSWORD: mongopw
     volumes:
       - mongos_data:/data/db
 

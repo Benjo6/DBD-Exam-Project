@@ -61,7 +61,7 @@ namespace CronJobService.Services
 
                 int count = 0;
                 var time = DateTime.Today.AddDays(1).AddHours(8);
-                while (time < DateTime.Today.AddDays(1).AddHours(16))
+                while (time < DateTime.Today.AddDays(100).AddHours(16))
                 {
                     // TODO update when doctor controller is up
                     for (int i = 1; i <= 10; i++)
