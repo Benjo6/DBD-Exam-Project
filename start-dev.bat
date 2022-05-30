@@ -6,8 +6,6 @@ docker compose -f infrastructure/docker-compose.infrastructure.dev.yml up --buil
 docker compose -f infrastructure/docker-compose.applications.dev.yml up --build -d
 docker compose -f infrastructure/docker-compose.tools.yml up -d
 
-
-
 docker compose -f infrastructure/docker-compose.infrastructure.dev.yml exec mongo-conf1 sleep 20
 docker compose -f infrastructure/docker-compose.infrastructure.dev.yml exec mongo-conf1 mongosh --quiet --file /scripts/setup_conf.js
 

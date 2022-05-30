@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
 
   ## Consultation ##
@@ -7,6 +7,10 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: ConsultationService/Dockerfile.compose
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     ports:
       - 18090:80
     restart: always
@@ -18,6 +22,10 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: MailService/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     ports:
       - 18092:80
     restart: always
@@ -28,6 +36,10 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: PrescriptionService/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     ports:
       - 18093:80
     restart: always
@@ -38,6 +50,10 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: TestDataAPI/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     ports:
       - 18094:80
     restart: always
@@ -48,11 +64,13 @@ services:
     build: 
       context: ../DBD-Exam-Project
       dockerfile: CronJobService/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     ports:
       - 18095:80
     restart: always
-    
-
 
 networks:
   default:

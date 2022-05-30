@@ -53,6 +53,8 @@ builder.Services.AddSingleton<IMapper>(
                     .ForMember(dist => dist.Patient, opt => opt.MapFrom(src => src.PrescribedToNavigation))
                     .ForMember(dist => dist.Doctor, opt => opt.MapFrom(src => src.PrescribedByNavigation))
                     .ForMember(dist => dist.MedicineName, opt => opt.MapFrom(src => src.Medicine.Name))
+                    .ForPath(dist => dist.Patient.Id, opt => opt.MapFrom(src => src.PrescribedTo))
+                    .ForPath(dist => dist.Doctor.Id, opt => opt.MapFrom(src => src.PrescribedBy))
                     .ReverseMap();
                 cfg.CreateMap<Patient, PersonDto>()
                     .ForMember(dist => dist.Type, opt => opt.MapFrom(src => PersonType.Patient))
@@ -74,8 +76,8 @@ builder.Services.AddSingleton<IMapper>(
                     .ForMember(dist => dist.FirstName, opt => opt.MapFrom(src => src.PersonalData.FirstName))
                     .ForMember(dist => dist.LastName, opt => opt.MapFrom(src => src.PersonalData.LastName))
                     .ForMember(dist => dist.Email, opt => opt.MapFrom(src => src.PersonalData.Email))
-                    .ForMember(dist => dist.PharmacyName, opt => opt.MapFrom(src => src.Pharmacy.PharmacyName))
                     .ForMember(dist => dist.Address, opt => opt.MapFrom(src => src.PersonalData.Address))
+                    .ForMember(dist=>dist.PharmacyName,opt=>opt.MapFrom(src=>src.Pharmacy.PharmacyName))
                     .ReverseMap();
                 cfg.CreateMap<Address, AddressDto>()
                     .ReverseMap();
