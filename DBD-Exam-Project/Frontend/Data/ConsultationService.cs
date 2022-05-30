@@ -16,6 +16,7 @@ public class ConsultationService : IConsultationService
         await _client.PutAsJsonAsync("Consultation/booking", dto);
     }
 
+
     public async Task<List<ConsultationDto>> GetAvailableConsultationsAsync(double longitude, double latitude, int distance)
         => await _client.GetFromJsonAsync<List<ConsultationDto>>($"Consultation/booking/{longitude}/{latitude}/{distance}")
             ?? new List<ConsultationDto>();
