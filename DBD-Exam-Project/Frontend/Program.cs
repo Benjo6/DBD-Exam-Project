@@ -7,18 +7,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddScoped<IConsultationService,ConsultationService>();
+builder.Services.AddScoped<IPeopleService, PeopleService>();
+builder.Services.AddScoped<UserProvider>();
 
 builder.Services.AddAntDesign();
+
+string consultationConnectionString = builder.Configuration.GetConnectionString("ConsultationService");
+builder.Services.AddHttpClient(
+    "ConsultationClient",
+    conf => conf.BaseAddress = new(consultationConnectionString));
 
 string prescriptionConnectionString = builder.Configuration.GetConnectionString("PrescriptionService");
 builder.Services
     .AddHttpClient(
     "PrescriptionClient", 
     conf => conf.BaseAddress = new(prescriptionConnectionString));
-
-
-builder.Services.AddScoped<IPeopleService, PeopleService>();
-builder.Services.AddScoped<UserProvider>();
 
 var app = builder.Build();
 

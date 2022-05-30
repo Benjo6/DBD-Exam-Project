@@ -16,6 +16,6 @@ public class PersonDto
     public string? CphNumber { get; set; }
     public string? PharmacyName { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public PersonType Type { get; set; }
+    public PersonType? Type { get; set; }
     public AddressDto? Address { get; set; }
 }
