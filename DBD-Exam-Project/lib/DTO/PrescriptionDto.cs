@@ -14,7 +14,7 @@ namespace lib.DTO
         public string? MedicineName { get; set; }
         public PersonDto? Patient { get; set; }
         public PersonDto? Doctor { get; set; }
-
+        public bool IsFulfilled { get; set; }
     }
 
 
