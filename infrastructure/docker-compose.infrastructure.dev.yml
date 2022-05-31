@@ -180,6 +180,8 @@ services:
       - mongo-conf1
       - mongo-conf2
       - mongo-conf3
+      - mongo-shard1-rs1
+      - mongo-shard2-rs1
     restart: always
     ports:
       - 17017:27017
