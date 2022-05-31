@@ -24,18 +24,18 @@ namespace Neo4JDataSupplier
 
         public async Task<string> Run()
         {
-            //await Patient();
-            //await Pharmacies();
+            await Patient();
+            await Pharmacies();
             await Prescription();
-            //await Pharamceuts();
-            //await Medicines();
-            //await Doctors();
-            //await Consultations();
+            await Pharamceuts();
+            await Medicines();
+            await Doctors();
+            await Consultations();
             await Prescribed();
             await Prescribed_By();
             await Work_For();
-            //await Booked();
-            //await Schedule_For();
+            await Booked();
+            await Schedule_For();
             await Prescribed_To();
 
             return "Task Completed";
