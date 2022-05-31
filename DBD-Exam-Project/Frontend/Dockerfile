@@ -18,4 +18,8 @@ RUN dotnet publish "Frontend.csproj" -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
 WORKDIR /app
 COPY --from=build-env /app/Frontend/out .
+
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
 ENTRYPOINT ["dotnet", "Frontend.dll"]
