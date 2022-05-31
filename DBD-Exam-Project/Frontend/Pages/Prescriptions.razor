@@ -8,12 +8,6 @@
 <h3>Prescriptions</h3>
 
 <Tabs>
-    @if (_currentUser.Type == PersonType.Doctor)
-    {
-        <TabPane Tab="Create prescription">
-           
-        </TabPane>
-    }
     @if (_currentUser.Type != PersonType.Pharmaceut)
     {
         <TabPane Tab="See own prescriptions">
@@ -32,6 +26,12 @@
             </Space>
             <br/>
             <PrescriptionTable Prescriptions="_prescriptionSearchResult" PeopleType="_currentUser.Type"/>
+        </TabPane>
+    }
+    @if (_currentUser.Type == PersonType.Doctor)
+    {
+        <TabPane Tab="Create prescription">
+           
         </TabPane>
     }
 </Tabs>
