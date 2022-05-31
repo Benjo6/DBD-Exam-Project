@@ -8,6 +8,9 @@
 <h3>Prescriptions</h3>
 
 
+<PrescriptionTable Prescriptions="_prescriptionsData" PeopleType="_currentUser.Type"/>
+
+
 <Tabs>
     @if (UserProvider.CurrentUser.Type == PersonType.Doctor)
     {
@@ -42,6 +45,8 @@
 
 @code {
     IEnumerable<PrescriptionDto>? patientPersonalPrescriptions;
+    IEnumerable<PrescriptionDto> _prescriptionsData = null!;
+    PersonDto _currentUser = null!;
 
     private async Task RequestPatientPrescriptions()
     {
@@ -50,10 +55,30 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (UserProvider.CurrentUser.Type == PersonType.Patient)
+        if (UserProvider.CurrentUser?.Type == PersonType.Patient)
         {
-            await RequestPatientPrescriptions();
+            //await RequestPatientPrescriptions();
         }
 
+        _currentUser = UserProvider.CurrentUser ?? new();
+        UserProvider.OnUserChanged += OnUserChanged;
+
+        await ReloadPrescriptionsData();
+    }
+
+    async Task ReloadPrescriptionsData()
+    {
+        _prescriptionsData = _currentUser.Type switch
+        {
+            PersonType.Doctor => await PrescriptionService.GetPrescriptionsForDoctor(_currentUser.Id),
+            PersonType.Patient => await PrescriptionService.GetPrescriptionsForPatient(_currentUser.CprNumber!),
+            _ => Enumerable.Empty<PrescriptionDto>()
+        };
+    }
+
+    void OnUserChanged(object? obj, EventArgs arg)
+    {
+        _currentUser = UserProvider.CurrentUser!;
+        StateHasChanged();
     }
 }
