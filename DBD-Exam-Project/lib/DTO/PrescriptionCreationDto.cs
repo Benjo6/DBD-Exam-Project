@@ -12,7 +12,7 @@ public class PrescriptionCreationDto
     public DateTime Expiration { get; set; }
     [Required]
     public string MedicineName { get; set; }
-    [Required] 
+    [Required, RegularExpression(@"^\d{10}$")] 
     public string PatientCprNumber { get; set; }
     [Required]
     public int DoctorId { get; set; }

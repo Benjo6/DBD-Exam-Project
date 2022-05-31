@@ -94,7 +94,7 @@
         availableConsultations?.Remove(selected!);
         await ConsultationService.BookAvailableConsultationAsync(bookingReqDTO);
         _visible = false;
-        await _message.Success("Your consultation has now been booked.");
+        _message.Success("Your consultation has now been booked.");
     }
     private void HandleCancel(MouseEventArgs e)
     {
