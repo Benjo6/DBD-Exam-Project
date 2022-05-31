@@ -47,12 +47,12 @@ namespace CronJobService.Services
                 var consultationMetadataRequest = new RestRequest("api/ConsultationMetadata");
                 consultationMetadataRequest.AddHeader("content-type", "application/json");
                 var metadata = consultationClient.GetAsync<ConsultationMetadataDto>(consultationMetadataRequest, CancellationToken.None).Result;
-                if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1))
+                if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1) && metadata.CreatedCount > 0)
                 {
                     _logger.LogInformation("{0} >= {1} - No consultations will be added", metadata.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
                     return;
                 }
-                _logger.LogInformation("{0} < {1} - Consultations will be added", metadata?.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
+                _logger.LogInformation("{0} < {1} Or no consultations were added yet - Consultations will be added", metadata?.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
 
                 int count = 0;
                 var time = DateTime.Today.AddDays(1).AddHours(8);
