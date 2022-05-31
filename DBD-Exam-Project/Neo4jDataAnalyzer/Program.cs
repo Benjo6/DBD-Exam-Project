@@ -8,7 +8,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-var client = new BoltGraphClient(new Uri("bolt://localhost:7687"), "neo4j", "2wsxcde3");
+var cs = builder.Configuration.GetConnectionString("bolt");
+var client = new BoltGraphClient(new Uri(cs), "neo4j", "2wsxcde3");
 await client.ConnectAsync();
 builder.Services.AddSingleton<IGraphClient>(client);
 
@@ -18,6 +19,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseHttpsRedirection();
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
@@ -26,7 +28,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
