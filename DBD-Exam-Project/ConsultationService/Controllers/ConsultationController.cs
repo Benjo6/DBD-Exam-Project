@@ -66,10 +66,10 @@ public class ConsultationController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet()]
-    public async Task<IActionResult> GetConsultations()
+    [HttpGet("{take}/{skip}")]
+    public async Task<IActionResult> GetConsultations(int take, int skip)
     {
-        var result = await _consultationService.GetConsultationsAsync();
+        var result = await _consultationService.GetConsultationsAsync(take, skip);
         if (result == null)
             return NotFound();
 
