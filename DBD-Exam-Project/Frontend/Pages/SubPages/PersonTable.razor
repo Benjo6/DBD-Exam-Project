@@ -10,7 +10,7 @@
     <Column @bind-Field="@context.Email"/>
     @if(PeopleType == PersonType.Patient)
     {
-        <Column Title="Cpr number" @bind-Field="@context.CphNumber"/>
+        <Column Title="Cpr number" @bind-Field="@context.CprNumber"/>
     }
     else if(PeopleType == PersonType.Pharmaceut)
     {
