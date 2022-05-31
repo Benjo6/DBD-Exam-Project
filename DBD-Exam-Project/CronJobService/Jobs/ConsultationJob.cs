@@ -15,28 +15,26 @@ namespace CronJobService.Services
         {
             _logger = logger;
             _consultationCreationService = consultationCreationService;
-
         }
 
-        public override Task StartAsync(CancellationToken cancellationToken)
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("ConsultationJob starts.");
-            return base.StartAsync(cancellationToken);
+            await base.StartAsync(cancellationToken);
+            await DoWork(cancellationToken);
         }
 
-        public override Task DoWork(CancellationToken cancellationToken)
+        public override async Task DoWork(CancellationToken cancellationToken)
         {
             _logger.LogInformation($"{DateTime.Now:hh:mm:ss} ConsultationJob is working.");
 
-            _consultationCreationService.CreateNewConsultationOpenings();
-
-            return Task.CompletedTask;
+            await Task.Run(_consultationCreationService.CreateNewConsultationOpenings, cancellationToken);
         }
 
-        public override Task StopAsync(CancellationToken cancellationToken)
+        public override async Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("ConsultationJob is stopping.");
-            return base.StopAsync(cancellationToken);
+            await base.StopAsync(cancellationToken);
         }
     }
 }
