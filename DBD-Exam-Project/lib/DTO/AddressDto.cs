@@ -6,4 +6,6 @@ public class AddressDto
     public string StreetName { get; set; }
     public string StreetNumber { get; set; }
     public string ZipCode { get; set; }
+    public double Longitude { get; set; }
+    public double Latitude { get; set; }
 }

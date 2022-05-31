@@ -13,7 +13,9 @@ CREATE TABLE IF NOT EXISTS prescriptions.address(
    id SERIAL PRIMARY KEY,
    streetname varchar(64) NOT NULL,
    streetnumber varchar(8) NOT NULL,
-   zipcode varchar(32) NOT NULL
+   zipcode varchar(32) NOT NULL,
+   latitude double,
+   longitude double
 );
 
 CREATE TABLE IF NOT EXISTS prescriptions.pharmacy(
