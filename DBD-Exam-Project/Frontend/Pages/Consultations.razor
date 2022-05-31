@@ -16,7 +16,7 @@
 
 
 <Tabs>
-    @if (UserProvider.CurrentUser.Type == PersonType.Patient)
+    @if (loggedIn?.Type == PersonType.Patient)
     {
         <TabPane Tab="Consultation Booking">
             <h3>Find available consultation</h3>
@@ -48,7 +48,7 @@
         </TabPane>
     }
     <TabPane Tab="Your consultations">
-        @if (UserProvider.CurrentUser.Type == PersonType.Doctor || UserProvider.CurrentUser.Type == PersonType.Patient)
+        @if (loggedIn?.Type == PersonType.Doctor || loggedIn?.Type == PersonType.Patient)
         {
             <Table TItem="ConsultationDto" DataSource="@personalizedConsultations">
                 <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc" />
@@ -74,10 +74,7 @@
     //DTO Holders
     ConsultationDto? selected;
     ConsultationBookingRequestDto bookingReqDTO = new();
-
-    //HARDCODED - MUST BE UPDATED!
-    private double longitude = 10;
-    private double latitude = 10;
+    private PersonDto loggedIn;
 
     //Distance when searching
     private int distance;
@@ -89,7 +86,7 @@
     {
         selected = context;
         bookingReqDTO.Id = selected.Id;
-        bookingReqDTO.PatientId = UserProvider.CurrentUser.Id.ToString();
+        bookingReqDTO.PatientId = loggedIn.Id.ToString();
         _visible = true;
     }
     private async Task HandleOk(MouseEventArgs e)
@@ -109,26 +106,27 @@
     //Handling request of available consultations
     private async Task RequestAvailableConsultations()
     {
-        availableConsultations = await ConsultationService.GetAvailableConsultationsAsync(longitude, latitude, distance);
+        availableConsultations = await ConsultationService.GetAvailableConsultationsAsync(loggedIn.Address.Longitude, loggedIn.Address.Latitude, distance);
     }
 
     private async Task RequestPersonalizedConsultationsDoctor()
     {
-        personalizedConsultations = await ConsultationService.GetPersonalizedConsultationsDoctor(UserProvider.CurrentUser.Id.ToString());
+        personalizedConsultations = await ConsultationService.GetPersonalizedConsultationsDoctor(loggedIn.Id.ToString());
     }
 
     private async Task RequestPersonalizedConsultationsPatient()
     {
-        personalizedConsultations = await ConsultationService.GetPersonalizedConsultationsPatient(UserProvider.CurrentUser.Id.ToString());
+        personalizedConsultations = await ConsultationService.GetPersonalizedConsultationsPatient(loggedIn.Id.ToString());
     }
 
     protected override async Task OnInitializedAsync()
     {
-        if (UserProvider.CurrentUser.Type == PersonType.Doctor)
+        loggedIn = UserProvider.CurrentUser;
+        if (UserProvider.CurrentUser?.Type == PersonType.Doctor)
         {
             await RequestPersonalizedConsultationsDoctor();
         }
-        else if (UserProvider.CurrentUser.Type == PersonType.Patient)
+        else if (UserProvider.CurrentUser?.Type == PersonType.Patient)
         {
             await RequestPersonalizedConsultationsPatient();
         }

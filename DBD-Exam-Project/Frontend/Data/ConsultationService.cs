@@ -1,4 +1,5 @@
 ﻿using lib.DTO;
+using System.Globalization;
 
 namespace Frontend.Data;
 
@@ -18,7 +19,7 @@ public class ConsultationService : IConsultationService
 
 
     public async Task<List<ConsultationDto>> GetAvailableConsultationsAsync(double longitude, double latitude, int distance)
-        => await _client.GetFromJsonAsync<List<ConsultationDto>>($"Consultation/booking/{longitude}/{latitude}/{distance}")
+        => await _client.GetFromJsonAsync<List<ConsultationDto>>($"Consultation/booking/{longitude.ToString(CultureInfo.InvariantCulture)}/{latitude.ToString(CultureInfo.InvariantCulture)}/{distance}")
             ?? new List<ConsultationDto>();
 
     public async Task<List<ConsultationDto>> GetPersonalizedConsultationsPatient(String id)
