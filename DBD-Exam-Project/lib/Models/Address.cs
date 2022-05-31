@@ -16,6 +16,11 @@ public class Address
     public string StreetNumber { get; set; }
     [Column("zipcode"), MaxLength(32)]
     public string ZipCode { get; set; }
+    [Column("longitude")]
+    public double Longitude { get; set; }
+    [Column("latitude")]
+    public double Latitude { get; set; }
+    
 
     [IgnoreMember]
     public List<PersonalDatum> PersonalData { get; set; } = new();
@@ -28,4 +33,12 @@ public class Address
         StreetNumber = streetNumber;
         ZipCode = zipCode;
     }
+    public Address(string streetName, string streetNumber, string zipCode, double longitude, double latitude)
+    {
+        StreetName = streetName;
+        StreetNumber = streetNumber;
+        ZipCode = zipCode;
+        Longitude = longitude;
+        Latitude = latitude;
+        }
 }

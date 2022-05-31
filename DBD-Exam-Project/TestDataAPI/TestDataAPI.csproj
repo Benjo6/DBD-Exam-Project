@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="bogus" Version="34.0.2" />
+		<PackageReference Include="RestSharp" Version="107.3.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

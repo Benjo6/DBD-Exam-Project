@@ -1,12 +1,9 @@
 using Bogus;
+using lib.DTO;
 using lib.Models;
 using lib.Password;
-using System;
-using System.Collections.Generic;
+using RestSharp;
 using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using TestDataAPI.Context;
 using TestDataAPI.DAP;
 
@@ -14,7 +11,7 @@ namespace TestDataAPI.Seeder
 {
     public class DbSeeder
     {
-        const int ADDRESS_COUNT = 10000;
+        int addressCount;
         const int PHARMACY_COUNT = 100;
         const int DOCTOR_COUNT = 1000;
         const int PATIENT_COUNT = 10000;
@@ -34,7 +31,10 @@ namespace TestDataAPI.Seeder
         HashSet<string> cprs = new HashSet<string>();
         Random random = new Random();
 
-        static bool testDataGenerated;
+        private List<ZipCodeDataDto> _zipCodeDataDtos;
+        private List<Address> _addresses;
+
+        static bool _generatingTestData;
 
         private int addCount = 0;
         private int _divider;
@@ -45,22 +45,29 @@ namespace TestDataAPI.Seeder
         {
             _prescriptionContext = prescriptionContext;
             _repo = prescriptionRepo;
+            addressCount = PHARMACEUT_COUNT + PATIENT_COUNT + DOCTOR_COUNT + PHARMACY_COUNT + 1;
+            FetchZipInfoFromApi();
+        }
+
+        public bool DatabaseIsEmpty()
+        {
+            return _prescriptionContext.Prescriptions.Count() == 0  && !_generatingTestData;
         }
 
         public void SeedTestData(int divider = 1)
         {
-            if (testDataGenerated)
+            if (_generatingTestData)
                 return;
 
-            testDataGenerated = true;
+            _generatingTestData = true;
             _divider = divider;
 
-            var add = CreateAddresses();
-            var pharmacies = CreatePharmacies(add);
+            _addresses = CreateAddresses();
+            var pharmacies = CreatePharmacies();
             var meds = CreateMedicines();
-            var patients = CreatePatients(add);
-            var pharmaceuts = CreatePharmaceuts(add,pharmacies);
-            var doctors = CreateDoctors(add);
+            var patients = CreatePatients();
+            var pharmaceuts = CreatePharmaceuts(pharmacies);
+            var doctors = CreateDoctors();
             var prescriptions = CreatePrescriptions(meds, doctors, patients);
 
             try
@@ -76,10 +83,14 @@ namespace TestDataAPI.Seeder
                 var entries = _prescriptionContext.SaveChanges();
                 Console.WriteLine($"Done! - Wrote {entries} entries");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 throw;
+            }
+            finally
+            {
+                _generatingTestData = false;
             }
 
         }
@@ -106,7 +117,7 @@ namespace TestDataAPI.Seeder
             return prescriptionFaker.Generate(PRESCRIPTION_COUNT);
         }
 
-        private List<Doctor> CreateDoctors(List<Address> add)
+        private List<Doctor> CreateDoctors()
         {
             Console.WriteLine("Create Doctors");
             int count = 0;
@@ -117,7 +128,7 @@ namespace TestDataAPI.Seeder
             return doctorFaker.Generate(DOCTOR_COUNT / _divider);
         }
 
-        private List<Pharmaceut> CreatePharmaceuts(List<Address> add, List<Pharmacy> pharmacies)
+        private List<Pharmaceut> CreatePharmaceuts(List<Pharmacy> pharmacies)
         {
             var random = new Random();
             Console.WriteLine("Create Pharmaceuts");
@@ -129,7 +140,7 @@ namespace TestDataAPI.Seeder
             return pharmaceutFaker.Generate(PHARMACEUT_COUNT / _divider);
         }
 
-        private List<Patient> CreatePatients(List<Address> add)
+        private List<Patient> CreatePatients()
         {
             Console.WriteLine("Create Patients");
 
@@ -178,26 +189,63 @@ namespace TestDataAPI.Seeder
             med.Add(new Medicine("Tyfusal"));
             med.Add(new Medicine("Postgresual"));
             med.Add(new Medicine("Databasimal"));
+            med.Add(new Medicine("Neofourjaynol"));
+            med.Add(new Medicine("Postgresal"));
+            med.Add(new Medicine("Redisol"));
+            med.Add(new Medicine("Mongonal"));
 
             return med;
         }
 
-        private List<Pharmacy> CreatePharmacies(List<Address> add)
+        private List<Pharmacy> CreatePharmacies()
         {
             Console.WriteLine("Create Pharmacies");
             return pharmacyFaker
                 .CustomInstantiator(f =>  new(f.Company.CompanyName()))
-                .RuleFor(p => p.Address, (p, f) => add[addCount++])
+                .RuleFor(p => p.Address, (p, f) => _addresses[addCount++])
                 .Generate(PHARMACY_COUNT / _divider);
+        }
+
+        private void FetchZipInfoFromApi()
+        {
+            try
+            {
+                var zipClient = new RestClient("https://api.dataforsyningen.dk");
+                var zipcodeDataRequest = new RestRequest("postnumre");
+                zipcodeDataRequest.AddHeader("content-type", "application/json");
+                _zipCodeDataDtos = zipClient.GetAsync<List<ZipCodeDataDto>>(zipcodeDataRequest, CancellationToken.None).Result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error getting data from API");
+            }
+        }
+
+        private ZipCodeDataDto GetZip()
+        {
+            return _zipCodeDataDtos[random.Next(_zipCodeDataDtos.Count)];
         }
 
         private List<Address> CreateAddresses()
         {
             Console.WriteLine("Create Addresses");
 
+
             return addFaker
-                .CustomInstantiator(f => new(f.Address.StreetName(), f.Address.BuildingNumber(), f.Address.ZipCode("####")))
-                .Generate(ADDRESS_COUNT / _divider);
+                .CustomInstantiator(f => new(f.Address.StreetName(), f.Address.BuildingNumber(), GetZip().ZipCode))
+                .RuleFor(a => a.Latitude, (f, a) => GetRandomLatitudeInCity(_zipCodeDataDtos.First(x => x.ZipCode == a.ZipCode)))
+                .RuleFor(a => a.Longitude, (f, a) => GetRandomLongitudeInCity(_zipCodeDataDtos.First(x => x.ZipCode == a.ZipCode)))
+                .Generate(addressCount);
+        }
+
+        private double GetRandomLatitudeInCity(ZipCodeDataDto zipCodeDataDto)
+        {
+            return random.NextDouble() * (zipCodeDataDto.BBox[1] - zipCodeDataDto.BBox[3]) + zipCodeDataDto.BBox[1];
+        }
+
+        private double GetRandomLongitudeInCity(ZipCodeDataDto zipCodeDataDto)
+        {
+            return random.NextDouble() * (zipCodeDataDto.BBox[0] - zipCodeDataDto.BBox[2]) + zipCodeDataDto.BBox[0];
         }
 
         private Patient CreateTestPatient()
@@ -216,7 +264,8 @@ namespace TestDataAPI.Seeder
         {
             var personalDataFaker = new Faker<PersonalDatum>()
                     .CustomInstantiator(f => new(firstname ?? f.Name.FirstName(), f.Name.LastName()))
-                    .RuleFor(p => p.Email, (f, p) => $"{p.FirstName}@{p.LastName}.emailPostfix")
+                    .RuleFor(p => p.Email, (f, p) => $"{p.FirstName}@{p.LastName}.{emailPostfix}")
+                    .RuleFor(p => p.Address, (f, p) => _addresses[addCount++])
                     .FinishWith((f, p) => p.Login = CreateLoginInfo(username, p.FirstName.Replace("'", ""), role));
             return personalDataFaker.Generate();
         }
