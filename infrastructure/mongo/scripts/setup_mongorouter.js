@@ -7,6 +7,5 @@ sh.addShard("rs-sh-02/mongo-shard2-rs3:27017");
 
 const db = new Mongo().getDB('consultations');
 sh.enableSharding("consultations");
-sh.shardCollection( "consultations.consultations", { "_id" : "hashed" } )
-
 db.consultations.createIndex( { Location : "2dsphere" } )
+sh.shardCollection( "consultations.consultations", { "_id" : "hashed" } )
