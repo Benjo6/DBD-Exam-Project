@@ -61,7 +61,7 @@ builder.Services.AddSingleton<IMapper>(
                     .ForMember(dist => dist.FirstName, opt => opt.MapFrom(src => src.PersonalData.FirstName))
                     .ForMember(dist => dist.LastName, opt => opt.MapFrom(src => src.PersonalData.LastName))
                     .ForMember(dist => dist.Email, opt => opt.MapFrom(src => src.PersonalData.Email))
-                    .ForMember(dist => dist.CphNumber, opt => opt.MapFrom(src => src.Cpr))
+                    .ForMember(dist => dist.CprNumber, opt => opt.MapFrom(src => src.Cpr))
                     .ForMember(dist => dist.Address, opt => opt.MapFrom(src => src.PersonalData.Address))
                     .ReverseMap();
                 cfg.CreateMap<Doctor, PersonDto>()

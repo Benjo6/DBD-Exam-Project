@@ -13,7 +13,7 @@ public class PersonDto
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
-    public string? CphNumber { get; set; }
+    public string? CprNumber { get; set; }
     public string? PharmacyName { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public PersonType? Type { get; set; }

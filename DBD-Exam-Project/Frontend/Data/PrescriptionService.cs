@@ -22,12 +22,9 @@ public class PrescriptionService: BasePrescriptionService, IPrescriptionService
         => await _client.GetFromJsonAsync<IEnumerable<PharmacyDto>>("Pharmacies" + GetPageParameter(pageCount, pageSize))
             ?? Enumerable.Empty<PharmacyDto>();
 
-    public async Task<bool> FulfillPrescription(long id)
+    public async Task<bool> FulfillPrescription(long prescriptionId, int pharmaceutId)
     {
-        if (_userProvider.CurrentUser?.Type != PersonType.Pharmaceut)
-            throw new Exception("User must be pharmaceut to use this method!");
-
-        FulfillPrescriptionRequestDto dto = new() { PrescriptionId = id, PharmaceutId = _userProvider.CurrentUser.Id };
+        FulfillPrescriptionRequestDto dto = new() { PrescriptionId = prescriptionId, PharmaceutId = pharmaceutId };
         HttpResponseMessage resp = await _client.PutAsJsonAsync("Prescriptions/FulfillPrescription", dto);
         resp.EnsureSuccessStatusCode();
 
@@ -46,17 +43,9 @@ public class PrescriptionService: BasePrescriptionService, IPrescriptionService
         => await _client.GetFromJsonAsync<IEnumerable<PrescriptionDto>>($"Prescriptions/Patient/{cprNumber}" + GetPageParameter(pageCount, pageSize))
             ?? Enumerable.Empty<PrescriptionDto>();
 
-    public async Task<PrescriptionDto> CreatePrescription(PrescriptionDto newPrescription)
+    public async Task<PrescriptionDto> CreatePrescription(PrescriptionCreationDto newPrescription)
     {
-        PrescriptionCreationDto prescriptionCreationDto = new()
-        {
-            MedicineName = newPrescription.MedicineName,
-            DoctorId = newPrescription.Doctor.Id,
-            PatientCprNumber = newPrescription.Patient.CphNumber,
-            Expiration = newPrescription.Expiration.Value
-
-        };
-        HttpResponseMessage resp = await _client.PostAsJsonAsync("Prescriptions", prescriptionCreationDto);
+        HttpResponseMessage resp = await _client.PostAsJsonAsync("Prescriptions", newPrescription);
         resp.EnsureSuccessStatusCode();
 
         return await resp.Content.ReadFromJsonAsync<PrescriptionDto>() 
@@ -72,10 +61,10 @@ public interface IPrescriptionService
 {
     Task<IEnumerable<string>> GetMedicine();
     Task<IEnumerable<PharmacyDto>> GetPharmacies(int pageCount = 0, int pageSize = 0);
-    Task<bool> FulfillPrescription(long id);
+    Task<bool> FulfillPrescription(long prescriptionId, int pharmaceutId);
     Task<IEnumerable<PrescriptionDto>> GetAllPrescriptions(int pageCount = 0, int pageSize = 0);
     Task<IEnumerable<PrescriptionDto>> GetPrescriptionsForDoctor(int doctorId, int pageCount = 0, int pageSize = 0);
     Task<IEnumerable<PrescriptionDto>> GetPrescriptionsForPatient(string cprNumber, int pageCount = 0, int pageSize = 0);
-    Task<PrescriptionDto> CreatePrescription(PrescriptionDto newPrescription);
+    Task<PrescriptionDto> CreatePrescription(PrescriptionCreationDto newPrescription);
     Task<PrescriptionDto> GetPrescription(long id);
 }
