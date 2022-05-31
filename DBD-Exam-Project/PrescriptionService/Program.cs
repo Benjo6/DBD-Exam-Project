@@ -25,8 +25,11 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-RedisCacheConfig settings = builder.Configuration.GetSection(RedisCacheConfig.ConfigKey).Get<RedisCacheConfig>();
+var redisConfig = builder.Configuration.GetSection(RedisCacheConfig.ConfigKey);
+RedisCacheConfig settings = redisConfig.Get<RedisCacheConfig>();
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(settings.EndPoints));
+
+builder.Services.Configure<RedisCacheConfig>(redisConfig);
 
 builder.Services.AddScoped<IRedisCache, RedisCache>();
 builder.Services.AddScoped<IPrescriptionStorage, PrescriptionStorage>();
