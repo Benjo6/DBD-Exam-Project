@@ -18,12 +18,14 @@ namespace PrescriptionService.Controllers
         }
 
         [HttpPost]
-        public async Task<PrescriptionDto> Post([FromBody] PrescriptionDto prescription)
+        public async Task<PrescriptionDto> Post([FromBody] PrescriptionCreationDto prescription)
             => await _storage.Create(prescription);
+
 
         [HttpGet("{id}")]
         public async Task<PrescriptionDto> Get(long id)
             => await _storage.Get(id);
+
 
         [HttpGet("Expired")]
         public async Task<IEnumerable<PrescriptionDto>> GetExpiredPrescriptions([FromQuery] Page? pageInfo)
