@@ -79,12 +79,12 @@ namespace ConsultationService.Services
             return ConsultationMapper.ToDto(consultationEntity);
         }
 
-        public IEnumerable<ConsultationDto> GetConsultations(int skip = 100, int take = 0)
+        public IEnumerable<ConsultationDto> GetConsultations(int skip = 0, int take = 100)
         {
             return GetConsultationsAsync(take, skip).Result;
         }
 
-        public async Task<IEnumerable<ConsultationDto>> GetConsultationsAsync(int skip = 100, int take = 0)
+        public async Task<IEnumerable<ConsultationDto>> GetConsultationsAsync(int skip = 0, int take = 100)
         {
             var consultationEntity = await _database.GetCollection<ConsultationEntity>("consultations").Find(x => true).Skip(skip).Limit(take).ToListAsync();
             return consultationEntity.Select(ConsultationMapper.ToDto);
