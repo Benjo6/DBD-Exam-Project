@@ -8,7 +8,13 @@
 <h3>Prescriptions</h3>
 
 <Tabs>
-    @if(_currentUser.Type != PersonType.Pharmaceut)
+    @if (_currentUser.Type == PersonType.Doctor)
+    {
+        <TabPane Tab="Create prescription">
+           
+        </TabPane>
+    }
+    @if (_currentUser.Type != PersonType.Pharmaceut)
     {
         <TabPane Tab="See own prescriptions">
             <PrescriptionTable Prescriptions="_prescriptionsData" PeopleType="_currentUser.Type"/>
@@ -30,50 +36,10 @@
     }
 </Tabs>
 
-
-
-<Tabs>
-    @if (UserProvider.CurrentUser.Type == PersonType.Doctor)
-    {
-        <TabPane Tab="Create prescription">
-           
-        </TabPane>
-    }
-    else if (UserProvider.CurrentUser.Type == PersonType.Patient)
-    {
-        <TabPane Tab="See your prescriptions">
-             @if (patientPersonalPrescriptions != null)
-            {
-                <Table TItem="PrescriptionDto" DataSource="@patientPersonalPrescriptions">
-                    <Column Title="Medicine" @bind-Field="@context.MedicineName" />
-                    <Column Title="Prescribed by" @bind-Field="@context.Doctor" />
-                    <Column Title="Expiration date" @bind-Field="@context.Expiration" />
-                </Table>
-            }
-        </TabPane>
-    }
-    else if (UserProvider.CurrentUser.Type == PersonType.Pharmaceut)
-    {
-        <TabPane Tab="Fulfill prescription">
-        </TabPane>
-    }
-    @if (UserProvider.CurrentUser != null && UserProvider.CurrentUser.Type != PersonType.Patient)
-    {
-        <TabPane Tab="Find patient">
-        </TabPane>
-    }
-</Tabs>
-
 @code {
-    IEnumerable<PrescriptionDto>? patientPersonalPrescriptions;
     IEnumerable<PrescriptionDto> _prescriptionsData = null!;
     IEnumerable<PrescriptionDto>? _prescriptionSearchResult;
     PersonDto _currentUser = null!;
-
-    private async Task RequestPatientPrescriptions()
-    {
-        patientPersonalPrescriptions = await PrescriptionService.GetPrescriptionsForPatient(UserProvider.CurrentUser.CprNumber);
-    }
 
     protected override async Task OnInitializedAsync()
     {
