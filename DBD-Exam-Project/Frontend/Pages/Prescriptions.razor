@@ -43,11 +43,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (UserProvider.CurrentUser?.Type == PersonType.Patient)
-        {
-            //await RequestPatientPrescriptions();
-        }
-
         _currentUser = UserProvider.CurrentUser ?? new();
         UserProvider.OnUserChanged += OnUserChanged;
 
