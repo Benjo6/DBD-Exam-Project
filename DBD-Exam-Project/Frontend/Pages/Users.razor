@@ -1,0 +1,22 @@
+﻿@page "/users"
+@using Frontend.Pages.SubPages;
+@inject UserProvider UserProvider
+
+<h3>Users</h3>
+
+<Tabs>
+    <TabPane Tab="Patients">
+        <PersonTable PeopleType="@PersonType.Patient" OnButtonClicked="UpdateCurrentUser"/>
+    </TabPane>
+    <TabPane Tab="Doctors">
+        <PersonTable PeopleType="@PersonType.Doctor" OnButtonClicked="UpdateCurrentUser"/>
+    </TabPane>
+    <TabPane Tab="Pharmaceuts">
+        <PersonTable PeopleType="@PersonType.Pharmaceut" OnButtonClicked="UpdateCurrentUser"/>
+    </TabPane>
+</Tabs>
+
+@code {
+    void UpdateCurrentUser(PersonDto user)
+        => UserProvider.CurrentUser = user;
+}

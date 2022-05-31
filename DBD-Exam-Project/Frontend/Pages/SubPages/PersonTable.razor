@@ -1,0 +1,58 @@
+﻿@using lib.DTO
+@using Frontend.Data
+@using AntDesign.TableModels
+@inject IPeopleService PeopleService
+
+<Table TItem="PersonDto" DataSource="People" @bind-PageIndex="_pageIndex" @bind-PageSize="_pageSize" Loading="_loading" OnChange="HandleTableChange" RemoteDataSource Total="100">
+    <Column @bind-Field="@context.Id"/>
+    <Column Title="First name" @bind-Field="@context.FirstName"/>
+    <Column Title="Last name" @bind-Field="@context.LastName"/>
+    <Column @bind-Field="@context.Email"/>
+    @if(PeopleType == PersonType.Patient)
+    {
+        <Column Title="Cpr number" @bind-Field="@context.CprNumber"/>
+    }
+    else if(PeopleType == PersonType.Pharmaceut)
+    {
+        <Column Title="Pharmacy name" @bind-Field="@context.PharmacyName" />
+    }
+    <ActionColumn>
+        <Space>
+            <SpaceItem>
+                <Button OnClick="@(async () => await OnViewDataClicked(context))">View other pages as user</Button>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
+</Table>
+
+
+@code {
+    private int _pageIndex = 1;
+    private int _pageSize = 10;
+    private bool _loading = false;
+
+
+    [Parameter]
+    public PersonType? PeopleType { get; set; } = null;
+
+    [Parameter]
+    public EventCallback<PersonDto> OnButtonClicked { get; set; }
+
+    public IEnumerable<PersonDto> People { get; set; } = null!;
+
+    async Task HandleTableChange(QueryModel queryModel)
+    {
+        _loading = true;
+
+        var result = await PeopleService.GetPeopleAsync(PeopleType.Value, queryModel.PageIndex, queryModel.PageSize);
+
+        _loading = false;
+        People = result;
+    }
+
+    private async Task OnViewDataClicked(PersonDto person)
+    {
+        if (OnButtonClicked.HasDelegate)
+            await OnButtonClicked.InvokeAsync(person);
+    }
+}

@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+@inject UserProvider UserProvider
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Frontend</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -15,13 +17,29 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            <NavLink class="nav-link" href="users">
+                <span class="oi oi-person" aria-hidden="true"></span> Users
             </NavLink>
         </div>
+        @if (UserProvider.CurrentUser != null && UserProvider.CurrentUser.Type != PersonType.Pharmaceut)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="consultations">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Consultations
+                </NavLink>
+            </div>
+        }
+        @if (UserProvider.CurrentUser != null)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="prescriptions">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Prescriptions
+                </NavLink>
+            </div>
+        }
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            <NavLink class="nav-link" href="medicine">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Medicine
             </NavLink>
         </div>
     </nav>
@@ -35,5 +53,15 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override void OnInitialized()
+    {
+        UserProvider.OnUserChanged += OnUserChanged;
+    }
+
+    void OnUserChanged(object? obj, EventArgs arg)
+    {
+        StateHasChanged();
     }
 }

@@ -1,0 +1,136 @@
+﻿@page "/consultations"
+
+<PageTitle>Consultations</PageTitle>
+
+@using Frontend.Data
+
+@using lib.DTO
+@using System.ComponentModel
+@using AntDesign.TableModels
+@using System.Text.RegularExpressions
+@inject MessageService _message
+@inject IConsultationService ConsultationService
+@inject UserProvider UserProvider
+
+<h1>Consultations</h1>
+
+
+<Tabs>
+    @if (UserProvider.CurrentUser.Type == PersonType.Patient)
+    {
+        <TabPane Tab="Consultation Booking">
+            <h3>Find available consultation</h3>
+            <Text>Max distance to potential consultation</Text>
+            <AntDesign.InputNumber @bind-Value="distance" Min="1" Max="1000000000" DefaultValue="3"></AntDesign.InputNumber>
+            <Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Search</Button>
+            @if (availableConsultations != null)
+            {
+                <Table TItem="ConsultationDto" DataSource="@availableConsultations">
+                    <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc" />
+                    <Column Title="Created" @bind-Field="@context.CreatedUtc" />
+                    <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
+                    <ActionColumn>
+                        <Space>
+                            <SpaceItem>
+                                <Button Type="primary" OnClick="() => HandleViewModal(context)">Book</Button>
+                            </SpaceItem>
+                        </Space>
+                    </ActionColumn>
+                </Table>
+            }
+            <Modal Title="@title"
+               Visible="@_visible"
+               OnOk="@HandleOk"
+               OnCancel="@HandleCancel">
+                <p>Please specify your reason for the consultation</p>
+                <Input Placeholder="Basic usage" @bind-Value="@bookingReqDTO.Regarding" />
+            </Modal>
+        </TabPane>
+    }
+    <TabPane Tab="Your consultations">
+        @if (UserProvider.CurrentUser.Type == PersonType.Doctor || UserProvider.CurrentUser.Type == PersonType.Patient)
+        {
+            <Table TItem="ConsultationDto" DataSource="@personalizedConsultations">
+                <Column Title="Start time" @bind-Field="@context.ConsultationStartUtc" />
+                <Column Title="Created" @bind-Field="@context.CreatedUtc" />
+                <Column Title="Patient ID" @bind-Field="@context.PatientId" />
+                <Column Title="Doctor ID" @bind-Field="@context.DoctorId" />
+                <Column Title="Regarding" @bind-Field="@context.Regarding" />
+            </Table>
+        }
+        else
+        {
+            <h1>Something went wrong, please make sure you are logged in.</h1>
+        }
+    </TabPane>
+</Tabs>
+
+
+@code {
+    //Table content
+    private List<ConsultationDto>? availableConsultations;
+    private List<ConsultationDto>? personalizedConsultations;
+
+    //DTO Holders
+    ConsultationDto? selected;
+    ConsultationBookingRequestDto bookingReqDTO = new();
+
+    //HARDCODED - MUST BE UPDATED!
+    private double longitude = 10;
+    private double latitude = 10;
+
+    //Distance when searching
+    private int distance;
+
+    //Modal functionality
+    string title = "Book consultation";
+    bool _visible = false;
+    private void HandleViewModal(ConsultationDto context)
+    {
+        selected = context;
+        bookingReqDTO.Id = selected.Id;
+        bookingReqDTO.PatientId = UserProvider.CurrentUser.Id.ToString();
+        _visible = true;
+    }
+    private async Task HandleOk(MouseEventArgs e)
+    {
+        availableConsultations?.Remove(selected!);
+        await ConsultationService.BookAvailableConsultationAsync(bookingReqDTO);
+        _visible = false;
+        await _message.Success("Your consultation has now been booked.");
+    }
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+        bookingReqDTO.Regarding = "";
+    }
+
+    //Handling request of available consultations
+    private async Task RequestAvailableConsultations()
+    {
+        availableConsultations = await ConsultationService.GetAvailableConsultationsAsync(longitude, latitude, distance);
+    }
+
+    private async Task RequestPersonalizedConsultationsDoctor()
+    {
+        personalizedConsultations = await ConsultationService.GetPersonalizedConsultationsDoctor(UserProvider.CurrentUser.Id.ToString());
+    }
+
+    private async Task RequestPersonalizedConsultationsPatient()
+    {
+        personalizedConsultations = await ConsultationService.GetPersonalizedConsultationsPatient(UserProvider.CurrentUser.Id.ToString());
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UserProvider.CurrentUser.Type == PersonType.Doctor)
+        {
+            await RequestPersonalizedConsultationsDoctor();
+        }
+        else if (UserProvider.CurrentUser.Type == PersonType.Patient)
+        {
+            await RequestPersonalizedConsultationsPatient();
+        }
+    }
+}

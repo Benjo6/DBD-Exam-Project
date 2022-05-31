@@ -20,23 +20,28 @@ namespace TestDataAPI.DAP
 
         public LoginInfo AddUser(string username, string password, string salt, string passwordRaw, string role)
         {
-            var func = $"select prescriptions.create_{role}(@username::varchar,@password_hashed::varchar,@password_salt::varchar,@password_raw::varchar)";
-
-            var param = new DynamicParameters();
-            param.Add("@username", username);
-            param.Add("@password_hashed", password);
-            param.Add("@password_salt", salt);
-            param.Add("@password_raw", passwordRaw);
-
-            using(var con=new NpgsqlConnection(_connectionsString))
+            try
             {
-                Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+                var func = $"select prescriptions.create_{role}(@username::varchar,@password_hashed::varchar,@password_salt::varchar,@password_raw::varchar)";
 
-                var result = con.Query(sql: func, param: param, commandType: CommandType.Text);
+                var param = new DynamicParameters();
+                param.Add("@username", username);
+                param.Add("@password_hashed", password);
+                param.Add("@password_salt", salt);
+                param.Add("@password_raw", passwordRaw);
 
-            };
+                using (var con = new NpgsqlConnection(_connectionsString))
+                {
+                    DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-            Console.WriteLine($"User: {username}-PW: {passwordRaw}");
+                    var result = con.Query(sql: func, param: param, commandType: CommandType.Text);
+
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             return GetUserByUsername(username);
         }

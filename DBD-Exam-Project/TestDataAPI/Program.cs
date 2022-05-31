@@ -22,11 +22,20 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.AddDbContext<PrescriptionContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("postgres") ?? throw new Exception("Postgres connection not set")));
-builder.Services.AddTransient<DbSeeder>();
+builder.Services.AddScoped<DbSeeder>();
 builder.Services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(builder.Configuration.GetConnectionString("postgres") ?? throw new Exception("Postgres connection not set")));
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var app = builder.Build();
+
+using (var serviceScope = app.Services.CreateScope())
+{
+    var provider = builder.Services.BuildServiceProvider();
+
+    var seeder = provider.GetService<DbSeeder>();
+    if (seeder.DatabaseIsEmpty())
+        seeder.SeedTestData();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
