@@ -15,7 +15,6 @@ This will set up databases and services on the following ports:
 | Neo4j                   | localhost:17687   | neo:7687              |
 | Redis                   | localhost:16379   | redis:6379              |
 | Consultation Service    | localhost:18090   | consultation-service:80 |
-| Analysis Service        | localhost:18091   | analysis-service:80     |
 | Mail Service            | localhost:18092   | mail-service:80         |
 | Prescription Service    | localhost:18093   | prescription-service:80 |
 | Test Data Api           | localhost:18094   | testdata-service:80     |
