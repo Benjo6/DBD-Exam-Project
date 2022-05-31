@@ -82,6 +82,39 @@ services:
       - 18095:80
     restart: always
 
+  ## Neo4j Analyzing Service ##
+  analyzing-service:
+    container_name: 'db-exam-data-analyzing-service'
+    build:
+      context: ../DBD-Exam-Project
+      dockerfile: Neo4jDataAnalyzer/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    depends_on:
+      consultation-service:
+        condition: service_healthy
+      prescription-service:
+        condition: service_started
+    ports:
+      - 18096:80
+    restart: always
+
+  ## Neo4j Analyzing Service ##
+  blazor-frontend:
+    container_name: 'db-exam-frontend'
+    build:
+      context: ../DBD-Exam-Project
+      dockerfile: Frontend/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    ports:
+      - 8080:80
+    restart: always
+
 networks:
   default:
     name: db-exam

@@ -1,23 +1,21 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+# syntax=docker/dockerfile:1
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY "Frontend/Frontend.csproj" "Frontend/"
-COPY "lib" "lib/"
+# Copy csproj and restore as distinct layers
+COPY "Frontend/Frontend.csproj" "/app/Frontend/"
+COPY lib /app/lib/
+WORKDIR /app/Frontend
+RUN dotnet restore "Frontend.csproj"
 
-WORKDIR /src/Frontend
-RUN dotnet restore "Frontend/Frontend.csproj"
-COPY "./" "./"
-RUN dotnet build "Frontend.csproj" -c Release -o /app/build
+# Copy everything else and build
+COPY ./Frontend ./
+RUN dotnet publish "Frontend.csproj" -c Release -o out
 
-FROM build AS publish
-RUN dotnet publish "Frontend.csproj" -c Release -o /app/publish
-
-FROM base AS final
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build-env /app/Frontend/out .
 ENTRYPOINT ["dotnet", "Frontend.dll"]
