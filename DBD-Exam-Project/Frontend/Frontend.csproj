@@ -15,5 +15,4 @@
   <ItemGroup>
     <ProjectReference Include="..\lib\lib.csproj" />
   </ItemGroup>
-
 </Project>
