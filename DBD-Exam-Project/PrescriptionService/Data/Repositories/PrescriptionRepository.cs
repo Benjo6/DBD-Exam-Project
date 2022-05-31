@@ -29,6 +29,7 @@ public class PrescriptionRepository: BaseAsyncRepository<Prescription, long>, IP
             .Include(x => x.PrescribedByNavigation)
             .Include(x => x.PrescribedByNavigation.PersonalData)
             .Where(x => x.PrescribedToCpr == cprNumber)
+            .OrderBy(x => x.Id)
             .AsAsyncEnumerable();
 
     public IAsyncEnumerable<Prescription> GetAllForDoctor(int doctorId)
@@ -36,6 +37,7 @@ public class PrescriptionRepository: BaseAsyncRepository<Prescription, long>, IP
             .Include(x => x.PrescribedToNavigation)
             .Include(x => x.PrescribedToNavigation.PersonalData)
             .Where(x => x.PrescribedBy == doctorId)
+            .OrderBy(x => x.Id)
             .AsAsyncEnumerable();
 
     public Task<Prescription?> GetDetailed(long id)

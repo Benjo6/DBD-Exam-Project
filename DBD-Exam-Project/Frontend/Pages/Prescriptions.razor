@@ -8,12 +8,6 @@
 <h3>Prescriptions</h3>
 
 <Tabs>
-    @if (_currentUser.Type == PersonType.Doctor)
-    {
-        <TabPane Tab="Create prescription">
-           
-        </TabPane>
-    }
     @if (_currentUser.Type != PersonType.Pharmaceut)
     {
         <TabPane Tab="See own prescriptions">
@@ -31,7 +25,13 @@
                 </Search>
             </Space>
             <br/>
-            <PrescriptionTable Prescriptions="_prescriptionSearchResult" PeopleType="_currentUser.Type"/>
+            <PrescriptionTable Prescriptions="_prescriptionSearchResult" PeopleType="_currentUser.Type" OnFulfillClicked="FulfillPrescription"/>
+        </TabPane>
+    }
+    @if (_currentUser.Type == PersonType.Doctor)
+    {
+        <TabPane Tab="Create prescription">
+           
         </TabPane>
     }
 </Tabs>
@@ -59,6 +59,14 @@
         if (string.IsNullOrWhiteSpace(query))
             return;
         _prescriptionSearchResult = await PrescriptionService.GetPrescriptionsForPatient(query);
+    }
+
+    async Task FulfillPrescription(PrescriptionDto prescription)
+    {
+        if (_currentUser.Type != PersonType.Pharmaceut)
+            return;
+
+        await PrescriptionService.FulfillPrescription(prescription.Id, _currentUser.Id);
     }
 
     void OnUserChanged(object? obj, EventArgs arg)

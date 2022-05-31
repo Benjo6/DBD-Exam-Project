@@ -1,7 +1,7 @@
 ﻿
 
 
-<Table TItem="PrescriptionDto" DataSource="Prescriptions">
+<Table TItem="PrescriptionDto" DataSource="Prescriptions" RowClassName="@(x => x.Data.IsFulfilled ? "bg-success bg-opacity-25" : "")">
     <Column @bind-Field="context.Id"/>
     @if(PeopleType != PersonType.Doctor)
     {
@@ -21,7 +21,7 @@
     {
         <ActionColumn>
             <Space>
-                <Button Type="@ButtonType.Primary" >Fulfill prescription</Button>
+                <Button Type="@ButtonType.Primary" Disabled="@context.IsFulfilled" OnClick="@(async () => await HandleFulfill(context))">Fulfill prescription</Button>
             </Space>
         </ActionColumn>
     }
@@ -31,11 +31,15 @@
     [Parameter]
     public PersonType? PeopleType { get; set; } = null;
 
-
     [Parameter]
     public IEnumerable<PrescriptionDto>? Prescriptions { get; set; }
 
-    
+    [Parameter]
+    public EventCallback<PrescriptionDto> OnFulfillClicked { get; set; }
 
-    
+    async Task HandleFulfill(PrescriptionDto prescription)
+    {
+        if (OnFulfillClicked.HasDelegate)
+            await OnFulfillClicked.InvokeAsync(prescription);
+    }
 }
