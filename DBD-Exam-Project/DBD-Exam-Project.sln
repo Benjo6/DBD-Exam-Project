@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrescriptionService", "Pres
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frontend", "Frontend\Frontend.csproj", "{C56831F5-5019-4028-8639-81FE40233E36}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo4jDataAnalyzer", "Neo4jDataAnalyzer\Neo4jDataAnalyzer.csproj", "{C7539FB7-4471-4E86-A8D1-2DFE5B454F0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAnalyzingService", "Neo4jDataAnalyzer\DataAnalyzingService.csproj", "{C7539FB7-4471-4E86-A8D1-2DFE5B454F0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
