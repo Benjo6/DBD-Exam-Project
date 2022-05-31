@@ -109,7 +109,7 @@
         newPrescription.DoctorId = _currentUser.Id;
         PrescriptionDto prescription = await PrescriptionService.CreatePrescription(newPrescription);
         _activeTabKey = "Own";
-        await MessageService.Success($"Prescription was created with id: {prescription.Id}.");
+        MessageService.Success($"Prescription was created with id: {prescription.Id}.");
     }
 
     async Task OpenDetails(PrescriptionDto prescription)
