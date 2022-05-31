@@ -24,7 +24,7 @@
                             <div><Text Strong>Email: </Text>@CurrentUser.Email</div>
                             @if(CurrentUser.Type == PersonType.Patient)
                             {
-                                <div><Text Strong>Cpr number: </Text>@CurrentUser.CphNumber</div>
+                                <div><Text Strong>Cpr number: </Text>@CurrentUser.CprNumber</div>
                             }
                             else if(CurrentUser.Type == PersonType.Pharmaceut)
                             {
