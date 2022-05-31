@@ -194,6 +194,10 @@ namespace TestDataAPI.Seeder
             med.Add(new Medicine("Tyfusal"));
             med.Add(new Medicine("Postgresual"));
             med.Add(new Medicine("Databasimal"));
+            med.Add(new Medicine("Neofourjaynol"));
+            med.Add(new Medicine("Postgresal"));
+            med.Add(new Medicine("Redisol"));
+            med.Add(new Medicine("Mongonal"));
 
             return med;
         }
