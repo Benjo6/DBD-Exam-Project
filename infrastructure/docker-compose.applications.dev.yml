@@ -68,6 +68,9 @@ services:
       resources:
         limits:
           memory: 2048M
+    depends_on:
+      - consultation-service
+      - prescription-service
     ports:
       - 18095:80
     restart: always
