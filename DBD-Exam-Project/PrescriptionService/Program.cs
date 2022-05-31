@@ -85,15 +85,17 @@ builder.Services.AddSingleton<IMapper>(
                 cfg.CreateMap<Pharmacy, PharmacyDto>()
                     .ForMember(dist => dist.Name, opt => opt.MapFrom(src => src.PharmacyName))
                     .ReverseMap();
-                cfg.CreateMap<Medicine, string>()
-                    .ConvertUsing(src => src.Name);
                 cfg.CreateMap<Medicine, MedicineDto>()
                     .ReverseMap();
-                cfg.CreateMap<Prescription, PrescriptionCreationDto>()
-                    .ForMember(dist => dist.PatientCprNumber, opt => opt.MapFrom(src => src.PrescribedToCpr))
-                    .ForMember(dist => dist.DoctorId, opt => opt.MapFrom(src => src.PrescribedBy))
-                    .ForMember(dist => dist.MedicineName, opt => opt.MapFrom(src => src.Medicine.Name))
+                cfg.CreateMap<PrescriptionCreationDto, Prescription>()
+                    .ForMember(dist => dist.PrescribedToCpr, opt => opt.MapFrom(src => src.PatientCprNumber))
+                    .ForMember(dist => dist.PrescribedBy, opt => opt.MapFrom(src => src.DoctorId))
+                    .ForMember(dist => dist.Medicine, opt => opt.MapFrom(src => src.MedicineName))
                     .ReverseMap();
+                cfg.CreateMap<string, Medicine>()
+                    .ForCtorParam("name", opt => opt.MapFrom(src => src))
+                    .ReverseMap()
+                    .ConvertUsing(src => src.Name);
             })));
 
 var app = builder.Build();
