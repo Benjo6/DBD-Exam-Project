@@ -1,7 +1,59 @@
 ﻿@page "/prescriptions"
 
+<PageTitle>Prescriptions</PageTitle>
+
+@inject UserProvider UserProvider
+@inject IPrescriptionService PrescriptionService
+
 <h3>Prescriptions</h3>
 
-@code {
 
+<Tabs>
+    @if (UserProvider.CurrentUser.Type == PersonType.Doctor)
+    {
+        <TabPane Tab="Create prescription">
+           
+        </TabPane>
+    }
+    else if (UserProvider.CurrentUser.Type == PersonType.Patient)
+    {
+        <TabPane Tab="See your prescriptions">
+             @if (patientPersonalPrescriptions != null)
+            {
+                <Table TItem="PrescriptionDto" DataSource="@patientPersonalPrescriptions">
+                    <Column Title="Medicine" @bind-Field="@context.MedicineName" />
+                    <Column Title="Prescribed by" @bind-Field="@context.Doctor" />
+                    <Column Title="Expiration date" @bind-Field="@context.Expiration" />
+                </Table>
+            }
+        </TabPane>
+    }
+    else if (UserProvider.CurrentUser.Type == PersonType.Pharmaceut)
+    {
+        <TabPane Tab="Fulfill prescription">
+        </TabPane>
+    }
+    @if (UserProvider.CurrentUser != null && UserProvider.CurrentUser.Type != PersonType.Patient)
+    {
+        <TabPane Tab="Find patient">
+        </TabPane>
+    }
+</Tabs>
+
+@code {
+    IEnumerable<PrescriptionDto>? patientPersonalPrescriptions;
+
+    private async Task RequestPatientPrescriptions()
+    {
+        patientPersonalPrescriptions = await PrescriptionService.GetPrescriptionsForPatient(UserProvider.CurrentUser.CphNumber);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UserProvider.CurrentUser.Type == PersonType.Patient)
+        {
+            await RequestPatientPrescriptions();
+        }
+
+    }
 }
