@@ -88,6 +88,11 @@ builder.Services.AddSingleton<IMapper>(
                     .ConvertUsing(src => src.Name);
                 cfg.CreateMap<Medicine, MedicineDto>()
                     .ReverseMap();
+                cfg.CreateMap<Prescription, PrescriptionCreationDto>()
+                    .ForMember(dist => dist.PatientCprNumber, opt => opt.MapFrom(src => src.PrescribedToCpr))
+                    .ForMember(dist => dist.DoctorId, opt => opt.MapFrom(src => src.PrescribedBy))
+                    .ForMember(dist => dist.MedicineName, opt => opt.MapFrom(src => src.Medicine.Name))
+                    .ReverseMap();
             })));
 
 var app = builder.Build();

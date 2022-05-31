@@ -9,7 +9,7 @@ namespace PrescriptionService.Data.Storage;
 
 public interface IPrescriptionStorage
 {
-    Task<PrescriptionDto> Create(PrescriptionDto prescription);
+    Task<PrescriptionDto> Create(PrescriptionCreationDto prescription);
     Task<IEnumerable<PrescriptionDto>> GetAll(bool expired = false, Page? pageInfo = null);
     Task<IEnumerable<PrescriptionDto>> GetAll(string cprNumber, Page? pageInfo = null);
     Task<IEnumerable<PrescriptionDto>> GetAll(int doctorId, Page? pageInfo = null);
@@ -21,16 +21,23 @@ public interface IPrescriptionStorage
 public class PrescriptionStorage : BaseStorage<PrescriptionDto, Prescription, long>, IPrescriptionStorage
 {
     private readonly IPrescriptionRepository _repo;
+    private readonly IPatientStorage _patientStorage;
 
-    public PrescriptionStorage(IPrescriptionRepository repo, IRedisCache cache, IMapper mapper)
+    public PrescriptionStorage(IPrescriptionRepository repo, IPatientStorage patientStorage, IRedisCache cache, IMapper mapper)
         : base(cache, mapper)
     {
         _repo = repo;
+        _patientStorage = patientStorage;
     }
 
-    public async Task<PrescriptionDto> Create(PrescriptionDto prescription)
+    public async Task<PrescriptionDto> Create(PrescriptionCreationDto prescription)
     {
-        Prescription pre = Mapper.Map<Prescription>(prescription);
+        Prescription pre = Mapper.Map<PrescriptionCreationDto, Prescription>(prescription);
+
+        PersonDto p = await _patientStorage.Get(pre.PrescribedToCpr);
+        pre.PrescribedTo = p.Id;
+        pre.Creation = DateTime.Now;
+
         pre = await _repo.Create(pre);
         await Cache.Store<Prescription, long>(pre);
         return Mapper.Map<PrescriptionDto>(pre);

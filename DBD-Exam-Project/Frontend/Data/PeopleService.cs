@@ -4,7 +4,7 @@ using lib.DTO;
 
 namespace Frontend.Data;
 
-public class PeopleService : IPeopleService
+public class PeopleService : BasePrescriptionService, IPeopleService
 {
     private readonly HttpClient _client;
 
@@ -37,23 +37,6 @@ public class PeopleService : IPeopleService
             PersonType.Pharmaceut => "Persons/pharmaceuts",
             _ => "Persons"
         };
-
-    private string GetPageParameter(int pageCount, int pageSize)
-    {
-        StringBuilder sb = new("?");
-
-        if (pageCount > 0)
-            sb.Append($"Number={pageCount}");
-        if (pageSize > 0)
-        {
-            if (pageCount > 0)
-                sb.Append('&');
-            
-            sb.Append($"Size={pageSize}");
-        }
-
-        return sb.ToString();
-    }
 }
 
 public interface IPeopleService
