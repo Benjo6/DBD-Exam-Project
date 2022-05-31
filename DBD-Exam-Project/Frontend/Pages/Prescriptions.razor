@@ -45,7 +45,7 @@
 
     private async Task RequestPatientPrescriptions()
     {
-        patientPersonalPrescriptions = await PrescriptionService.GetPrescriptionsForPatient(UserProvider.CurrentUser.CphNumber);
+        patientPersonalPrescriptions = await PrescriptionService.GetPrescriptionsForPatient(UserProvider.CurrentUser.CprNumber);
     }
 
     protected override async Task OnInitializedAsync()
