@@ -17,14 +17,21 @@
     }
     <Column Title="Medicine" @bind-Field="@context.MedicineName"/>
     <Column @bind-Field="@context.Expiration" Format="yyyy-MM-dd"/>
-    @if(PeopleType == PersonType.Pharmaceut)
-    {
-        <ActionColumn>
-            <Space>
-                <Button Type="@ButtonType.Primary" Disabled="@context.IsFulfilled" OnClick="@(async () => await HandleFulfill(context))">Fulfill prescription</Button>
-            </Space>
-        </ActionColumn>
-    }
+
+    <ActionColumn>
+        <Space>
+            @if(PeopleType == PersonType.Pharmaceut)
+            {
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" Disabled="@context.IsFulfilled" OnClick="@(async () => await HandleFulfill(context))">Fulfill prescription</Button>
+                </SpaceItem>
+            }
+            <SpaceItem>
+                <Button OnClick="@(async () => await HandleSeeDetails(context))">See details</Button>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
+    
 </Table>
 
 @code {
@@ -37,9 +44,18 @@
     [Parameter]
     public EventCallback<PrescriptionDto> OnFulfillClicked { get; set; }
 
+    [Parameter]
+    public EventCallback<PrescriptionDto> OnSeeDetailsClicked { get; set; }
+
     async Task HandleFulfill(PrescriptionDto prescription)
     {
         if (OnFulfillClicked.HasDelegate)
             await OnFulfillClicked.InvokeAsync(prescription);
+    }
+
+    async Task HandleSeeDetails(PrescriptionDto prescription)
+    {
+        if (OnSeeDetailsClicked.HasDelegate)
+            await OnSeeDetailsClicked.InvokeAsync(prescription);
     }
 }
