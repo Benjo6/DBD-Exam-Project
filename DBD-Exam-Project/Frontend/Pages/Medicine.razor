@@ -6,13 +6,11 @@
 @if(_data != null)
 {
     <AntList Bordered DataSource="@_data" Size="small">
-        <Header>Header</Header>
         <ChildContent Context="item">
             <ListItem>
                 @item
             </ListItem>
         </ChildContent>
-        <Footer>Footer</Footer>
     </AntList>
 }
 
