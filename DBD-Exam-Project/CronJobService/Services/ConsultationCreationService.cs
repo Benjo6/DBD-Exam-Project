@@ -37,6 +37,14 @@ namespace CronJobService.Services
             return doctors;
         }
 
+        private bool MongoServiceIsReady()
+        {
+            var consultationHealthClient = new RestClient(_consultationServiceUrl);
+            var consultationHealthRequest = new RestRequest("health");
+            return consultationHealthClient.GetAsync(consultationHealthRequest).Result.IsSuccessful;
+
+        }
+
         public void CreateNewConsultationOpenings()
         {
             var doctors = GetDoctors();
