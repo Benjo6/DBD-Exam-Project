@@ -50,8 +50,8 @@ namespace PrescriptionService.Controllers
             => await _storage.MarkWarningAsSent(id);
 
 
-        [HttpPut("{id}/FulfillPrescription/{pharmaceutId}")]
-        public async Task<bool> FulfillPrescription(long id, int pharmaceutId)
-            => await _storage.Fulfill(id, pharmaceutId);
+        [HttpPut("FulfillPrescription")]
+        public async Task<bool> FulfillPrescription([FromBody] FulfillPrescriptionRequestDto request)
+            => await _storage.Fulfill(request.PrescriptionId, request.PharmaceutId);
     }
 }
