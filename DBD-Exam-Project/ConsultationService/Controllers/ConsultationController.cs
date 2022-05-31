@@ -1,3 +1,4 @@
+using ConsultationService.Models;
 using ConsultationService.Services;
 using lib.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -66,10 +67,10 @@ public class ConsultationController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{take}/{skip}")]
-    public async Task<IActionResult> GetConsultations(int take, int skip)
+    [HttpGet()]
+    public async Task<IActionResult> GetConsultations([FromQuery] SkipTake? pageInfo)
     {
-        var result = await _consultationService.GetConsultationsAsync(take, skip);
+        var result = await _consultationService.GetConsultationsAsync(pageInfo?.Skip ?? 0, pageInfo?.Take ?? 100);
         if (result == null)
             return NotFound();
 
