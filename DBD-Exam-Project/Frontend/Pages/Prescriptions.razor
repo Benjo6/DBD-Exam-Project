@@ -7,8 +7,29 @@
 
 <h3>Prescriptions</h3>
 
+<Tabs>
+    @if(_currentUser.Type != PersonType.Pharmaceut)
+    {
+        <TabPane Tab="See own prescriptions">
+            <PrescriptionTable Prescriptions="_prescriptionsData" PeopleType="_currentUser.Type"/>
+        </TabPane>
+    }
+    @if (_currentUser.Type != PersonType.Patient)
+    {
+        <TabPane Tab="Search for patient prescriptions">
+            <Space>
+                <Search Placeholder="input person cpr number" EnterButton="@("Find")" OnSearch="OnSearchForPrescriptions">
+                    <Prefix>
+                        <Icon Type="User"/>
+                    </Prefix>
+                </Search>
+            </Space>
+            <br/>
+            <PrescriptionTable Prescriptions="_prescriptionSearchResult" PeopleType="_currentUser.Type"/>
+        </TabPane>
+    }
+</Tabs>
 
-<PrescriptionTable Prescriptions="_prescriptionsData" PeopleType="_currentUser.Type"/>
 
 
 <Tabs>
@@ -46,6 +67,7 @@
 @code {
     IEnumerable<PrescriptionDto>? patientPersonalPrescriptions;
     IEnumerable<PrescriptionDto> _prescriptionsData = null!;
+    IEnumerable<PrescriptionDto>? _prescriptionSearchResult;
     PersonDto _currentUser = null!;
 
     private async Task RequestPatientPrescriptions()
@@ -63,17 +85,19 @@
         _currentUser = UserProvider.CurrentUser ?? new();
         UserProvider.OnUserChanged += OnUserChanged;
 
-        await ReloadPrescriptionsData();
-    }
-
-    async Task ReloadPrescriptionsData()
-    {
         _prescriptionsData = _currentUser.Type switch
         {
             PersonType.Doctor => await PrescriptionService.GetPrescriptionsForDoctor(_currentUser.Id),
             PersonType.Patient => await PrescriptionService.GetPrescriptionsForPatient(_currentUser.CprNumber!),
             _ => Enumerable.Empty<PrescriptionDto>()
         };
+    }
+
+    async Task OnSearchForPrescriptions(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            return;
+        _prescriptionSearchResult = await PrescriptionService.GetPrescriptionsForPatient(query);
     }
 
     void OnUserChanged(object? obj, EventArgs arg)

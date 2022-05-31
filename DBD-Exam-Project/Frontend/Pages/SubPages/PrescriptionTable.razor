@@ -9,14 +9,22 @@
             @context.Doctor.FirstName @context.Doctor.LastName
         </Column>
     }
-    @if(PeopleType != PersonType.Patient)
+    @if(PeopleType == PersonType.Doctor)
     {
         <Column Title="Patient" TData="string">
             @context.Patient.FirstName @context.Patient.LastName
         </Column>
     }
     <Column Title="Medicine" @bind-Field="@context.MedicineName"/>
-    <Column @bind-Field="@context.Expiration"/>
+    <Column @bind-Field="@context.Expiration" Format="yyyy-MM-dd"/>
+    @if(PeopleType == PersonType.Pharmaceut)
+    {
+        <ActionColumn>
+            <Space>
+                <Button Type="@ButtonType.Primary" >Fulfill prescription</Button>
+            </Space>
+        </ActionColumn>
+    }
 </Table>
 
 @code {
