@@ -11,6 +11,11 @@ services:
       resources:
         limits:
           memory: 2048M
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost/health || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - 18090:80
     restart: always
@@ -69,8 +74,10 @@ services:
         limits:
           memory: 2048M
     depends_on:
-      - consultation-service
-      - prescription-service
+      consultation-service:
+        condition: service_healthy
+      prescription-service:
+        condition: service_started
     ports:
       - 18095:80
     restart: always
