@@ -20,6 +20,8 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddScoped<IConsultationService, MongoConsultationService>();
 builder.Services.AddScoped<IConsultationMetadataService, MongoConsultationMetadataService>();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 
@@ -33,6 +35,6 @@ app.UseSwaggerUI(options =>
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHealthChecks("/health");
 
 app.Run();
