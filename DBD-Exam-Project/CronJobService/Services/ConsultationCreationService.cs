@@ -27,24 +27,19 @@ namespace CronJobService.Services
             _logger.LogInformation("{0}:{1}", nameof(_consultationServiceUrl), _consultationServiceUrl);
 
         }
+        private IEnumerable<PersonDto> GetDoctors()
+        {
+            var doctorClient = new RestClient(_prescriptionServiceUrl);
+            var doctorRequest = new RestRequest("api/Persons/doctors?Number=0&Size=10000");
+            doctorRequest.AddHeader("content-type", "application/json");
+            var doctors = doctorClient.GetAsync<IEnumerable<PersonDto>>(doctorRequest, CancellationToken.None).Result;
+
+            return doctors;
+        }
+
         public void CreateNewConsultationOpenings()
         {
-            // Coordinates:
-            // Kalundborg 55,6783 11,1084
-            // Holbæk 55,7077 11,7113
-            // Ringsted 55,4508 11,7937
-            // Hillerød 55,9314 12,2990
-            // Nørrebro 55,6973 12,5542
-            // Hvidovre 55,6413 12,4763
-
-            List<GeoPointDto> geoPointDtos = new List<GeoPointDto>() { 
-                new GeoPointDto(55.6783, 11.1084),
-                new GeoPointDto(55.7077, 11.7113),
-                new GeoPointDto(55.4508, 11.7937),
-                new GeoPointDto(55.9314, 12.2990),
-                new GeoPointDto(55.6973, 12.5542),
-                new GeoPointDto(55.6413, 12.4763)
-            };
+            var doctors = GetDoctors();
 
             try
             {
@@ -52,26 +47,25 @@ namespace CronJobService.Services
                 var consultationMetadataRequest = new RestRequest("api/ConsultationMetadata");
                 consultationMetadataRequest.AddHeader("content-type", "application/json");
                 var metadata = consultationClient.GetAsync<ConsultationMetadataDto>(consultationMetadataRequest, CancellationToken.None).Result;
-                if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1))
+                if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1) && metadata.CreatedCount > 0)
                 {
                     _logger.LogInformation("{0} >= {1} - No consultations will be added", metadata.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
                     return;
                 }
-                _logger.LogInformation("{0} < {1} - Consultations will be added", metadata?.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
+                _logger.LogInformation("{0} < {1} Or no consultations were added yet - Consultations will be added", metadata?.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
 
                 int count = 0;
                 var time = DateTime.Today.AddDays(1).AddHours(8);
                 while (time < DateTime.Today.AddDays(1).AddHours(16))
                 {
-                    // TODO update when doctor controller is up
-                    for (int i = 1; i <= 10; i++)
+                    foreach (PersonDto doctor in doctors)
                     {
                         var consultationRequest = new RestRequest("api/Consultation", Method.Post);
                         var consultation = new ConsultationCreationDto()
                         {
-                            DoctorId = i.ToString(),
+                            DoctorId = doctor.Id.ToString(),
                             ConsultationStartUtc = time,
-                            GeoPoint = geoPointDtos[i % geoPointDtos.Count]
+                            GeoPoint = new GeoPointDto(doctor.Address.Longitude, doctor.Address.Latitude)
                         };
                         consultationRequest.AddJsonBody(consultation);
                         consultationRequest.AddHeader("content-type", "application/json");

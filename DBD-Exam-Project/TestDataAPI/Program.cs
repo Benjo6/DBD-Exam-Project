@@ -28,13 +28,16 @@ builder.Services.AddSingleton<IPrescriptionRepo>(new DapperPrescriptionRepo(buil
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var app = builder.Build();
 
-using (var serviceScope = app.Services.CreateScope())
+if (builder.Configuration.GetValue<bool>("SeedTestDataOnStartup", false))
 {
-    var provider = builder.Services.BuildServiceProvider();
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var provider = builder.Services.BuildServiceProvider();
 
-    var seeder = provider.GetService<DbSeeder>();
-    if (seeder.DatabaseIsEmpty())
-        seeder.SeedTestData();
+        var seeder = provider.GetService<DbSeeder>();
+        if (seeder.DatabaseIsEmpty())
+            seeder.SeedTestData();
+    }
 }
 
 app.UseSwagger();
