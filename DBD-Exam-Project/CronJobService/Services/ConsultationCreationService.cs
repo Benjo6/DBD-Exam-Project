@@ -43,7 +43,13 @@ namespace CronJobService.Services
         {
             var consultationHealthClient = new RestClient(_consultationServiceUrl);
             var consultationHealthRequest = new RestRequest("health");
-            return consultationHealthClient.GetAsync(consultationHealthRequest).Result.IsSuccessful;
+            var health = consultationHealthClient.GetAsync(consultationHealthRequest).Result;
+            if (health != null && !health.IsSuccessful)
+            {
+                _logger.LogWarning($"ConsultationService is not healthy\n{health.Content}");
+                return false;
+            }
+            return true;
         }
 
         private ConsultationMetadataDto GetMetadata()
@@ -106,10 +112,7 @@ namespace CronJobService.Services
             try
             {
                 if (!ConsultationServiceIsReady())
-                {
-                    _logger.LogWarning("ConsultationService is not healthy");
-                    return;
-                }
+                    return;                
 
                 var metadata = GetMetadata();
                 if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1) && metadata.CreatedCount > 0)
