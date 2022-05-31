@@ -3,11 +3,12 @@
 <PageTitle>Prescriptions</PageTitle>
 
 @inject UserProvider UserProvider
+@inject MessageService MessageService
 @inject IPrescriptionService PrescriptionService
 
 <h3>Prescriptions</h3>
 
-<Tabs>
+<Tabs @bind-ActiveKey="_activeTabKey">
     @if (_currentUser.Type != PersonType.Pharmaceut)
     {
         <TabPane Tab="See own prescriptions">
@@ -31,15 +32,19 @@
     @if (_currentUser.Type == PersonType.Doctor)
     {
         <TabPane Tab="Create prescription">
-           
+            <CreatePrescriptionForm MedicineChoices="_medicine" OnSubmit="CreatePrescription"/>
         </TabPane>
     }
 </Tabs>
 
 @code {
+    IEnumerable<string> _medicine = null!;
+
     IEnumerable<PrescriptionDto> _prescriptionsData = null!;
     IEnumerable<PrescriptionDto>? _prescriptionSearchResult;
     PersonDto _currentUser = null!;
+
+    string _activeTabKey = "1";
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,6 +57,8 @@
             PersonType.Patient => await PrescriptionService.GetPrescriptionsForPatient(_currentUser.CprNumber!),
             _ => Enumerable.Empty<PrescriptionDto>()
         };
+
+        _medicine = await PrescriptionService.GetMedicine();
     }
 
     async Task OnSearchForPrescriptions(string query)
@@ -64,9 +71,27 @@
     async Task FulfillPrescription(PrescriptionDto prescription)
     {
         if (_currentUser.Type != PersonType.Pharmaceut)
+        {
+            await MessageService.Error("Error: Current user is not a pharmaceut!");
             return;
+        }
 
         await PrescriptionService.FulfillPrescription(prescription.Id, _currentUser.Id);
+        await MessageService.Success($"Prescription {prescription.Id} is marked as fulfilled.");
+    }
+
+    async Task CreatePrescription(PrescriptionCreationDto newPrescription)
+    {
+        if (_currentUser.Type != PersonType.Doctor)
+        {
+            await MessageService.Error("Error: Current user is not a doctor!");
+            return;
+        }
+
+        newPrescription.DoctorId = _currentUser.Id;
+        PrescriptionDto prescription = await PrescriptionService.CreatePrescription(newPrescription);
+        _activeTabKey = "1";
+        await MessageService.Success($"Prescription was created with id: {prescription.Id}.");
     }
 
     void OnUserChanged(object? obj, EventArgs arg)
