@@ -57,6 +57,10 @@ namespace TestDataAPI.Context
                 entity.Property(e => e.ZipCode)
                     .HasMaxLength(32)
                     .HasColumnName("zipcode");
+                entity.Property(e => e.Latitude)
+                    .HasColumnName("latitude");
+                entity.Property(e => e.Longitude)
+                    .HasColumnName("longitude");
             });
 
             modelBuilder.Entity<Doctor>(entity =>
