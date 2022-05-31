@@ -1,0 +1,53 @@
+﻿
+<Form 
+    Layout="@FormLayout.Horizontal" 
+    Model="@_prescription"
+    LabelColSpan="2"
+    WrapperColSpan="4"
+    ValidateOnChange="true">
+    <FormItem Label="Cpr Number">
+        <Input @bind-Value="context.PatientCprNumber"/>
+    </FormItem>
+    <FormItem Label="Medicine">
+        <Select 
+            DataSource="MedicineChoices" 
+            @bind-Value="context.MedicineName"
+            EnableSearch
+            Placeholder="Select a medicine"
+            >
+        </Select>
+    </FormItem>
+    <FormItem Label="Experation date">
+        <DatePicker 
+            ShowTime="true"
+            ShowToday="false"
+            TValue="DateTime" 
+            Picker="@DatePickerType.Date" 
+            @bind-Value="context.Expiration"
+            Format="yyyy-MM-dd HH:mm:ss"
+            DefaultValue="DateTime.Now.AddDays(7)"
+            DisabledDate="date => date <= DateTime.Now"/>
+    </FormItem>
+    <FormItem>
+        <Button Type="@ButtonType.Primary" OnClick="HandleSubmit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+
+@code {
+    [Parameter, EditorRequired]
+    public IEnumerable<string> MedicineChoices { get; set; } = Enumerable.Empty<string>();
+
+    PrescriptionCreationDto _prescription = new();
+
+    [Parameter]
+    public EventCallback<PrescriptionCreationDto> OnSubmit { get; set; }
+
+    async Task HandleSubmit()
+    {
+        if (OnSubmit.HasDelegate)
+            await OnSubmit.InvokeAsync(_prescription);
+        _prescription = new();
+    }
+}

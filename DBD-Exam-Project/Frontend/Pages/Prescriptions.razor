@@ -3,20 +3,21 @@
 <PageTitle>Prescriptions</PageTitle>
 
 @inject UserProvider UserProvider
+@inject MessageService MessageService
 @inject IPrescriptionService PrescriptionService
 
 <h3>Prescriptions</h3>
 
-<Tabs>
+<Tabs Type="@TabType.EditableCard" HideAdd @bind-ActiveKey="_activeTabKey">
     @if (_currentUser.Type != PersonType.Pharmaceut)
     {
-        <TabPane Tab="See own prescriptions">
-            <PrescriptionTable Prescriptions="_prescriptionsData" PeopleType="_currentUser.Type"/>
+        <TabPane Tab="See own prescriptions" Key="Own" Closable="false">
+            <PrescriptionTable Prescriptions="_prescriptionsData" PeopleType="_currentUser.Type" OnSeeDetailsClicked="OpenDetails"/>
         </TabPane>
     }
     @if (_currentUser.Type != PersonType.Patient)
     {
-        <TabPane Tab="Search for patient prescriptions">
+        <TabPane Tab="Search for patient prescriptions" Key="Search" Closable="false">
             <Space>
                 <Search Placeholder="input person cpr number" EnterButton="@("Find")" OnSearch="OnSearchForPrescriptions">
                     <Prefix>
@@ -25,21 +26,43 @@
                 </Search>
             </Space>
             <br/>
-            <PrescriptionTable Prescriptions="_prescriptionSearchResult" PeopleType="_currentUser.Type" OnFulfillClicked="FulfillPrescription"/>
+            <PrescriptionTable Prescriptions="_prescriptionSearchResult" PeopleType="_currentUser.Type" OnFulfillClicked="FulfillPrescription" OnSeeDetailsClicked="OpenDetails"/>
         </TabPane>
     }
     @if (_currentUser.Type == PersonType.Doctor)
     {
-        <TabPane Tab="Create prescription">
-           
+        <TabPane Tab="Create prescription" Key="Create" Closable="false">
+            <CreatePrescriptionForm MedicineChoices="_medicine" OnSubmit="CreatePrescription"/>
+        </TabPane>
+    }
+    @foreach (PrescriptionDto prescription in _detailedPrescritions)
+    {
+        <TabPane Tab="@($"Details: {prescription.Id}")" Key="@prescription.Id.ToString()">
+            <Descriptions>
+                <DescriptionsItem Title="@nameof(prescription.Id)">@prescription.Id</DescriptionsItem>
+                <DescriptionsItem Title="@nameof(prescription.Creation)">@prescription.Creation</DescriptionsItem>
+                <DescriptionsItem Title="@nameof(prescription.Expiration)">@prescription.Expiration</DescriptionsItem>
+                <DescriptionsItem Title="Medicine">@prescription.MedicineName</DescriptionsItem>
+                <DescriptionsItem Title="Fulfilled">@prescription.IsFulfilled</DescriptionsItem>
+                <DescriptionsItem Title="Patient name">@prescription.Patient.FirstName @prescription.Patient.LastName</DescriptionsItem>
+                <DescriptionsItem Title="Patient CPR number">@prescription.Patient.CprNumber</DescriptionsItem>
+                <DescriptionsItem Title="Patient email">@prescription.Patient.Email</DescriptionsItem>
+                <DescriptionsItem Title="Doctor name">@prescription.Doctor.FirstName @prescription.Doctor.LastName</DescriptionsItem>
+                <DescriptionsItem Title="Doctor email">@prescription.Doctor.Email</DescriptionsItem>
+            </Descriptions>
         </TabPane>
     }
 </Tabs>
 
 @code {
+    IEnumerable<string> _medicine = null!;
+    List<PrescriptionDto> _detailedPrescritions = new();
+
     IEnumerable<PrescriptionDto> _prescriptionsData = null!;
     IEnumerable<PrescriptionDto>? _prescriptionSearchResult;
     PersonDto _currentUser = null!;
+
+    string _activeTabKey;
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,6 +75,8 @@
             PersonType.Patient => await PrescriptionService.GetPrescriptionsForPatient(_currentUser.CprNumber!),
             _ => Enumerable.Empty<PrescriptionDto>()
         };
+
+        _medicine = await PrescriptionService.GetMedicine();
     }
 
     async Task OnSearchForPrescriptions(string query)
@@ -64,9 +89,34 @@
     async Task FulfillPrescription(PrescriptionDto prescription)
     {
         if (_currentUser.Type != PersonType.Pharmaceut)
+        {
+            await MessageService.Error("Error: Current user is not a pharmaceut!");
             return;
+        }
 
         await PrescriptionService.FulfillPrescription(prescription.Id, _currentUser.Id);
+        await MessageService.Success($"Prescription {prescription.Id} is marked as fulfilled.");
+    }
+
+    async Task CreatePrescription(PrescriptionCreationDto newPrescription)
+    {
+        if (_currentUser.Type != PersonType.Doctor)
+        {
+            await MessageService.Error("Error: Current user is not a doctor!");
+            return;
+        }
+
+        newPrescription.DoctorId = _currentUser.Id;
+        PrescriptionDto prescription = await PrescriptionService.CreatePrescription(newPrescription);
+        _activeTabKey = "Own";
+        MessageService.Success($"Prescription was created with id: {prescription.Id}.");
+    }
+
+    async Task OpenDetails(PrescriptionDto prescription)
+    {
+        PrescriptionDto detailedPrescription = await PrescriptionService.GetPrescription(prescription.Id);
+        _activeTabKey = detailedPrescription.Id.ToString();
+        _detailedPrescritions.Add(detailedPrescription);
     }
 
     void OnUserChanged(object? obj, EventArgs arg)

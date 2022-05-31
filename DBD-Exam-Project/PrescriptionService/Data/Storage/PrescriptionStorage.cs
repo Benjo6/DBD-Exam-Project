@@ -22,20 +22,24 @@ public class PrescriptionStorage : BaseStorage<PrescriptionDto, Prescription, lo
 {
     private readonly IPrescriptionRepository _repo;
     private readonly IPatientStorage _patientStorage;
+    private readonly IMedicineStorage _medicineStorage;
 
-    public PrescriptionStorage(IPrescriptionRepository repo, IPatientStorage patientStorage, IRedisCache cache, IMapper mapper)
+    public PrescriptionStorage(IPrescriptionRepository repo, IPatientStorage patientStorage, IMedicineStorage medicineStorage, IRedisCache cache, IMapper mapper)
         : base(cache, mapper)
     {
         _repo = repo;
         _patientStorage = patientStorage;
+        _medicineStorage = medicineStorage;
     }
 
     public async Task<PrescriptionDto> Create(PrescriptionCreationDto prescription)
     {
         Prescription pre = Mapper.Map<PrescriptionCreationDto, Prescription>(prescription);
 
+        MedicineDto m = await _medicineStorage.Get(pre.Medicine.Name);
         PersonDto p = await _patientStorage.Get(pre.PrescribedToCpr);
         pre.PrescribedTo = p.Id;
+        pre.MedicineId = m.Id;
         pre.Creation = DateTime.Now;
 
         pre = await _repo.Create(pre);
