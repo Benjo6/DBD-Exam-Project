@@ -31,8 +31,10 @@ This will set up databases and services on the following ports:
 The service consists of a data supplier and a data analyzer. 
 
 Data supplier takes the data from our two other services named Prescription Service (Postgres/Redis) and Consultation Service (Mongo.). The data from these services will then be supplied to Neo4J through our bolt port (bolt://localhost:17687). The supplier also adds relations between the data. 
+
 Diagram of relations in Neo4J:
-![DiagramNeo4J](/documentation/neo4h/screenshot 2022-06-01 103844.png)
+
+![DiagramNeo4J](/documentation/neo4j/Screenshot 2022-06-01 103844.png)
 
 Picture of the supplier:
 ![Supplier](/Documentation/Neo4J/PictureofSupplier.png)
