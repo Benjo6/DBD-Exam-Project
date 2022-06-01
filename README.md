@@ -39,7 +39,7 @@ Picture of the supplier:
 
 Our Data Analyzer consists of three examples in the project. It analyzes the created relations between our node classes to find helpful knowledge about our data.
 
-Picture of the method:
+Picture of the method (DoctorWithMostPrescriptions):
 ![Method](/Documentation/Neo4J/Pictureoftheanalyzingmethod.png)
 
 Picture of the method executed:
