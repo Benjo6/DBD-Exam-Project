@@ -9,6 +9,7 @@ namespace CronJobService.Services
     {
         private ILogger<ConsultationJob> _logger;
         private IConsultationCreationService _consultationCreationService;
+        private static bool _running = false;
 
         public ConsultationJob(IScheduleConfig<ConsultationJob> config, ILogger<ConsultationJob> logger, IConsultationCreationService consultationCreationService)
         : base(config.CronExpression, config.TimeZoneInfo)
@@ -26,9 +27,18 @@ namespace CronJobService.Services
 
         public override async Task DoWork(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"{DateTime.Now:hh:mm:ss} ConsultationJob is working.");
+            if (_running) return;
+            try
+            {
+                _running = true;
+                _logger.LogInformation($"{DateTime.Now:hh:mm:ss} ConsultationJob is working.");
 
-            await Task.Run(_consultationCreationService.CreateNewConsultationOpenings, cancellationToken);
+                await Task.Run(_consultationCreationService.CreateNewConsultationOpenings, cancellationToken);
+            }
+            finally
+            {
+                _running = false;
+            }
         }
 
         public override async Task StopAsync(CancellationToken cancellationToken)
