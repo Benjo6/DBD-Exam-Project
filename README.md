@@ -34,7 +34,7 @@ Data supplier takes the data from our two other services named Prescription Serv
 
 Diagram of relations in Neo4J:
 
-![Diagram](/Documentation/Neo4J/Screenshot 2022-06-01 103844.png)
+![Diagram](/Documentation/Neo4J/DiagramofNeo4JRelations.png)
 
 Picture of the supplier:
 ![Supplier](/Documentation/Neo4J/PictureofSupplier.png)
