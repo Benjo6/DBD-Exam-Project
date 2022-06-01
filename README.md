@@ -1,6 +1,13 @@
 # DBD-Exam-Project
 We were given an assignment in our database exam project to construct a project that included four of the five databases from our course. The team chose PostgreSQL, Neo4J, MongoDB, and Redis for the project. The project is based on a previously submitted hand-in assignment from one of our database assignments (Postgres). That project was merely about how to use Postgres and create a functional prescription service (handling of prescriptions). We have expanded this prescription service to cover three additional databases and four new services in the original project. The final product is much more than just a prescription service as it was in the beginning.
 
+# Running the project
+In order to run the project:
+Requirements: docker, docker compose, open ports as listed below
+run start-dev.bat
+Go to: http://localhost:18094/api/TestData/SeedTestData (This will take a while - alternatively use http://localhost:18094/api/TestData/SeedTestDataReduced)
+After this has run - see the running frontend by going to:
+http://localhost:8080/
 
 # Connectionstrings for dev:
 All require running .start-dev.bat from root of repository (shortcut for docker-compose up with the databases along with services that have been containerized)
