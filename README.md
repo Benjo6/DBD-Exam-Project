@@ -27,7 +27,25 @@ This will set up databases and services on the following ports:
 | Mongo Express | http://localhost:10020
 | Redis Insight | http://localhost:10030
 
-neo4j
+## Data Analyzing Service (Neo4J)
+The service consists of a data supplier and a data analyzer. 
+
+Data supplier takes the data from our two other services named Prescription Service (Postgres/Redis) and Consultation Service (Mongo.). The data from these services will then be supplied to Neo4J through our bolt port (bolt://localhost:17687). The supplier also adds relations between the data. 
+Diagram of relations in Neo4J:
+![DiagramNeo4J](/documentation/neo4h/screenshot 2022-06-01 103844.png)
+
+Picture of the supplier:
+![Supplier](/Documentation/Neo4J/PictureofSupplier.png)
+
+Our Data Analyzer consists of three examples in the project. It analyzes the created relations between our node classes to find helpful knowledge about our data.
+
+Picture of the method:
+![Method](/Documentation/Neo4J/Pictureoftheanalyzingmethod.png)
+
+Picture of the method executed:
+![MethodExecuted](Documentation/Neo4J/PictureofMethodExecution.png)
+
+
 ## ConsultationService (mongo)
 Service for creating, booking and retrieving consultations.
 
