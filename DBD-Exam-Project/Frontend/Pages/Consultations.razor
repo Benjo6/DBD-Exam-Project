@@ -20,8 +20,8 @@
     {
         <TabPane Tab="Consultation Booking">
             <h3>Find available consultation</h3>
-            <Text>Max distance to potential consultation</Text>
-            <AntDesign.InputNumber @bind-Value="distance" Min="1" Max="1000000000" DefaultValue="3"></AntDesign.InputNumber>
+            <Text>Max distance to potential consultation in meters</Text>
+            <AntDesign.InputNumber @bind-Value="distance" Min="1000" Max="1000000" DefaultValue="10000"></AntDesign.InputNumber>
             <Button Type="@ButtonType.Primary" OnClick="@(async () => await RequestAvailableConsultations())">Search</Button>
             @if (availableConsultations != null)
             {
