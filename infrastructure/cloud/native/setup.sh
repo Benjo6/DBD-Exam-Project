@@ -18,9 +18,14 @@ NSG='database-exam-nsg'
 GATEWAY='gw'
 GATEWAYDNS='db-exam-'$GATEWAY
 
+echo "Delete res-group"
+az group delete --name $GROUP --yes --force-deletion-types Microsoft.Compute/virtualMachines
 
-az group delete --name $GROUP --yes
-az group create --name $GROUP --location northeurope 
+echo "Res-group exists"
+echo $(az group exists -n 'database-exam')
+
+echo "Create res-group"
+az group create --name $GROUP --location northeurope
 
 az network vnet create --name 'exam-vnet' --resource-group $GROUP
 az network nsg create -n $NSG -g $GROUP
@@ -68,11 +73,11 @@ az network public-ip update --resource-group $GROUP --name $GATEWAYDNS --dns-nam
 echo "Start configuration"
 
 az vm run-command invoke -g $GROUP -n $GATEWAY --command-id RunShellScript \
---scripts "@mongo/config-setup-1.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD $DB_USER $DB_PASSWORD
+--scripts "@mongo/config-setup-1.sh" --parameters "${ADMIN_USER}" ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD "${GATEWAY}"
 
 echo "Setup base-1-1"
 az vm run-command invoke -g $GROUP -n vm-a-1 --command-id RunShellScript \
---scripts "@mongo/shard-setup-base.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD $DB_USER $DB_PASSWORD mongors1
+--scripts "@mongo/shard-setup-base.sh" --parameters "$ADMIN_USER" "$ADMIN_PASSWORD" "$DB_USER" "$DB_PASSWORD" mongors1
 
 echo "Setup base-1-2"
 az vm run-command invoke -g $GROUP -n vm-a-2 --command-id RunShellScript \
@@ -80,7 +85,7 @@ az vm run-command invoke -g $GROUP -n vm-a-2 --command-id RunShellScript \
 
 echo "Setup shard 1"
 az vm run-command invoke -g $GROUP -n vm-a-1 --command-id RunShellScript \
---scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD $DB_USER $DB_PASSWORD vm-a-1:27018 vm-a-2:27018 mongors1
+--scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER vm-a-1:27018 vm-a-2:27018 mongors1
 
 ### Shard 2 ###
 
@@ -103,6 +108,6 @@ az vm run-command invoke -g $GROUP -n $GATEWAY --command-id RunShellScript \
 --scripts "@mongo/config-setup-2.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD
 
 az vm run-command invoke -g $GROUP -n $GATEWAY --command-id RunShellScript \
---scripts "@compose-setup.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD
+--scripts "@compose-setup.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD $DB_USER $DB_PASSWORD
 
 ### Start Applications ###
