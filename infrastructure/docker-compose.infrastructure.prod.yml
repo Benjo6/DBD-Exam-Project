@@ -1,27 +1,31 @@
-version: '2.4'
+version: '3.8'
 services:
 
-  ## Postgres ##
+## Postgres ##
   postgres:
     container_name: 'db-exam-postgres'
-    image: postgres:14.2-alpine
-    hostname: postgres
-    mem_limit: 400m
-    memswap_limit: 6000m
+    build: 
+      context: ./postgres
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
     ports:
       - 15432:5432
     volumes:
-     - ./db/data:/var/lib/postgresql/data
-     - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+     - postgres_data:/var/lib/postgresql/data
     restart: always
     environment:
-      POSTGRES_USER: prescription_user
-      POSTGRES_PASSWORD: prescription_pw
+      POSTGRES_USER: ${ADMIN_USER}
+      POSTGRES_PASSWORD: ${ADMIN_PASSWORD}
 
 ## Neo4j ##
   neo:
     container_name: db-exam-neo4j
-    image: neo4j
+    build: 
+      context: ./neo4j
+      dockerfile: Dockerfile
     hostname: db-exam-neo4j
     mem_limit: 600m
     memswap_limit: 6000m
@@ -42,31 +46,6 @@ services:
       - NEO4J_AUTH=none
       - apoc.import.file.enabled=true
 
-## Mongo ##
-
-  mongo:
-    container_name: db-exam-mongo
-    image: mongo
-    hostname: db-exam-mongo
-    mem_limit: 400m
-    memswap_limit: 6000m
-    restart: always
-    ports:
-      - 17017:27017
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: mongo
-      MONGO_INITDB_ROOT_PASSWORD: mongopw
-
-  mongo-express:
-    container_name: db-exam-mongo-express
-    image: mongo-express
-    restart: always
-    ports:
-      - 18081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: mongo
-      ME_CONFIG_MONGODB_ADMINPASSWORD: mongopw
-      ME_CONFIG_MONGODB_URL: mongodb://mongo:mongopw@mongo:27017/
 
 ## Redis ##
 
@@ -79,4 +58,15 @@ services:
     restart: always
     ports:
       - "16379:6379"
+
+## Redis ##
+
+  nginx:
+    container_name: db-exam-nginx
+    image: "nginx:alpine"
+    hostname: db-exam-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
     

@@ -1,0 +1,124 @@
+version: '3.8'
+services:
+
+  ## Consultation ##
+  consultation-service:
+    container_name: 'db-exam-consultation-service'
+    build: 
+      context: ../DBD-Exam-Project
+      dockerfile: ConsultationService/Dockerfile.compose
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost/health || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 18090:80
+    restart: always
+    environment:
+      - ConnectionStrings__MongoConnectionString="mongodb://${ADMIN_USER}:${ADMIN_PASSWORD}mongo-router:27017"
+
+
+  ## Mail-Service ##
+  mail-service:
+    container_name: 'db-exam-mail-service'
+    build: 
+      context: ../DBD-Exam-Project
+      dockerfile: MailService/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    ports:
+      - 18092:80
+    restart: always
+
+  ## Prescription-Service ##
+  prescription-service:
+    container_name: 'db-exam-prescription-service'
+    build: 
+      context: ../DBD-Exam-Project
+      dockerfile: PrescriptionService/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    ports:
+      - 18093:80
+    restart: always
+    environment:
+      - ConnectionStrings__postgres="Host=postgres;Port=5432;Database=prescription_db;Include Error Detail=true;Username=${DB_USER};Password=${DB_PASSWORD}"
+
+  ## TestData-Service ##
+  testdata-service:
+    container_name: 'db-exam-testdata-service'
+    build: 
+      context: ../DBD-Exam-Project
+      dockerfile: TestDataAPI/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    ports:
+      - 18094:80
+    restart: always
+
+  ## CronJob-Service ##
+  cronjob-service:
+    container_name: 'db-exam-cronjob-service'
+    build: 
+      context: ../DBD-Exam-Project
+      dockerfile: CronJobService/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    depends_on:
+      consultation-service:
+        condition: service_healthy
+      prescription-service:
+        condition: service_started
+    ports:
+      - 18095:80
+    restart: always
+
+  ## Neo4j Analyzing Service ##
+  analyzing-service:
+    container_name: 'db-exam-data-analyzing-service'
+    build:
+      context: ../DBD-Exam-Project
+      dockerfile: Neo4jDataAnalyzer/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    depends_on:
+      consultation-service:
+        condition: service_healthy
+      prescription-service:
+        condition: service_started
+    ports:
+      - 18096:80
+    restart: always
+
+  ## Neo4j Analyzing Service ##
+  blazor-frontend:
+    container_name: 'db-exam-frontend'
+    build:
+      context: ../DBD-Exam-Project
+      dockerfile: Frontend/Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    ports:
+      - 8080:80
+    restart: always
+
+networks:
+  default:
+    name: db-exam
