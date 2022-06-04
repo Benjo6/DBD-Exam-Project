@@ -1,5 +1,10 @@
 echo "config setup 1"
 USER=$1
+PASSWORD=$2
+
+DB_USER=$3
+DB_PASSWORD=$4
+
 su $USER
 
 sudo fallocate -l 2G /swapfile
@@ -29,7 +34,7 @@ mongod --configsvr --replSet mongors1conf --dbpath /home/$USER/data/db-cfg2 --po
 mongod --configsvr --replSet mongors1conf --dbpath /home/$USER/data/db-cfg3 --port 27016 --bind_ip_all --fork --logpath=/home/$USER/mongocfg3.log --logappend
 
 #mongocfg1 
-sleep 30
+sleep 20
 
 echo 'rs.initiate({_id: "mongors1conf",configsvr: true, members: [{ _id : 0, host : "mongo-config:27014" },{ _id : 1, host : "mongo-config:27015" }, { _id : 2, host : "mongo-config:27016" }]})' | mongosh --port 27014 --quiet
 echo 'rs.status()' | mongosh --port 27014 --quiet
@@ -38,8 +43,8 @@ mongos --configdb mongors1conf/mongo-config:27014,mongo-config:27015,mongo-confi
 
 echo @'db.createUser(
   {
-    user: "exam",
-    pwd: "maxexam",
+    user: "'$DB_USER'",
+    pwd: "'$DB_PASSWORD'",
     roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
   })' | mongosh --port 27017 --quiet
 

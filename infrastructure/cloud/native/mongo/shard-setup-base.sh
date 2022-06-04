@@ -6,8 +6,6 @@ sudo chmod 600 /swapfile && mkswap /swapfile
 sudo swapon /swapfile
 sudo echo "\n/swapfile swap swap defaults 0 0" >> /etc/fstab
 sudo mkdir /data && chmod 777 /data
-curl https://raw.githubusercontent.com/danielgron/db_assignment3_mongodb_sharding/main/twitter.json -o /data/twitter.json 
-curl https://raw.githubusercontent.com/danielgron/db_assignment3_mongodb_sharding/main/tweets.bson -o /data/twitter.bson
 
 
 ## Install Mongo ##
