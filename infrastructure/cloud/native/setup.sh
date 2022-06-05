@@ -77,11 +77,11 @@ az vm run-command invoke -g $GROUP -n $GATEWAY --command-id RunShellScript \
 
 echo "Setup base-1-1"
 az vm run-command invoke -g $GROUP -n vm-a-1 --command-id RunShellScript \
---scripts "@mongo/shard-setup-base.sh" --parameters "$ADMIN_USER" "$ADMIN_PASSWORD" "$DB_USER" "$DB_PASSWORD" mongors1
+--scripts "@mongo/shard-setup-base.sh" --parameters "$ADMIN_USER" mongors1
 
 echo "Setup base-1-2"
 az vm run-command invoke -g $GROUP -n vm-a-2 --command-id RunShellScript \
---scripts "@mongo/shard-setup-base.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD $DB_USER $DB_PASSWORD mongors1
+--scripts "@mongo/shard-setup-base.sh" --parameters $ADMIN_USER mongors1
 
 echo "Setup shard 1"
 az vm run-command invoke -g $GROUP -n vm-a-1 --command-id RunShellScript \
@@ -105,7 +105,7 @@ az vm run-command invoke -g $GROUP -n vm-b-1 --command-id RunShellScript \
 
 echo "Start configuration pt2"
 az vm run-command invoke -g $GROUP -n $GATEWAY --command-id RunShellScript \
---scripts "@mongo/config-setup-2.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD
+--scripts "@mongo/config-setup-2.sh" --parameters "${ADMIN_USER}" ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD
 
 az vm run-command invoke -g $GROUP -n $GATEWAY --command-id RunShellScript \
 --scripts "@compose-setup.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD $DB_USER $DB_PASSWORD
