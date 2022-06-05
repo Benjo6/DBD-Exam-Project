@@ -105,9 +105,11 @@ az vm run-command invoke -g $GROUP -n vm-b-1 --command-id RunShellScript \
 
 echo "Start configuration pt2"
 az vm run-command invoke -g $GROUP -n $GATEWAY --command-id RunShellScript \
---scripts "@mongo/config-setup-2.sh" --parameters "${ADMIN_USER}" ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD
+--scripts "@mongo/config-setup-2.sh" --parameters "${ADMIN_USER}" ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD "${GATEWAY}"
+
+
+### Start Applications ###
 
 az vm run-command invoke -g $GROUP -n $GATEWAY --command-id RunShellScript \
 --scripts "@compose-setup.sh" --parameters $ADMIN_USER $ADMIN_PASSWORD $DB_USER $DB_PASSWORD
 
-### Start Applications ###

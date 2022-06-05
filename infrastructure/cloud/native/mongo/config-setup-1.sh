@@ -14,14 +14,35 @@ HOSTNAME=$5
 
 
 su $USER
+HOME='/home/'$USER
 
-echo $USER >> ~/deploy.log
-echo $PASSWORD >> ~/deploy.log
-echo $DB_USER >> ~/deploy.log
-echo $DB_PASSWORD >> ~/deploy.log
-echo $HOSTNAME >> ~/deploy.log
+echo $USER >> ${HOME}/deploy.log
+echo $PASSWORD >> ${HOME}/deploy.log
+echo $DB_USER >> ${HOME}/deploy.log
+echo $DB_PASSWORD >> ${HOME}/deploy.log
+echo $HOSTNAME >> ${HOME}/deploy.log
 
-echo "Creating swap" >> ~/deploy.log
+# Install docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+sudo groupadd docker
+sudo usermod -aG docker $USER && newgrp docker
+
+# Install docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose 
+sudo chmod +x /usr/local/bin/docker-compose
+
+sudo usermod -aG docker $USER
+newgrp docker
+sudo chgrp docker /usr/local/bin/docker-compose
+
+#Setup frontend and backend
+sudo mkdir /repo && sudo chgrp docker /repo
+git clone https://github.com/SOFT2022-Database-Exam/DBD-Exam-Project.git /repo/
+cd /repo
+git checkout release/exam-dsg
+
+echo "Creating swap" >> ${HOME}/deploy.log
 sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
@@ -45,22 +66,29 @@ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongod
 sudo apt-get update
 sudo apt-get install -y mongodb-org=5.0.6 mongodb-org-database=5.0.6 mongodb-org-server=5.0.6 mongodb-org-shell=5.0.6 mongodb-org-mongos=5.0.6 mongodb-org-tools=5.0.6
 
-echo "Starting Mongo"
+echo "Starting Mongo" >> ${HOME}/deploy.log
 ## Start Mongo ##
-mongod --configsvr --replSet mongors1conf --dbpath /home/$USER/data/db-cfg1 --port 27014 --bind_ip_all --fork --logpath=/home/$USER/mongocfg1.log --logappend
-mongod --configsvr --replSet mongors1conf --dbpath /home/$USER/data/db-cfg2 --port 27015 --bind_ip_all --fork --logpath=/home/$USER/mongocfg2.log --logappend
-mongod --configsvr --replSet mongors1conf --dbpath /home/$USER/data/db-cfg3 --port 27016 --bind_ip_all --fork --logpath=/home/$USER/mongocfg3.log --logappend
+sudo sed 's/<USER>/'$USER'/' /repo/infrastructure/cloud/native/mongo/config1.cfg -> /etc/mongocfg1.conf
+sudo sed 's/<USER>/'$USER'/' /repo/infrastructure/cloud/native/mongo/config2.cfg -> /etc/mongocfg2.conf
+sudo sed 's/<USER>/'$USER'/' /repo/infrastructure/cloud/native/mongo/config3.cfg -> /etc/mongocfg3.conf
+
+sudo cp /repo/infrastructure/cloud/native/mongo/mongocfg1.service /lib/systemd/system/mongocfg1.service
+sudo cp /repo/infrastructure/cloud/native/mongo/mongocfg2.service /lib/systemd/system/mongocfg2.service
+sudo cp /repo/infrastructure/cloud/native/mongo/mongocfg3.service /lib/systemd/system/mongocfg3.service
+
+sudo systemctl start /lib/systemd/system/mongocfg1.service
+sudo systemctl start /lib/systemd/system/mongocfg2.service
+sudo systemctl start /lib/systemd/system/mongocfg3.service
 
 #mongocfg1 
 sleep 20
 
 echo 'rs.initiate({_id: "mongors1conf",configsvr: true, members: [{ _id : 0, host : "'${HOSTNAME}':27014" },{ _id : 1, host : "'${HOSTNAME}':27015" }, { _id : 2, host : "'${HOSTNAME}':27016" }]})' | mongosh --port 27014 --quiet
 
-mongos --configdb mongors1conf/${HOSTNAME}:27014,${HOSTNAME}:27015,${HOSTNAME}:27016 --port 27017 --bind_ip_all --fork --logpath=/home/$USER/mongo.log --logappend
+#Start mongos
 
-
-
-
+sudo sed -e 's/<USER>/'$USER'/' -e 's/<HOSTNAME>/'$HOSTNAME'/' /repo/infrastructure/cloud/native/mongo/mongos.cfg -> /etc/mongos.conf
+sudo systemctl start /lib/systemd/system/mongos.service
 
 
 

@@ -2,6 +2,7 @@ USER=$1
 PASSWORD=$2
 DB_USER=$3
 DB_PASSWORD=$4
+HOSTNAME=$5
 
 su $USER
 cd /home/${USER}
@@ -24,3 +25,8 @@ echo 'db.createUser({ user: "'${USER}'",pwd: "'${PASSWORD}'", roles: [ { role: "
 echo 'db.createUser( { user: "'${DB_USER}'", pwd: "'${DB_PASSWORD}'", roles: [ { role: "readWrite", db: "consultations" } ] })' | mongosh --port 27017 --quiet
 
 
+# Stop mongos and update config
+sudo systemctl stop /lib/systemd/system/mongos.service
+sudo rm /etc/mongos.conf
+sudo sed -e 's/<USER>/'$USER'/' -e 's/<HOSTNAME>/'$HOSTNAME'/' /repo/infrastructure/cloud/native/mongo/mongosauth.cfg -> /etc/mongos.conf
+sudo systemctl start /lib/systemd/system/mongos.service
