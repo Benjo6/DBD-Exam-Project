@@ -49,7 +49,7 @@ az network nsg rule create -n 'https' -g $GROUP --nsg-name $NSG --priority 780  
 
 az vm create -g $GROUP -n $GATEWAY --image $IMG --size Standard_B2s \
 --location $LOCATION --public-ip-address $GATEWAYDNS \
---nsg $NSG --public-ip-sku Basic --storage-sku Standard_LRS --os-disk-size-gb 30 \
+--nsg $NSG --public-ip-sku Basic --public-ip-address-allocation static --storage-sku Standard_LRS --os-disk-size-gb 30 \
 --admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD
 
 az vm create -g $GROUP -n vm-a-1 --image $IMG --size $VMSIZE \
@@ -85,7 +85,7 @@ az vm run-command invoke -g $GROUP -n vm-a-2 --command-id RunShellScript \
 
 echo "Setup shard 1"
 az vm run-command invoke -g $GROUP -n vm-a-1 --command-id RunShellScript \
---scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER vm-a-1:27018 vm-a-2:27018 mongors1
+--scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD vm-a-1:27018 vm-a-2:27018 mongors1
 
 ### Shard 2 ###
 
@@ -99,7 +99,7 @@ az vm run-command invoke -g $GROUP -n vm-b-2 --command-id RunShellScript \
 
 echo "Setup shard 2"
 az vm run-command invoke -g $GROUP -n vm-b-1 --command-id RunShellScript \
---scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER vm-b-1:27018 vm-b-2:27018 mongors2
+--scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD vm-b-1:27018 vm-b-2:27018 mongors2
 
 ##### Post config ###
 
