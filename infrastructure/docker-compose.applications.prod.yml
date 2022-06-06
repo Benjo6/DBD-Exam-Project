@@ -20,7 +20,7 @@ services:
       - 18090:80
     restart: always
     environment:
-      - ConnectionStrings__MongoConnectionString="mongodb://${ADMIN_USER}:${ADMIN_PASSWORD}mongo-router:27017"
+      - ConnectionStrings__MongoConnectionString="mongodb://${ADMIN_USER}:${ADMIN_PASSWORD}@mongo-router:27017"
 
 
   ## Mail-Service ##

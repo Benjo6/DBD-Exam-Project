@@ -20,7 +20,7 @@ echo $HOSTNAME >> ${HOME}/deploy.log
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh ./get-docker.sh
 sudo groupadd docker
-sudo usermod -aG docker $USER && newgrp docker
+sudo usermod -aG docker $USER
 
 # Install docker-compose
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose 
@@ -37,7 +37,7 @@ cd /repo
 git checkout release/exam-dsg
 
 echo "Creating swap" >> ${HOME}/deploy.log
-sudo fallocate -l 2G /swapfile
+sudo fallocate -l 4G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
