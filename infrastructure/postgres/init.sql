@@ -146,14 +146,14 @@ GRANT SELECT, UPDATE ON prescriptions.prescription TO pharmaceut;
 CREATE POLICY prescription_patient ON prescriptions.prescription TO patient
     USING (prescribed_to_cpr = current_user);
 
-CREATE USER prescriptionservice WITH ENCRYPTED PASSWORD 'prescreptionservicepw';
-GRANT SELECT, CREATE, UPDATE ON prescriptions.prescription TO prescriptionservice;
-GRANT SELECT ON prescriptions.address TO prescriptionservice;
-GRANT SELECT ON prescriptions.personal_data TO prescriptionservice;
-GRANT SELECT ON prescriptions.pharmacy TO prescriptionservice;
-GRANT SELECT ON prescriptions.doctor TO prescriptionservice;
-GRANT SELECT ON prescriptions.pharmaceut TO prescriptionservice;
-GRANT SELECT ON prescriptions.medicine TO prescriptionservice;
+CREATE USER prescriptionserviceuser WITH ENCRYPTED PASSWORD 'prescreptionservicepw';
+GRANT SELECT, CREATE, UPDATE ON prescriptions.prescription TO prescriptionserviceuser;
+GRANT SELECT ON prescriptions.address TO prescriptionserviceuser;
+GRANT SELECT ON prescriptions.personal_data TO prescriptionserviceuser;
+GRANT SELECT ON prescriptions.pharmacy TO prescriptionserviceuser;
+GRANT SELECT ON prescriptions.doctor TO prescriptionserviceuser;
+GRANT SELECT ON prescriptions.pharmaceut TO prescriptionserviceuser;
+GRANT SELECT ON prescriptions.medicine TO prescriptionserviceuser;
 
 CREATE USER renewalservice WITH ENCRYPTED PASSWORD 'renewal';
 GRANT SELECT ON prescriptions.prescription TO patient;

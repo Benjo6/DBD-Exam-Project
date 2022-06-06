@@ -51,7 +51,7 @@ services:
       - 18093:80
     restart: always
     environment:
-      - ConnectionStrings__postgres=Host=postgres;Port=5432;Database=prescription_db;Include Error Detail=true;Username=${DB_USER};Password=${DB_PASSWORD}
+      - ConnectionStrings__postgres=Host=postgres;Port=5432;Database=prescription_db;Include Error Detail=true;Username=${ADMIN_USER};Password=${ADMIN_PASSWORD}
 
   ## TestData-Service ##
   testdata-service:

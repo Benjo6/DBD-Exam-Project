@@ -1,0 +1,549 @@
+Delete res-group
+Res-group exists
+false
+Create res-group
+{
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam",
+  "location": "northeurope",
+  "managedBy": null,
+  "name": "database-exam",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+{
+  "newVNet": {
+    "addressSpace": {
+      "addressPrefixes": [
+        "10.0.0.0/16"
+      ]
+    },
+    "bgpCommunities": null,
+    "ddosProtectionPlan": null,
+    "dhcpOptions": {
+      "dnsServers": []
+    },
+    "enableDdosProtection": false,
+    "enableVmProtection": null,
+    "encryption": null,
+    "etag": "W/\"6883ff38-bc29-47ed-b483-9123c176e756\"",
+    "extendedLocation": null,
+    "flowTimeoutInMinutes": null,
+    "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/virtualNetworks/exam-vnet",
+    "ipAllocations": null,
+    "location": "northeurope",
+    "name": "exam-vnet",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "database-exam",
+    "resourceGuid": "19950915-1733-444c-9aac-9a370b6e280d",
+    "subnets": [],
+    "tags": {},
+    "type": "Microsoft.Network/virtualNetworks",
+    "virtualNetworkPeerings": []
+  }
+}
+{
+  "NewNSG": {
+    "defaultSecurityRules": [
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationApplicationSecurityGroups": null,
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"83f148a0-12ba-492b-8601-008bff0f5528\"",
+        "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/defaultSecurityRules/AllowVnetInBound",
+        "name": "AllowVnetInBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "database-exam",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourceApplicationSecurityGroups": null,
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow inbound traffic from azure load balancer",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationApplicationSecurityGroups": null,
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"83f148a0-12ba-492b-8601-008bff0f5528\"",
+        "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/defaultSecurityRules/AllowAzureLoadBalancerInBound",
+        "name": "AllowAzureLoadBalancerInBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "database-exam",
+        "sourceAddressPrefix": "AzureLoadBalancer",
+        "sourceAddressPrefixes": [],
+        "sourceApplicationSecurityGroups": null,
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all inbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationApplicationSecurityGroups": null,
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "etag": "W/\"83f148a0-12ba-492b-8601-008bff0f5528\"",
+        "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/defaultSecurityRules/DenyAllInBound",
+        "name": "DenyAllInBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "database-exam",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourceApplicationSecurityGroups": null,
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationAddressPrefixes": [],
+        "destinationApplicationSecurityGroups": null,
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"83f148a0-12ba-492b-8601-008bff0f5528\"",
+        "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/defaultSecurityRules/AllowVnetOutBound",
+        "name": "AllowVnetOutBound",
+        "priority": 65000,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "database-exam",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourceAddressPrefixes": [],
+        "sourceApplicationSecurityGroups": null,
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Allow",
+        "description": "Allow outbound traffic from all VMs to Internet",
+        "destinationAddressPrefix": "Internet",
+        "destinationAddressPrefixes": [],
+        "destinationApplicationSecurityGroups": null,
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"83f148a0-12ba-492b-8601-008bff0f5528\"",
+        "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/defaultSecurityRules/AllowInternetOutBound",
+        "name": "AllowInternetOutBound",
+        "priority": 65001,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "database-exam",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourceApplicationSecurityGroups": null,
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      },
+      {
+        "access": "Deny",
+        "description": "Deny all outbound traffic",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationApplicationSecurityGroups": null,
+        "destinationPortRange": "*",
+        "destinationPortRanges": [],
+        "direction": "Outbound",
+        "etag": "W/\"83f148a0-12ba-492b-8601-008bff0f5528\"",
+        "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/defaultSecurityRules/DenyAllOutBound",
+        "name": "DenyAllOutBound",
+        "priority": 65500,
+        "protocol": "*",
+        "provisioningState": "Succeeded",
+        "resourceGroup": "database-exam",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourceApplicationSecurityGroups": null,
+        "sourcePortRange": "*",
+        "sourcePortRanges": [],
+        "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules"
+      }
+    ],
+    "etag": "W/\"83f148a0-12ba-492b-8601-008bff0f5528\"",
+    "flowLogs": null,
+    "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg",
+    "location": "northeurope",
+    "name": "database-exam-nsg",
+    "networkInterfaces": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "database-exam",
+    "resourceGuid": "1bc81e1a-40fe-4620-bfde-b7b30ec774eb",
+    "securityRules": [],
+    "subnets": null,
+    "tags": null,
+    "type": "Microsoft.Network/networkSecurityGroups"
+  }
+}
+{
+  "access": "Allow",
+  "description": "Allow mongo traffic",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationApplicationSecurityGroups": null,
+  "destinationPortRange": "27017",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"2326fbf9-2b58-4b02-8898-614b2d1fc346\"",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/securityRules/mongo",
+  "name": "mongo",
+  "priority": 700,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "database-exam",
+  "sourceAddressPrefix": "*",
+  "sourceAddressPrefixes": [],
+  "sourceApplicationSecurityGroups": null,
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+{
+  "access": "Allow",
+  "description": "Allow postgres traffic",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationApplicationSecurityGroups": null,
+  "destinationPortRange": "5432",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"ad2fa84e-a00d-44f7-94f2-4ed471966b90\"",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/securityRules/postgres",
+  "name": "postgres",
+  "priority": 720,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "database-exam",
+  "sourceAddressPrefix": "*",
+  "sourceAddressPrefixes": [],
+  "sourceApplicationSecurityGroups": null,
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+{
+  "access": "Allow",
+  "description": "Allow neo4j traffic",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationApplicationSecurityGroups": null,
+  "destinationPortRange": "7474",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"48b27829-f1b7-463c-ac8a-ab5059cc3895\"",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/securityRules/neo4j",
+  "name": "neo4j",
+  "priority": 730,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "database-exam",
+  "sourceAddressPrefix": "*",
+  "sourceAddressPrefixes": [],
+  "sourceApplicationSecurityGroups": null,
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+{
+  "access": "Allow",
+  "description": "Allow ssh traffic",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationApplicationSecurityGroups": null,
+  "destinationPortRange": "22",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"a62f58ed-3b32-401d-afed-c7ce32480413\"",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/securityRules/ssh",
+  "name": "ssh",
+  "priority": 750,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "database-exam",
+  "sourceAddressPrefix": "*",
+  "sourceAddressPrefixes": [],
+  "sourceApplicationSecurityGroups": null,
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+{
+  "access": "Allow",
+  "description": "Allow http traffic",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationApplicationSecurityGroups": null,
+  "destinationPortRange": "80",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"e8e79d14-4029-4e79-b852-cf6419a0932b\"",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/securityRules/http",
+  "name": "http",
+  "priority": 770,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "database-exam",
+  "sourceAddressPrefix": "*",
+  "sourceAddressPrefixes": [],
+  "sourceApplicationSecurityGroups": null,
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+{
+  "access": "Allow",
+  "description": "Allow https traffic",
+  "destinationAddressPrefix": "*",
+  "destinationAddressPrefixes": [],
+  "destinationApplicationSecurityGroups": null,
+  "destinationPortRange": "443",
+  "destinationPortRanges": [],
+  "direction": "Inbound",
+  "etag": "W/\"dc36130b-647a-41f8-9b4e-7bfa3c74ca17\"",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkSecurityGroups/database-exam-nsg/securityRules/https",
+  "name": "https",
+  "priority": 780,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "database-exam",
+  "sourceAddressPrefix": "*",
+  "sourceAddressPrefixes": [],
+  "sourceApplicationSecurityGroups": null,
+  "sourcePortRange": "*",
+  "sourcePortRanges": [],
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+{
+  "fqdns": "",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Compute/virtualMachines/gw",
+  "location": "northeurope",
+  "macAddress": "00-22-48-A0-4A-12",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.4",
+  "publicIpAddress": "20.234.89.47",
+  "resourceGroup": "database-exam",
+  "zones": ""
+}
+{
+  "fqdns": "",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Compute/virtualMachines/vm-a-1",
+  "location": "northeurope",
+  "macAddress": "00-0D-3A-DB-DD-82",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.5",
+  "publicIpAddress": "",
+  "resourceGroup": "database-exam",
+  "zones": ""
+}
+{
+  "fqdns": "",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Compute/virtualMachines/vm-a-2",
+  "location": "northeurope",
+  "macAddress": "00-22-48-9C-AA-67",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.6",
+  "publicIpAddress": "",
+  "resourceGroup": "database-exam",
+  "zones": ""
+}
+{
+  "fqdns": "",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Compute/virtualMachines/vm-b-1",
+  "location": "northeurope",
+  "macAddress": "00-0D-3A-B9-37-A1",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.7",
+  "publicIpAddress": "",
+  "resourceGroup": "database-exam",
+  "zones": ""
+}
+{
+  "fqdns": "",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Compute/virtualMachines/vm-b-2",
+  "location": "northeurope",
+  "macAddress": "00-22-48-9C-AD-06",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.8",
+  "publicIpAddress": "",
+  "resourceGroup": "database-exam",
+  "zones": ""
+}
+{
+  "ddosSettings": null,
+  "deleteOption": null,
+  "dnsSettings": {
+    "domainNameLabel": "db-exam-gw",
+    "fqdn": "db-exam-gw.northeurope.cloudapp.azure.com",
+    "reverseFqdn": null
+  },
+  "etag": "W/\"ceee67ea-d3cc-4f3b-9d53-53aeb42edcb4\"",
+  "extendedLocation": null,
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/publicIPAddresses/db-exam-gw",
+  "idleTimeoutInMinutes": 4,
+  "ipAddress": "20.234.89.47",
+  "ipConfiguration": {
+    "etag": null,
+    "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Network/networkInterfaces/gwVMNic/ipConfigurations/ipconfiggw",
+    "name": null,
+    "privateIpAddress": null,
+    "privateIpAllocationMethod": null,
+    "provisioningState": null,
+    "publicIpAddress": null,
+    "resourceGroup": "database-exam",
+    "subnet": null
+  },
+  "ipTags": [],
+  "linkedPublicIpAddress": null,
+  "location": "northeurope",
+  "migrationPhase": null,
+  "name": "db-exam-gw",
+  "natGateway": null,
+  "provisioningState": "Succeeded",
+  "publicIpAddressVersion": "IPv4",
+  "publicIpAllocationMethod": "Static",
+  "publicIpPrefix": null,
+  "resourceGroup": "database-exam",
+  "resourceGuid": "db2160ce-1194-4038-98ad-328e59822d59",
+  "servicePublicIpAddress": null,
+  "sku": {
+    "name": "Basic",
+    "tier": "Regional"
+  },
+  "tags": {},
+  "type": "Microsoft.Network/publicIPAddresses",
+  "zones": null
+}
+Start configuration
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\nmultiverse amd64 mongodb-mongosh amd64 1.5.0 [37.2 MB]\nGet:3 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-shell amd64 5.0.6 [14.4 MB]\nGet:4 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-server amd64 5.0.6 [26.3 MB]\nGet:5 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-mongos amd64 5.0.6 [18.3 MB]\nGet:6 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database-tools-extra amd64 5.0.9 [7756 B]\nGet:7 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database amd64 5.0.6 [3544 B]\nGet:8 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-tools amd64 5.0.6 [2896 B]\nGet:9 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org amd64 5.0.6 [2932 B]\nFetched 143 MB in 3s (47.3 MB/s)\nSelecting previously unselected package mongodb-database-tools.\r\n(Reading database ... \r(Reading database ... 5%\r(Reading database ... 10%\r(Reading database ... 15%\r(Reading database ... 20%\r(Reading database ... 25%\r(Reading database ... 30%\r(Reading database ... 35%\r(Reading database ... 40%\r(Reading database ... 45%\r(Reading database ... 50%\r(Reading database ... 55%\r(Reading database ... 60%\r(Reading database ... 65%\r(Reading database ... 70%\r(Reading database ... 75%\r(Reading database ... 80%\r(Reading database ... 85%\r(Reading database ... 90%\r(Reading database ... 95%\r(Reading database ... 100%\r(Reading database ... 77332 files and directories currently installed.)\r\nPreparing to unpack .../0-mongodb-database-tools_100.5.2_amd64.deb ...\r\nUnpacking mongodb-database-tools (100.5.2) ...\r\nSelecting previously unselected package mongodb-mongosh.\r\nPreparing to unpack .../1-mongodb-mongosh_1.5.0_amd64.deb ...\r\nUnpacking mongodb-mongosh (1.5.0) ...\r\nSelecting previously unselected package mongodb-org-shell.\r\nPreparing to unpack .../2-mongodb-org-shell_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-shell (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-server.\r\nPreparing to unpack .../3-mongodb-org-server_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-server (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-mongos.\r\nPreparing to unpack .../4-mongodb-org-mongos_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-mongos (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-database-tools-extra.\r\nPreparing to unpack .../5-mongodb-org-database-tools-extra_5.0.9_amd64.deb ...\r\nUnpacking mongodb-org-database-tools-extra (5.0.9) ...\r\nSelecting previously unselected package mongodb-org-database.\r\nPreparing to unpack .../6-mongodb-org-database_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-database (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-tools.\r\nPreparing to unpack .../7-mongodb-org-tools_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-tools (5.0.6) ...\r\nSelecting previously unselected package mongodb-org.\r\nPreparing to unpack .../8-mongodb-org_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org (5.0.6) ...\r\nSetting up mongodb-org-shell (5.0.6) ...\r\nSetting up mongodb-org-database-tools-extra (5.0.9) ...\r\nSetting up mongodb-database-tools (100.5.2) ...\r\nSetting up mongodb-mongosh (1.5.0) ...\r\nSetting up mongodb-org-mongos (5.0.6) ...\r\nSetting up mongodb-org-tools (5.0.6) ...\r\nSetting up mongodb-org-server (5.0.6) ...\r\nAdding system user `mongodb' (UID 111) ...\r\nAdding new user `mongodb' (UID 111) with group `nogroup' ...\r\nNot creating home directory `/home/mongodb'.\r\nAdding group `mongodb' (GID 116) ...\r\nDone.\r\nAdding user `mongodb' to group `mongodb' ...\r\nAdding user mongodb to group mongodb\r\nDone.\r\nSetting up mongodb-org-database (5.0.6) ...\r\nSetting up mongodb-org (5.0.6) ...\r\nProcessing triggers for man-db (2.8.3-2ubuntu0.1) ...\r\ntest> {\n  ok: 1,\n  '$gleStats': {\n    lastOpTime: Timestamp({ t: 1654534868, i: 1 }),\n    electionId: ObjectId(\"000000000000000000000000\")\n  },\n  lastCommittedOpTime: Timestamp({ t: 1654534868, i: 1 })\n}\nmongors1conf [direct: other] test> \n[stderr]\n+ sh -c apt-get update -qq >/dev/null\n+ sh -c DEBIAN_FRONTEND=noninteractive apt-get install -y -qq apt-transport-https ca-certificates curl >/dev/null\n+ sh -c mkdir -p /etc/apt/keyrings && chmod -R 0755 /etc/apt/keyrings\n+ sh -c curl -fsSL \"https://download.docker.com/linux/ubuntu/gpg\" | gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg\n+ sh -c chmod a+r /etc/apt/keyrings/docker.gpg\n+ sh -c echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu bionic stable\" > /etc/apt/sources.list.d/docker.list\n+ sh -c apt-get update -qq >/dev/null\n+ sh -c DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-scan-plugin >/dev/null\n+ version_gte 20.10\n+ [ -z  ]\n+ return 0\n+ sh -c DEBIAN_FRONTEND=noninteractive apt-get install -y -qq docker-ce-rootless-extras >/dev/null\n+ sh -c docker version\ngroupadd: group 'docker' already exists\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r 17 12.1M   17 2152k    0     0  1456k      0  0:00:08  0:00:01  0:00:07 2105k\r100 12.1M  100 12.1M    0     0  6163k      0  0:00:02  0:00:02 --:--:-- 7963k\nCloning into '/repo'...\nSwitched to a new branch 'release/exam-dsg'\n\nWARNING: apt does not have a stable CLI interface. Use with caution in scripts.\n\n\nWARNING: apt does not have a stable CLI interface. Use with caution in scripts.\n\nWarning: apt-key output should not be parsed (stdout is not a terminal)\ndebconf: unable to initialize frontend: Dialog\ndebconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)\ndebconf: falling back to frontend: Readline\ndebconf: unable to initialize frontend: Readline\ndebconf: (This frontend requires a controlling tty.)\ndebconf: falling back to frontend: Teletype\ndpkg-preconfigure: unable to re-open stdin: \nusermod: group 'mongo' does not exist\n",
+      "time": null
+    }
+  ]
+}
+Setup base-1-1
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\n59 MB of additional disk space will be used.\nGet:1 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-database-tools amd64 100.5.2 [46.5 MB]\nGet:2 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-mongosh amd64 1.5.0 [37.2 MB]\nGet:3 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-shell amd64 5.0.6 [14.4 MB]\nGet:4 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-server amd64 5.0.6 [26.3 MB]\nGet:5 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-mongos amd64 5.0.6 [18.3 MB]\nGet:6 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database-tools-extra amd64 5.0.9 [7756 B]\nGet:7 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database amd64 5.0.6 [3544 B]\nGet:8 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-tools amd64 5.0.6 [2896 B]\nGet:9 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org amd64 5.0.6 [2932 B]\nFetched 143 MB in 3s (47.1 MB/s)\nSelecting previously unselected package mongodb-database-tools.\r\n(Reading database ... \r(Reading database ... 5%\r(Reading database ... 10%\r(Reading database ... 15%\r(Reading database ... 20%\r(Reading database ... 25%\r(Reading database ... 30%\r(Reading database ... 35%\r(Reading database ... 40%\r(Reading database ... 45%\r(Reading database ... 50%\r(Reading database ... 55%\r(Reading database ... 60%\r(Reading database ... 65%\r(Reading database ... 70%\r(Reading database ... 75%\r(Reading database ... 80%\r(Reading database ... 85%\r(Reading database ... 90%\r(Reading database ... 95%\r(Reading database ... 100%\r(Reading database ... 77089 files and directories currently installed.)\r\nPreparing to unpack .../0-mongodb-database-tools_100.5.2_amd64.deb ...\r\nUnpacking mongodb-database-tools (100.5.2) ...\r\nSelecting previously unselected package mongodb-mongosh.\r\nPreparing to unpack .../1-mongodb-mongosh_1.5.0_amd64.deb ...\r\nUnpacking mongodb-mongosh (1.5.0) ...\r\nSelecting previously unselected package mongodb-org-shell.\r\nPreparing to unpack .../2-mongodb-org-shell_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-shell (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-server.\r\nPreparing to unpack .../3-mongodb-org-server_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-server (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-mongos.\r\nPreparing to unpack .../4-mongodb-org-mongos_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-mongos (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-database-tools-extra.\r\nPreparing to unpack .../5-mongodb-org-database-tools-extra_5.0.9_amd64.deb ...\r\nUnpacking mongodb-org-database-tools-extra (5.0.9) ...\r\nSelecting previously unselected package mongodb-org-database.\r\nPreparing to unpack .../6-mongodb-org-database_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-database (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-tools.\r\nPreparing to unpack .../7-mongodb-org-tools_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-tools (5.0.6) ...\r\nSelecting previously unselected package mongodb-org.\r\nPreparing to unpack .../8-mongodb-org_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org (5.0.6) ...\r\nSetting up mongodb-org-shell (5.0.6) ...\r\nSetting up mongodb-org-database-tools-extra (5.0.9) ...\r\nSetting up mongodb-database-tools (100.5.2) ...\r\nSetting up mongodb-mongosh (1.5.0) ...\r\nSetting up mongodb-org-mongos (5.0.6) ...\r\nSetting up mongodb-org-tools (5.0.6) ...\r\nSetting up mongodb-org-server (5.0.6) ...\r\nAdding system user `mongodb' (UID 111) ...\r\nAdding new user `mongodb' (UID 111) with group `nogroup' ...\r\nNot creating home directory `/home/mongodb'.\r\nAdding group `mongodb' (GID 116) ...\r\nDone.\r\nAdding user `mongodb' to group `mongodb' ...\r\nAdding user mongodb to group mongodb\r\nDone.\r\nSetting up mongodb-org-database (5.0.6) ...\r\nSetting up mongodb-org (5.0.6) ...\r\nProcessing triggers for man-db (2.8.3-2ubuntu0.1) ...\r\n\n[stderr]\nWarning: apt-key output should not be parsed (stdout is not a terminal)\ndebconf: unable to initialize frontend: Dialog\ndebconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)\ndebconf: falling back to frontend: Readline\ndebconf: unable to initialize frontend: Readline\ndebconf: (This frontend requires a controlling tty.)\ndebconf: falling back to frontend: Teletype\ndpkg-preconfigure: unable to re-open stdin: \n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   682  100   682    0     0   3142      0 --:--:-- --:--:-- --:--:--  3128\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   683  100   683    0     0   3520      0 --:--:-- --:--:-- --:--:--  3520\nFailed to start mongoshardd.service: Unit mongoshardd.service not found.\n",
+      "time": null
+    }
+  ]
+}
+Setup base-1-2
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\n59 MB of additional disk space will be used.\nGet:1 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-database-tools amd64 100.5.2 [46.5 MB]\nGet:2 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-mongosh amd64 1.5.0 [37.2 MB]\nGet:3 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-shell amd64 5.0.6 [14.4 MB]\nGet:4 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-server amd64 5.0.6 [26.3 MB]\nGet:5 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-mongos amd64 5.0.6 [18.3 MB]\nGet:6 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database-tools-extra amd64 5.0.9 [7756 B]\nGet:7 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database amd64 5.0.6 [3544 B]\nGet:8 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-tools amd64 5.0.6 [2896 B]\nGet:9 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org amd64 5.0.6 [2932 B]\nFetched 143 MB in 3s (53.1 MB/s)\nSelecting previously unselected package mongodb-database-tools.\r\n(Reading database ... \r(Reading database ... 5%\r(Reading database ... 10%\r(Reading database ... 15%\r(Reading database ... 20%\r(Reading database ... 25%\r(Reading database ... 30%\r(Reading database ... 35%\r(Reading database ... 40%\r(Reading database ... 45%\r(Reading database ... 50%\r(Reading database ... 55%\r(Reading database ... 60%\r(Reading database ... 65%\r(Reading database ... 70%\r(Reading database ... 75%\r(Reading database ... 80%\r(Reading database ... 85%\r(Reading database ... 90%\r(Reading database ... 95%\r(Reading database ... 100%\r(Reading database ... 77089 files and directories currently installed.)\r\nPreparing to unpack .../0-mongodb-database-tools_100.5.2_amd64.deb ...\r\nUnpacking mongodb-database-tools (100.5.2) ...\r\nSelecting previously unselected package mongodb-mongosh.\r\nPreparing to unpack .../1-mongodb-mongosh_1.5.0_amd64.deb ...\r\nUnpacking mongodb-mongosh (1.5.0) ...\r\nSelecting previously unselected package mongodb-org-shell.\r\nPreparing to unpack .../2-mongodb-org-shell_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-shell (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-server.\r\nPreparing to unpack .../3-mongodb-org-server_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-server (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-mongos.\r\nPreparing to unpack .../4-mongodb-org-mongos_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-mongos (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-database-tools-extra.\r\nPreparing to unpack .../5-mongodb-org-database-tools-extra_5.0.9_amd64.deb ...\r\nUnpacking mongodb-org-database-tools-extra (5.0.9) ...\r\nSelecting previously unselected package mongodb-org-database.\r\nPreparing to unpack .../6-mongodb-org-database_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-database (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-tools.\r\nPreparing to unpack .../7-mongodb-org-tools_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-tools (5.0.6) ...\r\nSelecting previously unselected package mongodb-org.\r\nPreparing to unpack .../8-mongodb-org_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org (5.0.6) ...\r\nSetting up mongodb-org-shell (5.0.6) ...\r\nSetting up mongodb-org-database-tools-extra (5.0.9) ...\r\nSetting up mongodb-database-tools (100.5.2) ...\r\nSetting up mongodb-mongosh (1.5.0) ...\r\nSetting up mongodb-org-mongos (5.0.6) ...\r\nSetting up mongodb-org-tools (5.0.6) ...\r\nSetting up mongodb-org-server (5.0.6) ...\r\nAdding system user `mongodb' (UID 111) ...\r\nAdding new user `mongodb' (UID 111) with group `nogroup' ...\r\nNot creating home directory `/home/mongodb'.\r\nAdding group `mongodb' (GID 116) ...\r\nDone.\r\nAdding user `mongodb' to group `mongodb' ...\r\nAdding user mongodb to group mongodb\r\nDone.\r\nSetting up mongodb-org-database (5.0.6) ...\r\nSetting up mongodb-org (5.0.6) ...\r\nProcessing triggers for man-db (2.8.3-2ubuntu0.1) ...\r\n\n[stderr]\nWarning: apt-key output should not be parsed (stdout is not a terminal)\ndebconf: unable to initialize frontend: Dialog\ndebconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)\ndebconf: falling back to frontend: Readline\ndebconf: unable to initialize frontend: Readline\ndebconf: (This frontend requires a controlling tty.)\ndebconf: falling back to frontend: Teletype\ndpkg-preconfigure: unable to re-open stdin: \n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   682  100   682    0     0  12400      0 --:--:-- --:--:-- --:--:-- 12400\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   683  100   683    0     0  14531      0 --:--:-- --:--:-- --:--:-- 14531\nFailed to start mongoshardd.service: Unit mongoshardd.service not found.\n",
+      "time": null
+    }
+  ]
+}
+Setup shard 1
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\n\n[stderr]\nMongoNetworkError: connect ECONNREFUSED 127.0.0.1:27018\nMongoNetworkError: connect ECONNREFUSED 127.0.0.1:27018\nMongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017\nMongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017\nFailed to stop mongoshardd.service: Unit mongoshardd.service not loaded.\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   724  100   724    0     0   3399      0 --:--:-- --:--:-- --:--:--  3399\nFailed to start mongoshardd.service: Unit mongoshardd.service not found.\n",
+      "time": null
+    }
+  ]
+}
+Setup base-2-1
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\n59 MB of additional disk space will be used.\nGet:1 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-database-tools amd64 100.5.2 [46.5 MB]\nGet:2 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-mongosh amd64 1.5.0 [37.2 MB]\nGet:3 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-shell amd64 5.0.6 [14.4 MB]\nGet:4 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-server amd64 5.0.6 [26.3 MB]\nGet:5 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-mongos amd64 5.0.6 [18.3 MB]\nGet:6 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database-tools-extra amd64 5.0.9 [7756 B]\nGet:7 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database amd64 5.0.6 [3544 B]\nGet:8 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-tools amd64 5.0.6 [2896 B]\nGet:9 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org amd64 5.0.6 [2932 B]\nFetched 143 MB in 3s (43.9 MB/s)\nSelecting previously unselected package mongodb-database-tools.\r\n(Reading database ... \r(Reading database ... 5%\r(Reading database ... 10%\r(Reading database ... 15%\r(Reading database ... 20%\r(Reading database ... 25%\r(Reading database ... 30%\r(Reading database ... 35%\r(Reading database ... 40%\r(Reading database ... 45%\r(Reading database ... 50%\r(Reading database ... 55%\r(Reading database ... 60%\r(Reading database ... 65%\r(Reading database ... 70%\r(Reading database ... 75%\r(Reading database ... 80%\r(Reading database ... 85%\r(Reading database ... 90%\r(Reading database ... 95%\r(Reading database ... 100%\r(Reading database ... 77089 files and directories currently installed.)\r\nPreparing to unpack .../0-mongodb-database-tools_100.5.2_amd64.deb ...\r\nUnpacking mongodb-database-tools (100.5.2) ...\r\nSelecting previously unselected package mongodb-mongosh.\r\nPreparing to unpack .../1-mongodb-mongosh_1.5.0_amd64.deb ...\r\nUnpacking mongodb-mongosh (1.5.0) ...\r\nSelecting previously unselected package mongodb-org-shell.\r\nPreparing to unpack .../2-mongodb-org-shell_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-shell (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-server.\r\nPreparing to unpack .../3-mongodb-org-server_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-server (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-mongos.\r\nPreparing to unpack .../4-mongodb-org-mongos_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-mongos (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-database-tools-extra.\r\nPreparing to unpack .../5-mongodb-org-database-tools-extra_5.0.9_amd64.deb ...\r\nUnpacking mongodb-org-database-tools-extra (5.0.9) ...\r\nSelecting previously unselected package mongodb-org-database.\r\nPreparing to unpack .../6-mongodb-org-database_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-database (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-tools.\r\nPreparing to unpack .../7-mongodb-org-tools_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-tools (5.0.6) ...\r\nSelecting previously unselected package mongodb-org.\r\nPreparing to unpack .../8-mongodb-org_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org (5.0.6) ...\r\nSetting up mongodb-org-shell (5.0.6) ...\r\nSetting up mongodb-org-database-tools-extra (5.0.9) ...\r\nSetting up mongodb-database-tools (100.5.2) ...\r\nSetting up mongodb-mongosh (1.5.0) ...\r\nSetting up mongodb-org-mongos (5.0.6) ...\r\nSetting up mongodb-org-tools (5.0.6) ...\r\nSetting up mongodb-org-server (5.0.6) ...\r\nAdding system user `mongodb' (UID 111) ...\r\nAdding new user `mongodb' (UID 111) with group `nogroup' ...\r\nNot creating home directory `/home/mongodb'.\r\nAdding group `mongodb' (GID 116) ...\r\nDone.\r\nAdding user `mongodb' to group `mongodb' ...\r\nAdding user mongodb to group mongodb\r\nDone.\r\nSetting up mongodb-org-database (5.0.6) ...\r\nSetting up mongodb-org (5.0.6) ...\r\nProcessing triggers for man-db (2.8.3-2ubuntu0.1) ...\r\n\n[stderr]\nWarning: apt-key output should not be parsed (stdout is not a terminal)\ndebconf: unable to initialize frontend: Dialog\ndebconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)\ndebconf: falling back to frontend: Readline\ndebconf: unable to initialize frontend: Readline\ndebconf: (This frontend requires a controlling tty.)\ndebconf: falling back to frontend: Teletype\ndpkg-preconfigure: unable to re-open stdin: \n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   682  100   682    0     0  11000      0 --:--:-- --:--:-- --:--:-- 11000\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   683  100   683    0     0  14229      0 --:--:-- --:--:-- --:--:-- 14229\nFailed to start mongoshardd.service: Unit mongoshardd.service not found.\n",
+      "time": null
+    }
+  ]
+}
+Setup base-2-2
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\n59 MB of additional disk space will be used.\nGet:1 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-database-tools amd64 100.5.2 [46.5 MB]\nGet:2 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-mongosh amd64 1.5.0 [37.2 MB]\nGet:3 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-shell amd64 5.0.6 [14.4 MB]\nGet:4 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-server amd64 5.0.6 [26.3 MB]\nGet:5 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-mongos amd64 5.0.6 [18.3 MB]\nGet:6 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database-tools-extra amd64 5.0.9 [7756 B]\nGet:7 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-database amd64 5.0.6 [3544 B]\nGet:8 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org-tools amd64 5.0.6 [2896 B]\nGet:9 https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0/multiverse amd64 mongodb-org amd64 5.0.6 [2932 B]\nFetched 143 MB in 3s (46.6 MB/s)\nSelecting previously unselected package mongodb-database-tools.\r\n(Reading database ... \r(Reading database ... 5%\r(Reading database ... 10%\r(Reading database ... 15%\r(Reading database ... 20%\r(Reading database ... 25%\r(Reading database ... 30%\r(Reading database ... 35%\r(Reading database ... 40%\r(Reading database ... 45%\r(Reading database ... 50%\r(Reading database ... 55%\r(Reading database ... 60%\r(Reading database ... 65%\r(Reading database ... 70%\r(Reading database ... 75%\r(Reading database ... 80%\r(Reading database ... 85%\r(Reading database ... 90%\r(Reading database ... 95%\r(Reading database ... 100%\r(Reading database ... 77089 files and directories currently installed.)\r\nPreparing to unpack .../0-mongodb-database-tools_100.5.2_amd64.deb ...\r\nUnpacking mongodb-database-tools (100.5.2) ...\r\nSelecting previously unselected package mongodb-mongosh.\r\nPreparing to unpack .../1-mongodb-mongosh_1.5.0_amd64.deb ...\r\nUnpacking mongodb-mongosh (1.5.0) ...\r\nSelecting previously unselected package mongodb-org-shell.\r\nPreparing to unpack .../2-mongodb-org-shell_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-shell (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-server.\r\nPreparing to unpack .../3-mongodb-org-server_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-server (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-mongos.\r\nPreparing to unpack .../4-mongodb-org-mongos_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-mongos (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-database-tools-extra.\r\nPreparing to unpack .../5-mongodb-org-database-tools-extra_5.0.9_amd64.deb ...\r\nUnpacking mongodb-org-database-tools-extra (5.0.9) ...\r\nSelecting previously unselected package mongodb-org-database.\r\nPreparing to unpack .../6-mongodb-org-database_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-database (5.0.6) ...\r\nSelecting previously unselected package mongodb-org-tools.\r\nPreparing to unpack .../7-mongodb-org-tools_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org-tools (5.0.6) ...\r\nSelecting previously unselected package mongodb-org.\r\nPreparing to unpack .../8-mongodb-org_5.0.6_amd64.deb ...\r\nUnpacking mongodb-org (5.0.6) ...\r\nSetting up mongodb-org-shell (5.0.6) ...\r\nSetting up mongodb-org-database-tools-extra (5.0.9) ...\r\nSetting up mongodb-database-tools (100.5.2) ...\r\nSetting up mongodb-mongosh (1.5.0) ...\r\nSetting up mongodb-org-mongos (5.0.6) ...\r\nSetting up mongodb-org-tools (5.0.6) ...\r\nSetting up mongodb-org-server (5.0.6) ...\r\nAdding system user `mongodb' (UID 111) ...\r\nAdding new user `mongodb' (UID 111) with group `nogroup' ...\r\nNot creating home directory `/home/mongodb'.\r\nAdding group `mongodb' (GID 116) ...\r\nDone.\r\nAdding user `mongodb' to group `mongodb' ...\r\nAdding user mongodb to group mongodb\r\nDone.\r\nSetting up mongodb-org-database (5.0.6) ...\r\nSetting up mongodb-org (5.0.6) ...\r\nProcessing triggers for man-db (2.8.3-2ubuntu0.1) ...\r\n\n[stderr]\nWarning: apt-key output should not be parsed (stdout is not a terminal)\ndebconf: unable to initialize frontend: Dialog\ndebconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)\ndebconf: falling back to frontend: Readline\ndebconf: unable to initialize frontend: Readline\ndebconf: (This frontend requires a controlling tty.)\ndebconf: falling back to frontend: Teletype\ndpkg-preconfigure: unable to re-open stdin: \n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   682  100   682    0     0   3294      0 --:--:-- --:--:-- --:--:--  3294\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   683  100   683    0     0   3902      0 --:--:-- --:--:-- --:--:--  3880\r100   683  100   683    0     0   3880      0 --:--:-- --:--:-- --:--:--  3858\nFailed to start mongoshardd.service: Unit mongoshardd.service not found.\n",
+      "time": null
+    }
+  ]
+}
+Setup shard 2
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\n\n[stderr]\nMongoNetworkError: connect ECONNREFUSED 127.0.0.1:27018\nMongoNetworkError: connect ECONNREFUSED 127.0.0.1:27018\nMongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017\nMongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017\nFailed to stop mongoshardd.service: Unit mongoshardd.service not loaded.\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   724  100   724    0     0  14775      0 --:--:-- --:--:-- --:--:-- 14775\nFailed to start mongoshardd.service: Unit mongoshardd.service not found.\n",
+      "time": null
+    }
+  ]
+}
+Start configuration pt2
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\n/home/fedtnisse\nconfig setup 2\n[direct: mongos] test> Uncaught \rMongoServerError: Could not find host matching read preference { mode: \"primary\" } for set mongors1\n[direct: mongos] test> [direct: mongos] test> Uncaught \rMongoServerError: Could not find host matching read preference { mode: \"primary\" } for set mongors2\n[direct: mongos] test> [direct: mongos] test> Uncaught \rMongoServerError: Database consultations could not be created :: caused by :: No shards found\n[direct: mongos] test> [direct: mongos] test> Uncaught \rMongoServerError: database consultations not found\n[direct: mongos] test> [direct: mongos] test> Uncaught \rMongoServerError: Database consultations could not be created :: caused by :: No shards found\n[direct: mongos] test> [direct: mongos] test> Uncaught \rMongoServerError: database consultations not found\n[direct: mongos] test> [direct: mongos] test> {\n  ok: 1,\n  '$clusterTime': {\n    clusterTime: Timestamp({ t: 1654535415, i: 4 }),\n    signature: {\n      hash: Binary(Buffer.from(\"0000000000000000000000000000000000000000\", \"hex\"), 0),\n      keyId: Long(\"0\")\n    }\n  },\n  operationTime: Timestamp({ t: 1654535415, i: 4 })\n}\n[direct: mongos] test> [direct: mongos] test> {\n  ok: 1,\n  '$clusterTime': {\n    clusterTime: Timestamp({ t: 1654535417, i: 2 }),\n    signature: {\n      hash: Binary(Buffer.from(\"0000000000000000000000000000000000000000\", \"hex\"), 0),\n      keyId: Long(\"0\")\n    }\n  },\n  operationTime: Timestamp({ t: 1654535417, i: 2 })\n}\n[direct: mongos] test> \n[stderr]\n",
+      "time": null
+    }
+  ]
+}
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\nntend.csproj]\n#81 60.16 /app/Frontend/Pages/Consultations.razor(109,91): warning CS8602: Dereference of a possibly null reference. [/app/Frontend/Frontend.csproj]\n#81 60.16 /app/Frontend/Pages/Consultations.razor(124,20): warning CS8601: Possible null reference assignment. [/app/Frontend/Frontend.csproj]\n#81 60.16 /app/Frontend/Pages/Consultations.razor(77,23): warning CS8618: Non-nullable field 'loggedIn' must contain a non-null value when exiting constructor. Consider declaring the field as nullable. [/app/Frontend/Frontend.csproj]\n#81 62.23   Frontend -> /app/Frontend/bin/Release/net6.0/Frontend.dll\n#81 63.51   Frontend -> /app/Frontend/out/\n#81 DONE 63.8s\n\n#87 [infrastructure_testdata-service publish 1/1] RUN dotnet publish \"TestDataAPI.csproj\" -c Release -o /app/publish\n#87 8.463   Determining projects to restore...\n#87 9.449   All projects are up-to-date for restore.\n#87 ...\n\n#94 [infrastructure_blazor-frontend stage-1 3/4] COPY --from=build-env /app/Frontend/out .\n#94 DONE 0.4s\n\n#95 [infrastructure_blazor-frontend stage-1 4/4] RUN apk add --no-cache icu-libs\n#95 0.566 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/main/x86_64/APKINDEX.tar.gz\n#95 0.883 fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/community/x86_64/APKINDEX.tar.gz\n#95 1.240 (1/1) Installing icu-libs (69.1-r1)\n#95 1.564 OK: 42 MiB in 24 packages\n#95 DONE 2.3s\n\n#89 [infrastructure_blazor-frontend] exporting to image\n#89 exporting layers\n#89 exporting layers 1.0s done\n#89 writing image sha256:97beceea4f50284a64376bcc32d0a2bfa273bab52f8735cb510f1740c416ce06\n#89 writing image sha256:97beceea4f50284a64376bcc32d0a2bfa273bab52f8735cb510f1740c416ce06 done\n#89 naming to docker.io/library/infrastructure_blazor-frontend done\n#89 DONE 4.9s\n\n#87 [infrastructure_testdata-service publish 1/1] RUN dotnet publish \"TestDataAPI.csproj\" -c Release -o /app/publish\n#87 10.88   lib -> /src/lib/bin/Release/net6.0/lib.dll\n#87 15.43 /src/TestDataAPI/Context/PrescriptionContext.cs(36,10): warning CS1030: #warning: 'To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.' [/src/TestDataAPI/TestDataAPI.csproj]\n#87 15.43 /src/TestDataAPI/DatabaseSettings.cs(5,22): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context. [/src/TestDataAPI/TestDataAPI.csproj]\n#87 15.43 /src/TestDataAPI/Seeder/DbSeeder.cs(218,30): warning CS0168: The variable 'ex' is declared but never used [/src/TestDataAPI/TestDataAPI.csproj]\n#87 15.43 /src/TestDataAPI/Controllers/TestDataController.cs(20,46): warning CS0169: The field 'TestDataController._pc' is never used [/src/TestDataAPI/TestDataAPI.csproj]\n#87 15.43 /src/TestDataAPI/Program.cs(35,24): warning ASP0000: Calling 'BuildServiceProvider' from application code results in an additional copy of singleton services being created. Consider alternatives such as dependency injecting services as parameters to 'Configure'. [/src/TestDataAPI/TestDataAPI.csproj]\n#87 15.66   TestDataAPI -> /src/TestDataAPI/bin/Release/net6.0/TestDataAPI.dll\n#87 15.84   TestDataAPI -> /app/publish/\n#87 DONE 15.9s\n\n#21 [infrastructure_mail-service build-env 1/8] FROM mcr.microsoft.com/dotnet/sdk:6.0@sha256:58a93345aa1069d69f4e32eded710dcf5cd563171226fbce69e65b1e98b5e5a5\n#21 ...\n\n#96 [infrastructure_testdata-service final 2/2] COPY --from=publish /app/publish .\n#96 DONE 0.3s\n\n#89 [infrastructure_testdata-service] exporting to image\n#89 exporting layers 0.7s done\n#89 writing image sha256:0ef2fc50fb97187b486f952e45629bd24d104a9dcf8d663932d53010081905fe done\n#89 naming to docker.io/library/infrastructure_testdata-service done\n#89 DONE 5.7s\n\n#25 [infrastructure_consultation-service] docker-image://docker.io/docker/dockerfile:1@sha256:443aab4ca21183e069e7d8b2dc68006594f40bddf1b15bbd83f5137bd93e80e2\n\n[stderr]\n                   ]  589.8kB/18.11MB\n4438ce0f50f4 Extracting [=======>                                           ]  2.556MB/18.11MB\n4438ce0f50f4 Extracting [===========>                                       ]  4.325MB/18.11MB\n4438ce0f50f4 Extracting [===============>                                   ]  5.702MB/18.11MB\n4438ce0f50f4 Extracting [====================>                              ]  7.274MB/18.11MB\n4438ce0f50f4 Extracting [==========================>                        ]  9.634MB/18.11MB\n4438ce0f50f4 Extracting [================================>                  ]   11.6MB/18.11MB\n4438ce0f50f4 Extracting [====================================>              ]  13.37MB/18.11MB\n4438ce0f50f4 Extracting [=========================================>         ]  14.94MB/18.11MB\n4438ce0f50f4 Extracting [=============================================>     ]  16.52MB/18.11MB\n4438ce0f50f4 Extracting [=================================================> ]  17.89MB/18.11MB\n4438ce0f50f4 Extracting [=================================================> ]  18.09MB/18.11MB\n4438ce0f50f4 Extracting [==================================================>]  18.11MB/18.11MB\n4438ce0f50f4 Pull complete \na5034a74998d Extracting [==================================================>]  1.912kB/1.912kB\na5034a74998d Extracting [==================================================>]  1.912kB/1.912kB\na5034a74998d Pull complete \nredis-insight Pulled \ntime=\"2022-06-06T17:12:44Z\" level=warning msg=\"Found orphan containers ([db-exam-neo4j db-exam-postgres db-exam-redis db-exam-nginx]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\nContainer db-exam-mongo-express  Creating\nContainer db-exam-pgadmin  Creating\nContainer db-exam-redis-insight  Creating\nContainer db-exam-redis-insight  Created\nContainer db-exam-mongo-express  Created\nContainer db-exam-pgadmin  Created\nContainer db-exam-redis-insight  Starting\nContainer db-exam-pgadmin  Starting\nContainer db-exam-mongo-express  Starting\nContainer db-exam-pgadmin  Started\nContainer db-exam-mongo-express  Started\nContainer db-exam-redis-insight  Started\n\nUse 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them\ntime=\"2022-06-06T17:15:41Z\" level=warning msg=\"Found orphan containers ([db-exam-pgadmin db-exam-mongo-express db-exam-redis-insight db-exam-neo4j db-exam-postgres db-exam-redis db-exam-nginx]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\nContainer db-exam-mail-service  Creating\nContainer db-exam-prescription-service  Creating\nContainer db-exam-frontend  Creating\nContainer db-exam-consultation-service  Creating\nContainer db-exam-testdata-service  Creating\nContainer db-exam-testdata-service  Created\nContainer db-exam-consultation-service  Created\nContainer db-exam-mail-service  Created\nContainer db-exam-frontend  Created\nContainer db-exam-prescription-service  Created\nContainer db-exam-data-analyzing-service  Creating\nContainer db-exam-cronjob-service  Creating\nContainer db-exam-data-analyzing-service  Created\nContainer db-exam-cronjob-service  Created\nContainer db-exam-prescription-service  Starting\nContainer db-exam-frontend  Starting\nContainer db-exam-consultation-service  Starting\nContainer db-exam-testdata-service  Starting\nContainer db-exam-mail-service  Starting\nContainer db-exam-testdata-service  Started\nContainer db-exam-mail-service  Started\nContainer db-exam-frontend  Started\nContainer db-exam-prescription-service  Started\nContainer db-exam-consultation-service  Started\nContainer db-exam-consultation-service  Waiting\nContainer db-exam-consultation-service  Waiting\nContainer db-exam-consultation-service  Healthy\nContainer db-exam-consultation-service  Healthy\nContainer db-exam-data-analyzing-service  Starting\nContainer db-exam-cronjob-service  Starting\nContainer db-exam-cronjob-service  Started\nContainer db-exam-data-analyzing-service  Started\n",
+      "time": null
+    }
+  ]
+}
+Delete res-group
