@@ -5130,3 +5130,14 @@ Create res-group
   "resourceGroup": "database-exam",
   "zones": ""
 }
+{
+  "fqdns": "",
+  "id": "/subscriptions/f99263d6-b875-4096-9cef-564bc850e27d/resourceGroups/database-exam/providers/Microsoft.Compute/virtualMachines/vm-a-2",
+  "location": "northeurope",
+  "macAddress": "00-0D-3A-67-A4-F1",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.0.6",
+  "publicIpAddress": "",
+  "resourceGroup": "database-exam",
+  "zones": ""
+}

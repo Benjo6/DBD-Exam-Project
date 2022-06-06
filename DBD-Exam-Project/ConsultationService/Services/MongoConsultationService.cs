@@ -19,10 +19,12 @@ namespace ConsultationService.Services
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
 
-            _client = new MongoClient(settings.Value.MongoConnectionString ?? throw new ArgumentNullException("MongoConnectionString"));
-            _database = _client.GetDatabase("consultations");
             _logger = logger;
             _logger.LogInformation(settings.Value.MongoConnectionString);
+
+            _client = new MongoClient(settings.Value.MongoConnectionString ?? throw new ArgumentNullException("MongoConnectionString"));
+            _database = _client.GetDatabase("consultations");
+            
         }
 
         public ConsultationDto BookConsultation(ConsultationBookingRequestDto consultationDto)
