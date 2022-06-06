@@ -1,5 +1,5 @@
 [Unit]
-Description=MongoDB Config Server
+Description=MongoDB Database Shard Server
 Documentation=https://docs.mongodb.org/manual
 After=network-online.target
 Wants=network-online.target
@@ -7,7 +7,7 @@ Wants=network-online.target
 [Service]
 User=mongodb
 Group=mongodb
-ExecStart=/usr/bin/mongod --config /etc/mongocfg2.conf
+ExecStart=/usr/bin/mongod --config /etc/mongod.conf
 # file size
 LimitFSIZE=infinity
 # cpu time
