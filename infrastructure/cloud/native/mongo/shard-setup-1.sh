@@ -14,7 +14,8 @@ echo 'new Mongo("localhost:27018").getDB("admin").createUser({ user: "'${USER}'"
 echo 'new Mongo("localhost:27018").getDB("admin").createUser( { user: "'${DB_USER}'", pwd: "'${DB_PASSWORD}'", roles: [ { role: "readWrite", db: "consultations" } ] })' | mongosh --port 27017 --quiet
 
 
-sudo systemctl stop mongosd.service
-
-
-sudo systemctl start mongosd.service
+sudo systemctl stop mongoshardd.service
+sudo rm /etc/mongod.conf
+sudo curl https://raw.githubusercontent.com/SOFT2022-Database-Exam/DBD-Exam-Project/release/exam-dsg/infrastructure/cloud/native/mongo/shardauth.cfg -o /etc/mongodauthbase.conf
+sudo sed -e 's/<USER>/'$USER'/' -e 's/<REPL>/'$REPL'/' /etc/mongodauthbase.conf -> /etc/mongod.conf
+sudo systemctl start mongoshardd.service

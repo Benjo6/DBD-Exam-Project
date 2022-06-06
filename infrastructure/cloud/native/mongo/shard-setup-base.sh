@@ -15,4 +15,6 @@ sudo apt-get update
 sudo apt-get install -y mongodb-org=5.0.6 mongodb-org-database=5.0.6 mongodb-org-server=5.0.6 mongodb-org-shell=5.0.6 mongodb-org-mongos=5.0.6 mongodb-org-tools=5.0.6
 
 mkdir -p /home/$USER/data/db
-mongod --shardsvr --replSet ${REPL} --dbpath /home/$USER/data/db --port 27018 --bind_ip_all --fork --logpath=/home/$USER/mongo.log --logappend
+sudo curl https://raw.githubusercontent.com/SOFT2022-Database-Exam/DBD-Exam-Project/release/exam-dsg/infrastructure/cloud/native/mongo/shard.cfg -o /etc/mongodbase.conf
+sudo sed -e 's/<USER>/'$USER'/' -e 's/<REPL>/'$REPL'/' /etc/mongodbase.conf -> /etc/mongod.conf
+sudo systemctl start mongoshardd.service
