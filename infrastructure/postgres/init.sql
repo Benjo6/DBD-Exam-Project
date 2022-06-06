@@ -147,7 +147,7 @@ CREATE POLICY prescription_patient ON prescriptions.prescription TO patient
     USING (prescribed_to_cpr = current_user);
 
 CREATE USER prescriptionserviceuser WITH ENCRYPTED PASSWORD 'prescreptionservicepw';
-GRANT SELECT, CREATE, UPDATE ON prescriptions.prescription TO prescriptionserviceuser;
+GRANT SELECT, INSERT, UPDATE ON prescriptions.prescription TO prescriptionserviceuser;
 GRANT SELECT ON prescriptions.address TO prescriptionserviceuser;
 GRANT SELECT ON prescriptions.personal_data TO prescriptionserviceuser;
 GRANT SELECT ON prescriptions.pharmacy TO prescriptionserviceuser;
