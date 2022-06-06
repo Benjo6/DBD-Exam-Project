@@ -6,12 +6,6 @@ DB_PASSWORD=$4
 
 HOSTNAME=$5
 
-[[ -z "$USER" ]] && { echo "Error: USER not found"; exit 1; }
-[[ -z "$PASSWORD" ]] && { echo "Error: PASSWORD not found"; exit 1; }
-[[ -z "$DB_USER" ]] && { echo "Error: DB_USER not found"; exit 1; }
-[[ -z "$DB_ADMIN" ]] && { echo "Error: DB_ADMIN not found"; exit 1; }
-[[ -z "$HOSTNAME" ]] && { echo "Error: HOSTNAME not found"; exit 1; }
-
 
 su $USER
 HOME='/home/'$USER
@@ -66,19 +60,25 @@ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongod
 sudo apt-get update
 sudo apt-get install -y mongodb-org=5.0.6 mongodb-org-database=5.0.6 mongodb-org-server=5.0.6 mongodb-org-shell=5.0.6 mongodb-org-mongos=5.0.6 mongodb-org-tools=5.0.6
 
+sudo chown -R mongodb /home/$USER/data 
+sudo chgrp -R mongodb /home/$USER/data 
+sudo usermod -aG mongo $USER
+
 echo "Starting Mongo" >> ${HOME}/deploy.log
 ## Start Mongo ##
 sudo sed 's/<USER>/'$USER'/' /repo/infrastructure/cloud/native/mongo/config1.cfg -> /etc/mongocfg1.conf
 sudo sed 's/<USER>/'$USER'/' /repo/infrastructure/cloud/native/mongo/config2.cfg -> /etc/mongocfg2.conf
 sudo sed 's/<USER>/'$USER'/' /repo/infrastructure/cloud/native/mongo/config3.cfg -> /etc/mongocfg3.conf
 
-sudo cp /repo/infrastructure/cloud/native/mongo/mongocfg1.service /lib/systemd/system/mongocfg1.service
-sudo cp /repo/infrastructure/cloud/native/mongo/mongocfg2.service /lib/systemd/system/mongocfg2.service
-sudo cp /repo/infrastructure/cloud/native/mongo/mongocfg3.service /lib/systemd/system/mongocfg3.service
+sudo cp /repo/infrastructure/cloud/native/mongo/mongocfg1.service /lib/systemd/system/mongocfg1d.service
+sudo cp /repo/infrastructure/cloud/native/mongo/mongocfg2.service /lib/systemd/system/mongocfg2d.service
+sudo cp /repo/infrastructure/cloud/native/mongo/mongocfg3.service /lib/systemd/system/mongocfg3d.service
 
-sudo systemctl start /lib/systemd/system/mongocfg1.service
-sudo systemctl start /lib/systemd/system/mongocfg2.service
-sudo systemctl start /lib/systemd/system/mongocfg3.service
+sudo systemctl daemon-reload
+
+sudo systemctl start mongocfg1d.service
+sudo systemctl start mongocfg2d.service
+sudo systemctl start mongocfg3d.service
 
 #mongocfg1 
 sleep 20
@@ -88,10 +88,6 @@ echo 'rs.initiate({_id: "mongors1conf",configsvr: true, members: [{ _id : 0, hos
 #Start mongos
 
 sudo sed -e 's/<USER>/'$USER'/' -e 's/<HOSTNAME>/'$HOSTNAME'/' /repo/infrastructure/cloud/native/mongo/mongos.cfg -> /etc/mongos.conf
-sudo systemctl start /lib/systemd/system/mongos.service
-
-
-
-
-
+sudo cp /repo/infrastructure/cloud/native/mongo/mongos.service /lib/systemd/system/mongosd.service
+sudo systemctl start mongosd.service
 

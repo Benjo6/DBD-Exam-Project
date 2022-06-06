@@ -1,5 +1,5 @@
 [Unit]
-Description=MongoDB Database Server
+Description=MongoDB Config Server
 Documentation=https://docs.mongodb.org/manual
 After=network-online.target
 Wants=network-online.target
@@ -7,9 +7,7 @@ Wants=network-online.target
 [Service]
 User=mongodb
 Group=mongodb
-EnvironmentFile=-/etc/default/mongod
-ExecStart=/usr/bin/mongod --config /etc/mongodcfg1.conf
-PIDFile=/var/run/mongodb/mongod.pid
+ExecStart=/usr/bin/mongod --config /etc/mongocfg1.conf
 # file size
 LimitFSIZE=infinity
 # cpu time

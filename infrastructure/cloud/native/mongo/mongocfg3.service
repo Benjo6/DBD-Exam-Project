@@ -7,9 +7,7 @@ Wants=network-online.target
 [Service]
 User=mongodb
 Group=mongodb
-EnvironmentFile=-/etc/default/mongod
-ExecStart=/usr/bin/mongod --config /etc/mongodcfg3.conf
-PIDFile=/var/run/mongodb/mongod.pid
+ExecStart=/usr/bin/mongod --config /etc/mongocfg3.conf
 # file size
 LimitFSIZE=infinity
 # cpu time
