@@ -12,14 +12,17 @@ namespace ConsultationService.Services
     {
         private MongoClient _client;
         private IMongoDatabase _database;
+        private ILogger<MongoConsultationService> _logger;
 
-        public MongoConsultationService(IOptions<DatabaseSettings> settings)
+        public MongoConsultationService(IOptions<DatabaseSettings> settings, ILogger<MongoConsultationService> logger)
         {
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
 
             _client = new MongoClient(settings.Value.MongoConnectionString ?? throw new ArgumentNullException("MongoConnectionString"));
             _database = _client.GetDatabase("consultations");
+            _logger = logger;
+            _logger.LogInformation(settings.Value.MongoConnectionString);
         }
 
         public ConsultationDto BookConsultation(ConsultationBookingRequestDto consultationDto)

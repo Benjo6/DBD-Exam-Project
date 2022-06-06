@@ -16,5 +16,7 @@ sudo apt-get install -y mongodb-org=5.0.6 mongodb-org-database=5.0.6 mongodb-org
 
 mkdir -p /home/$USER/data/db
 sudo curl https://raw.githubusercontent.com/SOFT2022-Database-Exam/DBD-Exam-Project/release/exam-dsg/infrastructure/cloud/native/mongo/shard.cfg -o /etc/mongodbase.conf
+sudo curl https://raw.githubusercontent.com/SOFT2022-Database-Exam/DBD-Exam-Project/release/exam-dsg/infrastructure/cloud/native/mongo/mongoshardd.service -o /etc/mongoshardd.service
 sudo sed -e 's/<USER>/'$USER'/' -e 's/<REPL>/'$REPL'/' /etc/mongodbase.conf -> /etc/mongod.conf
+sudo systemctl daemon-reload
 sudo systemctl start mongoshardd.service
