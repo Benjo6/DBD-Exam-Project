@@ -32,23 +32,24 @@ az group create --name $GROUP --location northeurope
 
 az network vnet create --name 'exam-vnet' --resource-group $GROUP
 az network nsg create -n $NSG -g $GROUP
+
 az network nsg rule create -n 'mongo' -g $GROUP --nsg-name $NSG --priority 700   \
---direction Inbound --access Allow --protocol Tcp --description "Allow mongo traffic" --destination-port-ranges '27017' --source-address-prefixes "*"
+--direction Inbound --access Allow --protocol Tcp --description "Allow mongo traffic" --destination-port-ranges '27017' --source-address-prefixes "*" &>/dev/null &
 
 az network nsg rule create -n 'postgres' -g $GROUP --nsg-name $NSG --priority 720   \
---direction Inbound --access Allow --protocol Tcp --description "Allow postgres traffic" --destination-port-ranges '5432' --source-address-prefixes "*"
+--direction Inbound --access Allow --protocol Tcp --description "Allow postgres traffic" --destination-port-ranges '5432' --source-address-prefixes "*" &>/dev/null &
 
 az network nsg rule create -n 'neo4j' -g $GROUP --nsg-name $NSG --priority 730   \
---direction Inbound --access Allow --protocol Tcp --description "Allow neo4j traffic" --destination-port-ranges '7474' --source-address-prefixes "*"
+--direction Inbound --access Allow --protocol Tcp --description "Allow neo4j traffic" --destination-port-ranges '7474' --source-address-prefixes "*" &>/dev/null &
 
 az network nsg rule create -n 'ssh' -g $GROUP --nsg-name $NSG --priority 750   \
---direction Inbound --access Allow --protocol Tcp --description "Allow ssh traffic" --destination-port-ranges '22' --source-address-prefixes "*"
+--direction Inbound --access Allow --protocol Tcp --description "Allow ssh traffic" --destination-port-ranges '22' --source-address-prefixes "*" &>/dev/null &
 
 az network nsg rule create -n 'http' -g $GROUP --nsg-name $NSG --priority 770   \
---direction Inbound --access Allow --protocol Tcp --description "Allow http traffic" --destination-port-ranges '80'
+--direction Inbound --access Allow --protocol Tcp --description "Allow http traffic" --destination-port-ranges '80' &>/dev/null &
 
 az network nsg rule create -n 'https' -g $GROUP --nsg-name $NSG --priority 780   \
---direction Inbound --access Allow --protocol Tcp --description "Allow https traffic" --destination-port-ranges '443'
+--direction Inbound --access Allow --protocol Tcp --description "Allow https traffic" --destination-port-ranges '443' &>/dev/null &
 
 az vm create -g $GROUP -n $GATEWAY --image $IMG --size Standard_B2s \
 --location $LOCATION --public-ip-address $GATEWAYDNS \

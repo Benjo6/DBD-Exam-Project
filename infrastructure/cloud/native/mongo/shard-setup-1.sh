@@ -8,8 +8,7 @@ REPL=$7
 su $USER
 sleep 10
 
-echo 'new Mongo("localhost:27018").getDB("admin").createUser({ user: "'${USER}'",pwd: "'${PASSWORD}'", roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]})' | mongosh --port 27017 --quiet
-echo 'new Mongo("localhost:27018").getDB("admin").createUser( { user: "'${DB_USER}'", pwd: "'${DB_PASSWORD}'", roles: [ { role: "readWrite", db: "consultations" } ] })' | mongosh --port 27017 --quiet
+
 
 echo 'rs.initiate({_id : "'${REPL}'", members: [{ _id : 0, host : "'$HOST1'" },{ _id : 1, host : "'$HOST2'" }]})' | mongosh --port 27018 --quiet
 echo 'rs.status()' | mongosh --port 27018 --quiet

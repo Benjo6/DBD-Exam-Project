@@ -63,6 +63,7 @@ sudo apt-get update
 sudo apt-get install -y mongodb-org=5.0.6 mongodb-org-database=5.0.6 mongodb-org-server=5.0.6 mongodb-org-shell=5.0.6 mongodb-org-mongos=5.0.6 mongodb-org-tools=5.0.6
 
 echo $KEY >> /home/$USER/data/key.txt
+sudo chmod 400 /home/$USER/data/key.txt
 
 sudo chown -R mongodb /home/$USER/data 
 sudo chgrp -R mongodb /home/$USER/data 
