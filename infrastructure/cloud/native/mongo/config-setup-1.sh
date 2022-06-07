@@ -6,6 +6,8 @@ DB_PASSWORD=$4
 
 HOSTNAME=$5
 
+KEY=$6
+
 
 su $USER
 HOME='/home/'$USER
@@ -59,6 +61,8 @@ wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add 
 echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
 sudo apt-get update
 sudo apt-get install -y mongodb-org=5.0.6 mongodb-org-database=5.0.6 mongodb-org-server=5.0.6 mongodb-org-shell=5.0.6 mongodb-org-mongos=5.0.6 mongodb-org-tools=5.0.6
+
+echo $KEY > /home/$USER/data/key.txt
 
 sudo chown -R mongodb /home/$USER/data 
 sudo chgrp -R mongodb /home/$USER/data 

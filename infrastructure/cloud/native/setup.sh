@@ -7,6 +7,9 @@ ADMIN_PASSWORD=$1
 DB_USER=dbexam
 DB_PASSWORD=$2
 
+KEY=$(openssl rand -base64 768)
+REPL1=mongors1
+REPL2=mongors2
 
 GROUP='database-exam'
 VMSIZE='Standard_B1ls'
@@ -50,19 +53,23 @@ az network nsg rule create -n 'https' -g $GROUP --nsg-name $NSG --priority 780  
 az vm create -g $GROUP -n $GATEWAY --image $IMG --size Standard_B2s \
 --location $LOCATION --public-ip-address $GATEWAYDNS \
 --nsg $NSG --public-ip-sku Basic --public-ip-address-allocation static --storage-sku Standard_LRS --os-disk-size-gb 30 \
---admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD
+--admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD --vnet-name 'exam-vnet' --subnet subnet1
 
 az vm create -g $GROUP -n vm-a-1 --image $IMG --size $VMSIZE \
---location $LOCATION --public-ip-address "" --admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD --nsg $NSG --storage-sku Standard_LRS --os-disk-size-gb 30
+--location $LOCATION --public-ip-address "" --admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD \
+--nsg $NSG --storage-sku Standard_LRS --os-disk-size-gb 30 --vnet-name 'exam-vnet' --subnet subnet1
 
 az vm create -g $GROUP -n vm-a-2 --image $IMG --size $VMSIZE \
---location $LOCATION --public-ip-address "" --admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD --nsg $NSG --storage-sku Standard_LRS --os-disk-size-gb 30
+--location $LOCATION --public-ip-address "" --admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD \
+--nsg $NSG --storage-sku Standard_LRS --os-disk-size-gb 30 --vnet-name 'exam-vnet' --subnet subnet1
 
 az vm create -g $GROUP -n vm-b-1 --image $IMG --size $VMSIZE \
---location $LOCATION --public-ip-address "" --admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD --nsg $NSG --storage-sku Standard_LRS --os-disk-size-gb 30
+--location $LOCATION --public-ip-address "" --admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD \
+--nsg $NSG --storage-sku Standard_LRS --os-disk-size-gb 30 --vnet-name 'exam-vnet' --subnet subnet1
 
 az vm create -g $GROUP -n vm-b-2 --image $IMG --size $VMSIZE \
---location $LOCATION --public-ip-address "" --admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD --nsg $NSG --storage-sku Standard_LRS --os-disk-size-gb 30
+--location $LOCATION --public-ip-address "" --admin-username $ADMIN_USER --admin-password $ADMIN_PASSWORD \
+--nsg $NSG --storage-sku Standard_LRS --os-disk-size-gb 30 --vnet-name 'exam-vnet' --subnet subnet1
 
 
 az network public-ip update --resource-group $GROUP --name $GATEWAYDNS --dns-name $GATEWAYDNS
@@ -73,33 +80,33 @@ az network public-ip update --resource-group $GROUP --name $GATEWAYDNS --dns-nam
 echo "Start configuration"
 
 az vm run-command invoke -g $GROUP -n $GATEWAY --command-id RunShellScript \
---scripts "@mongo/config-setup-1.sh" --parameters "${ADMIN_USER}" ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD "${GATEWAY}"
+--scripts "@mongo/config-setup-1.sh" --parameters "${ADMIN_USER}" ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD "${GATEWAY}" $KEY
 
 echo "Setup base-1-1"
 az vm run-command invoke -g $GROUP -n vm-a-1 --command-id RunShellScript \
---scripts "@mongo/shard-setup-base.sh" --parameters "$ADMIN_USER" mongors1
+--scripts "@mongo/shard-setup-base.sh" --parameters "$ADMIN_USER" $REPL1 $KEY
 
 echo "Setup base-1-2"
 az vm run-command invoke -g $GROUP -n vm-a-2 --command-id RunShellScript \
---scripts "@mongo/shard-setup-base.sh" --parameters $ADMIN_USER mongors1
+--scripts "@mongo/shard-setup-base.sh" --parameters $ADMIN_USER $REPL1 $KEY
 
 echo "Setup shard 1"
 az vm run-command invoke -g $GROUP -n vm-a-1 --command-id RunShellScript \
---scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD vm-a-1:27018 vm-a-2:27018 mongors1
+--scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD vm-a-1:27018 vm-a-2:27018 $REPL1
 
 ### Shard 2 ###
 
 echo "Setup base-2-1"
 az vm run-command invoke -g $GROUP -n vm-b-1 --command-id RunShellScript \
---scripts "@mongo/shard-setup-base.sh" --parameters $ADMIN_USER mongors2
+--scripts "@mongo/shard-setup-base.sh" --parameters $ADMIN_USER $REPL2 $KEY
 
 echo "Setup base-2-2"
 az vm run-command invoke -g $GROUP -n vm-b-2 --command-id RunShellScript \
---scripts "@mongo/shard-setup-base.sh" --parameters $ADMIN_USER mongors2
+--scripts "@mongo/shard-setup-base.sh" --parameters $ADMIN_USER $REPL2 $KEY
 
 echo "Setup shard 2"
 az vm run-command invoke -g $GROUP -n vm-b-1 --command-id RunShellScript \
---scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD vm-b-1:27018 vm-b-2:27018 mongors2
+--scripts "@mongo/shard-setup-1.sh" --parameters $ADMIN_USER ${ADMIN_PASSWORD} "$DB_USER" $DB_PASSWORD vm-b-1:27018 vm-b-2:27018 $REPL2
 
 ##### Post config ###
 
