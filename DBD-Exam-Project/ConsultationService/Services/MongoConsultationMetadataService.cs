@@ -22,7 +22,7 @@ namespace ConsultationService.Services
         }
         public async Task<ConsultationMetadataDto> GetLatestMetadataAsync()
         {
-            var consultationEntity = await _database.GetCollection<ConsultationMetadataEntity>(Collection).Find(x => true).SortByDescending(x => x.DayOfConsultationsAdded).FirstOrDefaultAsync();
+            var consultationEntity = await _database.GetCollection<ConsultationMetadataEntity>(Collection).Find(x => true).SortByDescending(x => x.CreatedUtc).FirstOrDefaultAsync();
             return ConsultationMetadataMapper.ToDto(consultationEntity); ;
         }
         public async Task<ConsultationMetadataDto> AddMetadataAsync(ConsultationMetadataDto consultationMetadata)

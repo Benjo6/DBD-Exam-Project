@@ -117,7 +117,7 @@ namespace CronJobService.Services
                 var metadata = GetMetadata();
                 if (metadata != null && metadata.DayOfConsultationsAdded >= DateTime.Today.AddDays(1) && metadata.CreatedCount > 0)
                 {
-                    _logger.LogInformation("{0} >= {1} - No consultations will be added", metadata.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
+                    _logger.LogInformation("{0} >= {1} - {2} Created on last run. No consultations will be added", metadata.DayOfConsultationsAdded, DateTime.Today.AddDays(1), metadata.CreatedCount);
                     return;
                 }
                 _logger.LogInformation("{0} < {1} Or no consultations were added yet - Consultations will be added", metadata?.DayOfConsultationsAdded, DateTime.Today.AddDays(1));
