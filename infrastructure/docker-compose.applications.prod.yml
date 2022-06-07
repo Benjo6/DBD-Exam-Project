@@ -66,6 +66,8 @@ services:
     ports:
       - 18094:80
     restart: always
+    environment:
+      - ConnectionStrings__postgres=Host=postgres;Port=5432;Database=prescription_db;Include Error Detail=true;Username=${ADMIN_USER};Password=${ADMIN_PASSWORD}
 
   ## CronJob-Service ##
   cronjob-service:
